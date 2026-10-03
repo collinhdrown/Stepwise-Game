@@ -70,7 +70,7 @@ nav.tabs .theme-btn { margin-left: 6px; }
 nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
-.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 42px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -107,16 +107,18 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 }
 .tile { position: relative; }
 /* Letter value in the tile's bottom-right corner. */
-.tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: max(10px, 0.4em); font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
+.tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: 0.4em; font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
 .tile.start-letter .pv { opacity: .5; }
 .tile:hover { transform: translateY(-2px); }
 .tile.sel { transform: translateY(-6px); box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .tile.swap { box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
 .tile.pop { animation: pop 380ms ease-out backwards; animation-delay: calc(var(--i) * 30ms); }
 @keyframes pop { 0% { transform: translateY(8px) scale(.9); opacity: .2; } 100% { transform: none; opacity: 1; } }
-.gap { flex: 0 1 6px; min-width: 0; border: 0; background: none; padding: 0; position: relative; pointer-events: none; transition: flex-basis 140ms ease; }
-.gap.target { flex: 0 6 22px; min-width: 6px; align-self: stretch; pointer-events: auto; cursor: pointer; }
-.gap.target::after { content: ""; position: absolute; left: 50%; top: 10%; bottom: 10%; width: 4px; margin-left: -2px; border-radius: 2px; background: color-mix(in srgb, var(--accent) 35%, transparent); transition: background 120ms, width 120ms, margin 120ms; }
+/* Gaps always show between letters; they only take taps when a move can use them. */
+.gap { flex: 0 6 22px; min-width: 4px; align-self: stretch; border: 0; background: none; padding: 0; position: relative; pointer-events: none; }
+.gap::after { content: ""; position: absolute; left: 50%; top: 10%; bottom: 10%; width: 4px; margin-left: -2px; border-radius: 2px; background: color-mix(in srgb, var(--muted) 18%, transparent); transition: background 120ms, width 120ms, margin 120ms; }
+.gap.target { pointer-events: auto; cursor: pointer; }
+.gap.target::after { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 .gap.target:hover::after, .gap.target:focus-visible::after { background: var(--accent); width: 6px; margin-left: -3px; }
 .word.shake { animation: shake 360ms ease; }
 @keyframes shake { 0%,100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
