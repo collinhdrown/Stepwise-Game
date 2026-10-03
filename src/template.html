@@ -99,6 +99,10 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
   font-size: clamp(15px, calc(60cqw / var(--n)), 32px); line-height: 1; padding: 0 0 4px;
   display: grid; place-items: center; transition: transform 120ms ease, box-shadow 120ms ease;
 }
+.tile { position: relative; }
+/* Letter value in the tile's bottom-right corner. */
+.tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: max(10px, 0.4em); font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
+.tile.start-letter .pv { opacity: .5; }
 .tile:hover { transform: translateY(-2px); }
 .tile.sel { transform: translateY(-6px); box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .tile.swap { box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
@@ -342,7 +346,8 @@ details.rules summary { cursor: pointer; font-weight: 700; }
       <div>
         <h3>Scoring</h3>
         <ul>
-          <li>Each new word scores one point per letter.</li>
+          <li>Each new word scores the value of its letters, shown in each tile's corner: 1 for A E I L N O R S T U, 2 for D G, 3 for B C M P, 4 for F H K V W Y and 5 for J Q X Z.</li>
+          <li>Letters from the starting word are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
           <li>A word whose meaning fits the active bonus category scores 15 more, and a new category appears.</li>
           <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
@@ -372,6 +377,8 @@ const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
 const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 15, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
 const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
+// Letter values, 1 (common) to 5 (hard to use). Scrabble values squeezed into 1-5.
+const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorstu", 2: "dg", 3: "bcmp", 4: "fhkvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
 const BAG = Object.entries(FREQ).flatMap(([l, n]) => Array(n).fill(l));
 const isVowel = l => "aeiou".includes(l);
 const rand = n => Math.floor(Math.random() * n);
@@ -443,6 +450,12 @@ let ui = { sel: null, mode: null, chosen: null, msg: null, pop: false, freshBonu
 
 const cur = () => G.chain[G.chain.length - 1].w;
 const used = () => new Set(G.chain.map(c => c.w));
+// Which tiles of the current word came from the starting word ("s", worth 0) or were played ("p").
+// The mask goes through the same moves as the word, so letters keep their origin when moved.
+const curMask = () => G.chain[G.chain.length - 1].m;
+const startMask = w => "s".repeat(w.length);
+const tileValue = (l, m) => m === "s" ? 0 : VALUE[l];
+const wordValue = (w, m) => [...w].reduce((s, l, i) => s + tileValue(l, m[i]), 0);
 const score = () => G.chain.reduce((s, c) => s + c.pts, 0);
 // Toolkit icons lit after the latest move; stored on each step so undo and backtrack restore it.
 const lit = () => G.chain[G.chain.length - 1].lit || [];
@@ -474,7 +487,8 @@ function nextBonus() {
 }
 
 function newGame() {
-  G = { chain: [{ w: pick(DATA.starts), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  const start = pick(DATA.starts);
+  G = { chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
   G.bonus = nextBonus();
   ui = { sel: null, mode: null, chosen: null, msg: null, pop: true, freshBonus: true, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null, view: ui.view };
 }
@@ -491,7 +505,7 @@ function check(nw) {
 
 function fail(text) { ui.msg = { text, kind: "bad" }; ui.shake = true; render(); }
 
-function commit(op, nw, detail, bankFn) {
+function commit(op, nw, nm, detail, bankFn) {
   const err = check(nw);
   if (err) return fail(err);
   const snap = snapshot();
@@ -500,9 +514,9 @@ function commit(op, nw, detail, bankFn) {
   let nowLit = lit().includes(op) ? lit().slice() : lit().concat(op);
   const toolkit = nowLit.length === OPS.length;
   if (toolkit) nowLit = [];
-  const pts = nw.length + (hit ? BONUS_PTS : 0) + (toolkit ? TOOLKIT_PTS : 0);
+  const pts = wordValue(nw, nm) + (hit ? BONUS_PTS : 0) + (toolkit ? TOOLKIT_PTS : 0);
   if (bankFn) bankFn();
-  G.chain.push({ w: nw, op, detail, pts, bonus: hit ? b.name : null, toolkit, lit: nowLit });
+  G.chain.push({ w: nw, m: nm, op, detail, pts, bonus: hit ? b.name : null, toolkit, lit: nowLit });
   if (hit) G.bonus = nextBonus();
   G.undo = snap;
   ui.sel = null; ui.pop = true; ui.freshBonus = hit; ui.justLit = toolkit ? "full" : op;
@@ -571,23 +585,23 @@ function checkAchievements(nw) {
 // ---------- actions ----------
 function addLetter(bi, gap) {
   const l = G.bank[bi];
-  commit("add", ins(cur(), gap, l), `added ${UP(l)}`, () => {
+  commit("add", ins(cur(), gap, l), ins(curMask(), gap, "p"), `added ${UP(l)}`, () => {
     G.bank[bi] = draw();
     balance(G.bank, [bi]);
     ui.newBank = bi;
   });
 }
-function removeLetter(i) { const w = cur(); commit("remove", del(w, i), `removed ${UP(w[i])}`); }
-function shiftLetter(i, gap) { const w = cur(); commit("shift", shiftTo(w, i, gap), `moved ${UP(w[i])}`); }
+function removeLetter(i) { const w = cur(); commit("remove", del(w, i), del(curMask(), i), `removed ${UP(w[i])}`); }
+function shiftLetter(i, gap) { const w = cur(); commit("shift", shiftTo(w, i, gap), shiftTo(curMask(), i, gap), `moved ${UP(w[i])}`); }
 function replaceLetter(ti, bi) {
-  const w = cur(), l = G.bank[bi];
-  commit("replace", w.slice(0, ti) + l + w.slice(ti + 1), `${UP(w[ti])} became ${UP(l)}`, () => {
+  const w = cur(), m = curMask(), l = G.bank[bi];
+  commit("replace", w.slice(0, ti) + l + w.slice(ti + 1), m.slice(0, ti) + "p" + m.slice(ti + 1), `${UP(w[ti])} became ${UP(l)}`, () => {
     G.bank[bi] = draw();
     balance(G.bank, [bi]);
     ui.newBank = bi;
   });
 }
-function swapLetters(i, j) { const w = cur(); commit("swap", swap(w, i, j), `swapped ${UP(w[i])} and ${UP(w[j])}`); }
+function swapLetters(i, j) { const w = cur(); commit("swap", swap(w, i, j), swap(curMask(), i, j), `swapped ${UP(w[i])} and ${UP(w[j])}`); }
 
 function undo() {
   if (!G.undo) return;
@@ -663,7 +677,7 @@ function gapTargetable(g) {
 }
 
 function render() {
-  const w = cur(), n = w.length;
+  const w = cur(), m = curMask(), n = w.length;
   const moves = G.over ? 0 : legalMoves().size;
   if (!G.over && moves === 0) {
     const canRecover = G.undo || G.powers.exchange || G.powers.choose || (G.powers.backtrack && G.chain.length > 1);
@@ -707,7 +721,8 @@ function render() {
     if (i < n) {
       const isSel = sel && sel.k === "word" && sel.i === i;
       const isSwap = sel && ((sel.k === "word" && sel.i !== i) || sel.k === "bank");
-      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}">${esc(w[i])}</button>`;
+      const v = tileValue(w[i], m[i]);
+      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}${m[i] === "s" ? " start-letter" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}, worth ${v}">${esc(w[i])}<span class="pv" aria-hidden="true">${v}</span></button>`;
     }
   }
   wordEl.innerHTML = h;
@@ -736,7 +751,7 @@ function render() {
     const isSel = sel && sel.k === "bank" && sel.i === i;
     const isNew = ui.newBank === "all" || ui.newBank === i;
     const isTarget = sel && sel.k === "word";
-    return `<button type="button" class="tile${isSel ? " sel" : ""}${isTarget ? " swap" : ""}${ui.mode === "discard" ? " discard" : ""}${isNew ? " new" : ""}" data-bank="${i}" aria-pressed="${!!isSel}" aria-label="Bank letter ${UP(l)}">${esc(l)}</button>`;
+    return `<button type="button" class="tile${isSel ? " sel" : ""}${isTarget ? " swap" : ""}${ui.mode === "discard" ? " discard" : ""}${isNew ? " new" : ""}" data-bank="${i}" aria-pressed="${!!isSel}" aria-label="Bank letter ${UP(l)}, worth ${VALUE[l]}">${esc(l)}<span class="pv" aria-hidden="true">${VALUE[l]}</span></button>`;
   }).join("");
 
   // undo
@@ -989,7 +1004,7 @@ function boot(data) {
   applyLayout();
   let g = data && data.game;
   if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
-  if (valid(g)) { G = g; G.deck = (G.deck || []).filter(id => BONUS[id]); ui.pop = true; }
+  if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); ui.pop = true; }
   else newGame();
   render();
 }
