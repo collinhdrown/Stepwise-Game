@@ -350,7 +350,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
         <ul>
           <li>Each new word scores the value of its letters, shown in each tile's corner: 1 for A E I L N O R S T U, 2 for D G, 3 for B C M P, 4 for F H K V W Y and 5 for J Q X Z.</li>
           <li>Letters from the starting word are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
-          <li>A word whose meaning fits the active bonus category scores 15 more, and a new category appears.</li>
+          <li>A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
           <li><b>Achievements</b> unlock for long words, long ladders, big scores, bonuses and using the whole alphabet, and stay unlocked across games. See them on the Achievements page.</li>
@@ -377,7 +377,7 @@ const DATA = /*__DATA__*/null;
 const LAYOUT = /*__LAYOUT__*/"side";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
-const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 15, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
+const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
 const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
 // Letter values, 1 (common) to 5 (hard to use). Scrabble values squeezed into 1-5.
 const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorstu", 2: "dg", 3: "bcmp", 4: "fhkvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
