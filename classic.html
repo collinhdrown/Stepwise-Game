@@ -108,7 +108,6 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .tile { position: relative; }
 /* Letter value in the tile's bottom-right corner. */
 .tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: 0.4em; font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
-.tile.start-letter .pv { opacity: .5; }
 .tile:hover { transform: translateY(-2px); }
 .tile.sel { transform: translateY(-6px); box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .tile.swap { box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
@@ -355,7 +354,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
         <h3>Scoring</h3>
         <ul>
           <li>Each new word scores the value of its letters, shown in each tile's corner: 1 for A E I L N O R S T U, 2 for D G, 3 for B C M P, 4 for F H K V W Y and 5 for J Q X Z.</li>
-          <li>Letters from the starting word are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
+          <li>Letters from the starting word have no number and are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
           <li>A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
@@ -730,7 +729,7 @@ function render() {
       const isSel = sel && sel.k === "word" && sel.i === i;
       const isSwap = sel && ((sel.k === "word" && sel.i !== i) || sel.k === "bank");
       const v = tileValue(w[i], m[i]);
-      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}${m[i] === "s" ? " start-letter" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}, worth ${v}">${esc(w[i])}<span class="pv" aria-hidden="true">${v}</span></button>`;
+      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}${m[i] === "s" ? " start-letter" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}${m[i] === "s" ? ", from the starting word, worth 0" : `, worth ${v}`}">${esc(w[i])}${m[i] === "s" ? "" : `<span class="pv" aria-hidden="true">${v}</span>`}</button>`;
     }
   }
   wordEl.innerHTML = h;
