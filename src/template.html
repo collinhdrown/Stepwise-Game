@@ -1,0 +1,998 @@
+<title>Stepwise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a type-case workbench. Play area (bonus, word, bank, powers) on the left; the ladder of past words runs down the right. Stacks on phones. */
+:root {
+  --bg: #E3E8EC;
+  --panel: #F6F8FA;
+  --ink: #17202B;
+  --muted: #5B6672;
+  --line: #CAD2DA;
+  --tile: #FFFCF4;
+  --tile-edge: #B8AF9B;
+  --tile-ink: #1C2430;
+  --bank: #F4CF7A;
+  --bank-edge: #BE8B22;
+  --accent: #2D4BD2;
+  --accent-soft: #DCE2FB;
+  --good: #1D7F54;
+  --good-soft: #D7F0E3;
+  --bad: #B9362A;
+  --font-display: "Zilla Slab", "Rockwell", "Roboto Slab", Georgia, serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
+    --tile: #F0E9DA; --tile-edge: #8B8270; --tile-ink: #1C2430;
+    --bank: #E6B64C; --bank-edge: #93701F;
+    --accent: #8197FF; --accent-soft: #232D52;
+    --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
+  --tile: #F0E9DA; --tile-edge: #8B8270; --tile-ink: #1C2430;
+  --bank: #E6B64C; --bank-edge: #93701F;
+  --accent: #8197FF; --accent-soft: #232D52;
+  --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-inline: 16px; padding-block: 20px 40px;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { max-width: 1060px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr) clamp(190px, 28vw, 300px); align-items: start; }
+@media (max-width: 600px) { .app { grid-template-columns: minmax(0, 1fr); } }
+.app.view-ach > main, .app.view-ach > aside, .app.view-ach > details { display: none; }
+.app:not(.view-ach) > #ach-page { display: none; }
+#ach-page { grid-column: 1 / -1; }
+#toast-slot, #modal-slot { position: fixed; }
+nav.tabs { display: flex; gap: 6px; margin-top: 12px; }
+nav.tabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13.5px; cursor: pointer; color: var(--muted); }
+nav.tabs .theme-btn { margin-left: 6px; }
+nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
+.brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.scores { display: flex; gap: 22px; }
+.stat { display: grid; gap: 2px; text-align: right; }
+.stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.stat .v { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat.main .v { font-size: 40px; color: var(--accent); }
+
+.play { display: grid; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+
+/* Bonus */
+/* Category bonus card: same frame and type as the Toolkit card. */
+.bonus { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; }
+.bonus .txt { display: grid; gap: 1px; min-width: 0; }
+.bonus .txt b { font-size: 14.5px; }
+.bonus .txt span { font-size: 12.5px; color: var(--muted); }
+.bonus .cat { display: grid; gap: 1px; min-width: 0; }
+.bonus .name { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.15; color: var(--accent); }
+.bonus .hint { color: var(--muted); font-size: 12.5px; }
+.bonus.fresh { animation: fresh 700ms ease-out; }
+@keyframes fresh { 0% { transform: scale(0.97); box-shadow: 0 0 0 0 color-mix(in srgb, var(--good) 60%, transparent); } 100% { transform: none; box-shadow: 0 0 0 14px transparent; } }
+
+/* Board */
+.board { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 22px 18px 18px; container-type: inline-size; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: var(--muted); }
+.word { display: flex; justify-content: center; align-items: center; min-height: 64px; }
+.tile {
+  flex: 0 1 60px; min-width: 0; aspect-ratio: 1 / 1.08; border: 0; cursor: pointer;
+  background: var(--tile); color: var(--tile-ink);
+  border-radius: 7px; box-shadow: inset 0 -4px 0 var(--tile-edge), 0 1px 2px rgba(0,0,0,.18);
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(15px, calc(60cqw / var(--n)), 32px); line-height: 1; padding: 0 0 4px;
+  display: grid; place-items: center; transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.tile:hover { transform: translateY(-2px); }
+.tile.sel { transform: translateY(-6px); box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
+.tile.swap { box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
+.tile.pop { animation: pop 380ms ease-out backwards; animation-delay: calc(var(--i) * 30ms); }
+@keyframes pop { 0% { transform: translateY(8px) scale(.9); opacity: .2; } 100% { transform: none; opacity: 1; } }
+.gap { flex: 0 1 6px; min-width: 0; border: 0; background: none; padding: 0; position: relative; pointer-events: none; transition: flex-basis 140ms ease; }
+.gap.target { flex: 0 6 22px; min-width: 6px; align-self: stretch; pointer-events: auto; cursor: pointer; }
+.gap.target::after { content: ""; position: absolute; left: 50%; top: 10%; bottom: 10%; width: 4px; margin-left: -2px; border-radius: 2px; background: color-mix(in srgb, var(--accent) 35%, transparent); transition: background 120ms, width 120ms, margin 120ms; }
+.gap.target:hover::after, .gap.target:focus-visible::after { background: var(--accent); width: 6px; margin-left: -3px; }
+.word.shake { animation: shake 360ms ease; }
+@keyframes shake { 0%,100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+
+.hintrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; min-height: 34px; text-align: center; color: var(--muted); font-size: 14px; }
+/* Fixed-height line so showing or hiding the preview never moves the bank under the cursor. */
+.preview { height: 24px; line-height: 24px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; }
+.msg { text-align: center; min-height: 22px; font-weight: 600; font-size: 14.5px; }
+.msg.bad { color: var(--bad); }
+.msg.good { color: var(--good); }
+.msg.info { color: var(--muted); }
+
+.bankrow { display: grid; gap: 8px; justify-items: center; padding-top: 6px; border-top: 1px dashed var(--line); }
+.bank { display: flex; gap: 8px; justify-content: center; width: 100%; }
+.bank .tile { flex: 0 1 52px; min-width: 0; font-size: 26px; background: var(--bank); box-shadow: inset 0 -4px 0 var(--bank-edge), 0 1px 2px rgba(0,0,0,.18); }
+.bank .tile.sel { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
+.bank .tile.swap { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
+.bank .tile.discard { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px var(--bad); }
+.bank .tile.new { animation: pop 420ms ease-out backwards; }
+
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 9px; padding: 7px 13px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.danger { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+.btn.primary:hover:not(:disabled) { color: var(--panel); filter: brightness(1.08); }
+.actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+.actions .grp { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Powers */
+.powers { display: grid; gap: 10px; }
+.powers .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .board { padding-inline: 10px; } .powers .row { grid-template-columns: minmax(0, 1fr); } }
+.power { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 11px; padding: 11px 13px; cursor: pointer; display: grid; gap: 3px; }
+.power:hover:not(:disabled) { border-color: var(--accent); }
+.power b { font-size: 14.5px; }
+.power span { font-size: 12.5px; color: var(--muted); }
+.power .state { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--good); }
+.power:disabled { cursor: not-allowed; opacity: .5; }
+.power:disabled .state { color: var(--muted); }
+.power.active { border-color: var(--accent); background: var(--accent-soft); }
+.picker { display: grid; gap: 10px; padding: 12px; border-radius: 11px; background: var(--accent-soft); }
+.alpha { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
+.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--tile); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--tile-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
+.alpha button:hover { outline: 2px solid var(--accent); }
+.picker .bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
+
+.toolkit { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; }
+.toolkit .txt { display: grid; gap: 1px; min-width: 0; }
+.toolkit .txt b { font-size: 14.5px; }
+.toolkit .txt span { font-size: 12.5px; color: var(--muted); }
+.tk-icons { display: flex; gap: 8px; }
+.tk { display: grid; justify-items: center; gap: 3px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); width: 50px; }
+.tk .ic { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 2px dashed var(--line); font-size: 17px; font-weight: 700; color: var(--muted); transition: background 200ms, border-color 200ms, color 200ms; }
+.tk.on { color: var(--accent); }
+.tk.on .ic { border: 2px solid var(--accent); background: var(--accent); color: var(--panel); }
+.tk.just .ic { animation: pop 420ms ease-out; }
+.toolkit.full { animation: fresh 700ms ease-out; }
+.hinttext { text-align: center; font-size: 14px; color: var(--accent); font-weight: 600; min-height: 0; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); z-index: 10; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 10px 16px; display: grid; gap: 1px; box-shadow: 0 10px 30px rgba(0,0,0,.25); animation: toast 3.2s ease forwards; max-width: calc(100vw - 32px); text-align: center; }
+.toast small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: .75; font-weight: 700; }
+.toast b { font-family: var(--font-display); font-size: 20px; }
+@keyframes toast { 0% { opacity: 0; transform: translate(-50%, 12px); } 10%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 0); } }
+.ach { display: grid; gap: 10px; }
+.ach .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.ach-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.badge { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 9px 11px; border-radius: 10px; border: 1px dashed var(--line); color: var(--muted); }
+.badge .mark { grid-row: 1 / span 2; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; border: 2px solid var(--line); font-variant-numeric: tabular-nums; }
+.badge b { font-size: 14px; }
+.badge span { font-size: 12.5px; }
+.badge.on { border: 1px solid color-mix(in srgb, var(--good) 45%, var(--line)); background: var(--good-soft); color: var(--ink); }
+.badge.on .mark { border-color: var(--good); background: var(--good); color: var(--panel); }
+.badge.wide { grid-column: 1 / -1; }
+.ach-group { grid-column: 1 / -1; margin: 10px 0 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.ach-group:first-child { margin-top: 0; }
+.ops { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; grid-column: 2; }
+.ops i { font-style: normal; font-size: 11.5px; font-weight: 600; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.ops i.on { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+
+.stuck { border-color: color-mix(in srgb, var(--bad) 50%, var(--line)); display: grid; gap: 10px; }
+.stuck h2 { margin: 0; font-family: var(--font-display); font-size: 22px; }
+.stuck p { margin: 0; color: var(--muted); }
+
+/* Ladder */
+.ladder { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 10px; padding: 16px 0 10px; max-height: calc(100vh - 40px); grid-template-rows: auto minmax(0, 1fr); }
+@media (max-width: 600px) { .ladder { position: static; max-height: none; } }
+.ladder .head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 16px; }
+.ladder .head h2 { margin: 0; font-family: var(--font-display); font-size: 21px; }
+.ladder .head span { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.rungs { list-style: none; margin: 0; padding: 0 8px 0 16px; overflow-y: auto; display: grid; align-content: start; }
+@media (max-width: 600px) { .rungs { max-height: 360px; } }
+@media (max-width: 760px) { .ladder .head { flex-wrap: wrap; } .ladder .head h2 { font-size: 18px; } .rung .w { font-size: 15px; } .rung { grid-template-columns: 20px minmax(0, 1fr) auto; } }
+.rung { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; padding: 7px 8px 7px 0; border-bottom: 1px solid var(--line); }
+.rung:last-child { border-bottom: 0; }
+.rung.latest { animation: pop 380ms ease-out; }
+.rung .n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rung .w { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.05em; text-transform: uppercase; overflow-wrap: anywhere; }
+.rung .op { font-size: 12px; color: var(--muted); grid-column: 2; }
+.rung .p { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; grid-row: 1; grid-column: 3; }
+.rung .op { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.chip { font-size: 11px; font-weight: 700; color: var(--good); background: var(--good-soft); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+.rung.latest .w { color: var(--accent); }
+.rung .chips { display: none; }
+.rung.start .w { color: var(--muted); }
+
+/* Stacked layout: history fades out above the word; bonuses take the right column. */
+.layout-stack .side { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.app.layout-stack { grid-template-columns: minmax(0, 1fr) clamp(250px, 33vw, 360px); }
+@media (max-width: 600px) { .app.layout-stack { grid-template-columns: minmax(0, 1fr); } }
+.layout-stack .side .bonus { flex-direction: column; align-items: flex-start; }
+.layout-stack .side .toolkit { flex-direction: column; align-items: flex-start; }
+.layout-stack .side .tk-icons { gap: 4px; }
+.layout-stack .side .tk { width: 46px; font-size: 9.5px; letter-spacing: 0.02em; }
+.layout-stack .side .ladder { position: static; max-height: none; display: block; padding: 12px 0 8px; }
+.layout-stack .ladder .head { padding: 0 16px 4px; }
+.layout-stack .ladder .head h2 { font-size: 12px; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+/* Shows the last 3 words; scroll up for the rest. Older rows fade toward the top. */
+.layout-stack .rungs { height: 105px; max-height: none; padding: 0 12px 0 16px; overscroll-behavior: contain;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); }
+.layout-stack .rungs:hover, .layout-stack .rungs:focus-within { -webkit-mask-image: none; mask-image: none; }
+.layout-stack .rung { grid-template-columns: 24px auto minmax(0, 1fr) auto; padding: 0 4px 0 0; height: 35px; border-bottom: 1px dashed var(--line); }
+.layout-stack .rung .chips { display: flex; gap: 4px; justify-content: flex-end; min-width: 0; grid-column: 3; grid-row: 1; }
+.layout-stack .rung .chips .chip { font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; }
+.layout-stack .rung .p { grid-column: 4; }
+.layout-stack .rung .op { display: none; }
+.layout-stack .rung .w { font-size: 17px; }
+.layout-stack .rung:not(.latest) { opacity: .6; }
+.layout-stack .ladder .more { padding: 4px 16px 0; font-size: 11.5px; color: var(--muted); }
+@media (max-width: 600px) { .layout-stack .side { position: static; } }
+
+.modal-back { position: fixed; inset: 0; z-index: 20; background: color-mix(in srgb, var(--ink) 45%, transparent); display: grid; place-items: center; padding: 16px; }
+.modal { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; width: min(440px, 100%); max-height: 100%; overflow-y: auto; padding: 22px; display: grid; gap: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+.modal h2 { margin: 0; font-family: var(--font-display); font-size: 26px; }
+.modal .sub { margin: -10px 0 0; color: var(--muted); font-size: 14px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-box { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; background: var(--bg); }
+.stat-box .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.stat-box .v { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stat-box.big .v { color: var(--accent); }
+.stat-box .v small { font-size: 14px; color: var(--muted); font-family: var(--font-body); font-weight: 600; }
+.modal .row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.modal .row .btn.primary { order: 3; }
+.modal .note { font-size: 13px; color: var(--good); font-weight: 600; min-height: 18px; margin: -6px 0 0; }
+.modal textarea { width: 100%; min-height: 90px; font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--bg); color: var(--ink); }
+
+details.rules { grid-column: 1 / -1; }
+details.rules summary { cursor: pointer; font-weight: 700; }
+.rules-body { display: grid; gap: 6px 28px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 12px; color: var(--muted); font-size: 14px; }
+.rules-body h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); }
+.rules-body ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.rules-body b { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Stepwise</h1>
+      <p>Change one thing at a time. Every step must be a new, real word.</p>
+      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn" aria-pressed="false">Dark mode</button></nav>
+    </div>
+    <div class="scores">
+      <div class="stat"><span class="k">Words</span><span class="v" id="s-words">0</span></div>
+      <div class="stat"><span class="k">Best</span><span class="v" id="s-best">0</span></div>
+      <div class="stat main"><span class="k">Score</span><span class="v" id="s-score">0</span></div>
+    </div>
+  </header>
+
+  <main class="play">
+
+    <section class="card board">
+      <div class="label">Current word</div>
+      <div class="word" id="word"></div>
+      <div class="hintrow" id="hint"></div>
+      <div class="preview" id="preview" aria-hidden="true"></div>
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+      <div class="hinttext" id="hinttext" aria-live="polite"></div>
+      <div class="bankrow">
+        <div class="label">Letter bank</div>
+        <div class="bank" id="bank"></div>
+      </div>
+    </section>
+
+    <section class="card stuck" id="stuck" hidden></section>
+
+    <div class="actions">
+      <div class="grp">
+        <button class="btn" id="undo" type="button">Undo last move</button>
+        <button class="btn" id="hintbtn" type="button">Hint</button>
+      </div>
+      <div class="grp">
+        <button class="btn" id="newgame" type="button">New game</button>
+      </div>
+    </div>
+
+    <section class="card powers">
+      <div class="label">Powers · one use each</div>
+      <div class="row" id="powers"></div>
+      <div id="picker" hidden></div>
+    </section>
+    <section class="card bonus" id="bonus" aria-live="polite"></section>
+    <section class="card toolkit" id="toolkit"></section>
+  </main>
+  <section class="card ach" id="ach-page" aria-label="Achievements">
+    <div class="head"><h2 style="margin:0;font-family:var(--font-display)">Achievements</h2><span class="label" id="ach-count"></span></div>
+    <p style="margin:0;color:var(--muted)">Unlocked achievements stay with you from game to game in this browser.</p>
+    <div class="ach-list" id="ach-list"></div>
+    <div><button type="button" class="btn primary" data-view="play">Back to the game</button></div>
+  </section>
+  <div id="toast-slot"></div>
+  <div id="modal-slot"></div>
+
+  <aside class="card ladder" aria-label="Word chain">
+    <div class="head"><h2>The ladder</h2><span id="ladder-count"></span></div>
+    <ol class="rungs" id="rungs" reversed></ol>
+  </aside>
+
+  <details class="card rules" id="rules">
+    <summary>How to play</summary>
+    <div class="rules-body">
+      <div>
+        <h3>Moves</h3>
+        <ul>
+          <li><b>Add.</b> Tap a bank letter, then a gap in the word. A new letter refills the bank.</li>
+          <li><b>Remove.</b> Tap a letter in the word, then Remove. It doesn't go back to the bank.</li>
+          <li><b>Shift.</b> Tap a letter in the word, then the gap you want it to move to.</li>
+          <li><b>Swap.</b> Tap a letter in the word, then another letter to trade places.</li>
+          <li><b>Replace.</b> Tap a letter in the word, then a bank letter to put in its place (or the other way round). A new letter refills the bank.</li>
+          <li>Each move must make a real word of 3+ letters that isn't already on the ladder.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Scoring</h3>
+        <ul>
+          <li>Each new word scores one point per letter.</li>
+          <li>A word whose meaning fits the active bonus category scores 15 more, and a new category appears.</li>
+          <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
+          <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
+          <li><b>Achievements</b> unlock for long words, long ladders, big scores, bonuses and using the whole alphabet, and stay unlocked across games. See them on the Achievements page.</li>
+          <li><b>Undo</b> takes back your last move, one step deep. Using a power resets it.</li>
+          <li>The game ends when no move is possible and no powers or undo can help.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Powers</h3>
+        <ul>
+          <li><b>Exchange.</b> Swap your whole bank for 6 new letters.</li>
+          <li><b>Choose a letter.</b> Pick any letter for your bank and discard one.</li>
+          <li><b>Backtrack.</b> Remove the last 5 words from the ladder and their points. Your bank stays as it is.</li>
+          <li>Bank letters are drawn with Scrabble tile frequencies. The bank always holds at least one vowel and one consonant, and never more than two of the same letter.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+// "side": ladder in its own column on the right. "stack": history faded above the word, bonuses on the right.
+const LAYOUT = /*__LAYOUT__*/"side";
+const DICT = new Set(DATA.words.split(" "));
+const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
+const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 15, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
+const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
+const BAG = Object.entries(FREQ).flatMap(([l, n]) => Array(n).fill(l));
+const isVowel = l => "aeiou".includes(l);
+const rand = n => Math.floor(Math.random() * n);
+const pick = arr => arr[rand(arr.length)];
+const draw = (pred = () => true) => pick(BAG.filter(pred));
+const UP = w => w.toUpperCase();
+
+const BONUSES = [
+  { id: "animal", name: "Animal", hint: "Any animal, like CAT, HORSE or BEETLE", test: w => CATS.animal.has(w) },
+  { id: "food", name: "Food or drink", hint: "Like PEAR, TOAST or CIDER", test: w => CATS.food.has(w) },
+  { id: "body", name: "Body part", hint: "Like KNEE, THUMB or SPINE", test: w => CATS.body.has(w) },
+  { id: "nature", name: "Outdoors", hint: "Plants, landscape or weather, like FERN, RIVER or STORM", test: w => CATS.nature.has(w) },
+  { id: "clothing", name: "Something you wear", hint: "Like SCARF, BOOT or RING", test: w => CATS.clothing.has(w) },
+  { id: "job", name: "Job or title", hint: "Like BAKER, PILOT or QUEEN", test: w => CATS.job.has(w) },
+  { id: "color", name: "Color", hint: "Like RED, TEAL or AMBER", test: w => CATS.color.has(w) },
+  { id: "home", name: "Around the house", hint: "Furniture and household things, like LAMP, SOFA or KETTLE", test: w => CATS.home.has(w) },
+  { id: "sport", name: "Sport or game", hint: "Like GOLF, CHESS or DARTS", test: w => CATS.sport.has(w) },
+  { id: "feeling", name: "Feeling", hint: "An emotion or mood, like JOY, ANGST or GLAD", test: w => CATS.feeling.has(w) },
+  { id: "transport", name: "Way to travel", hint: "Vehicles and craft, like TRAIN, CANOE or SLED", test: w => CATS.transport.has(w) },
+  { id: "tool", name: "Tool or weapon", hint: "Like SAW, RAKE or SPEAR", test: w => CATS.tool.has(w) },
+  { id: "music", name: "Music", hint: "Instruments, styles and song words, like HARP, TUNE or BLUES", test: w => CATS.music.has(w) },
+  { id: "place", name: "Place or building", hint: "Like BARN, CAFE or STREET", test: w => CATS.place.has(w) },
+];
+const BONUS = Object.fromEntries(BONUSES.map(b => [b.id, b]));
+
+const OPS = [
+  ["add", "Add", "Add a letter from your bank"],
+  ["remove", "Remove", "Remove a letter"],
+  ["shift", "Shift", "Move one letter to a new spot"],
+  ["swap", "Swap", "Swap two letters in the word"],
+  ["replace", "Replace", "Replace a letter with one from your bank"],
+];
+const OP_NAME = Object.fromEntries(OPS.map(o => [o[0], o[1]]));
+const OP_HINT = Object.fromEntries(OPS.map(o => [o[0], o[2]]));
+const OP_ICON = { add: "+", remove: "−", shift: "→", swap: "⇄", replace: "↻" };
+// Per-game counters, read from the current ladder (so undo and backtrack are reflected).
+const steps = () => G.chain.slice(1);
+const gameWords = () => G.chain.length - 1;
+const bonusesHit = () => steps().filter(c => c.bonus).length;
+const toolkitsHit = () => steps().filter(c => c.toolkit).length;
+const lettersUsed = () => new Set(G.chain.map(c => c.w).join(""));
+const lenAch = n => ({ id: `len${n}`, group: "Long words", mark: String(n), name: { 6: "Stretch", 7: "Lucky seven", 8: "Long haul", 9: "Nine lives", 10: "Double digits" }[n], desc: `Make a word of ${n}+ letters`, test: w => w.length >= n });
+const countAch = (id, group, mark, name, desc, goal, get) => ({ id, group, mark, name, desc, test: () => get() >= goal, progress: () => `${Math.min(get(), goal)}/${goal}` });
+const ACHIEVEMENTS = [
+  ...[6, 7, 8, 9, 10].map(lenAch),
+  countAch("chain10", "Long ladders", "10", "Ten steps", "Make 10 words in one game", 10, gameWords),
+  countAch("chain25", "Long ladders", "25", "Climber", "Make 25 words in one game", 25, gameWords),
+  countAch("chain50", "Long ladders", "50", "High rise", "Make 50 words in one game", 50, gameWords),
+  countAch("chain100", "Long ladders", "100", "Skyscraper", "Make 100 words in one game", 100, gameWords),
+  countAch("pts50", "Big scores", "50", "Half century", "Score 50 points in one game", 50, () => score()),
+  countAch("pts100", "Big scores", "100", "Century", "Score 100 points in one game", 100, () => score()),
+  countAch("pts250", "Big scores", "250", "Quarter grand", "Score 250 points in one game", 250, () => score()),
+  countAch("pts500", "Big scores", "500", "High scorer", "Score 500 points in one game", 500, () => score()),
+  countAch("pts1000", "Big scores", "1k", "Grand", "Score 1,000 points in one game", 1000, () => score()),
+  countAch("bonus3", "Bonuses", "3", "Category hat trick", "Hit 3 bonus categories in one game", 3, bonusesHit),
+  countAch("toolkit3", "Bonuses", "3", "Toolkit hat trick", "Earn the Toolkit bonus 3 times in one game", 3, toolkitsHit),
+  countAch("alphabet", "Bonuses", "A–Z", "Alphabet soup", "Use all 26 letters across the words in one game", 26, () => lettersUsed().size),
+];
+
+// ---------- word operations ----------
+const ins = (w, i, l) => w.slice(0, i) + l + w.slice(i);
+const del = (w, i) => w.slice(0, i) + w.slice(i + 1);
+const shiftTo = (w, from, gap) => ins(del(w, from), gap > from ? gap - 1 : gap, w[from]);
+const swap = (w, i, j) => { const a = [...w]; [a[i], a[j]] = [a[j], a[i]]; return a.join(""); };
+
+// ---------- state ----------
+let G;
+let ui = { sel: null, mode: null, chosen: null, msg: null, pop: false, freshBonus: false, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null };
+
+const cur = () => G.chain[G.chain.length - 1].w;
+const used = () => new Set(G.chain.map(c => c.w));
+const score = () => G.chain.reduce((s, c) => s + c.pts, 0);
+// Toolkit icons lit after the latest move; stored on each step so undo and backtrack restore it.
+const lit = () => G.chain[G.chain.length - 1].lit || [];
+
+const MAX_SAME = 2;
+// No letter may appear more than MAX_SAME times in the bank. Redraws the fresh
+// slots that break the rule, keeping each one a vowel or consonant as it was.
+function capRepeats(bank, fresh) {
+  const count = (l, skip) => bank.filter((x, j) => j !== skip && x === l).length;
+  for (const i of fresh) {
+    while (count(bank[i], i) >= MAX_SAME) {
+      const v = isVowel(bank[i]);
+      bank[i] = draw(l => isVowel(l) === v && count(l, i) < MAX_SAME);
+    }
+  }
+  return bank;
+}
+function balance(bank, fresh) {
+  if (!bank.some(isVowel)) bank[pick(fresh)] = draw(isVowel);
+  else if (bank.every(isVowel)) bank[pick(fresh)] = draw(l => !isVowel(l));
+  return capRepeats(bank, fresh);
+}
+function freshBank() { return balance(Array.from({ length: BANK_SIZE }, () => draw()), [...Array(BANK_SIZE).keys()]); }
+
+function shuffled(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function nextBonus() {
+  if (!G.deck.length) G.deck = shuffled(BONUSES.map(b => b.id).filter(id => id !== G.bonus));
+  return G.deck.pop();
+}
+
+function newGame() {
+  G = { chain: [{ w: pick(DATA.starts), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  G.bonus = nextBonus();
+  ui = { sel: null, mode: null, chosen: null, msg: null, pop: true, freshBonus: true, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null, view: ui.view };
+}
+
+function snapshot() { return { chain: G.chain.slice(), bank: G.bank.slice(), bonus: G.bonus, deck: G.deck.slice() }; }
+
+function check(nw) {
+  if (nw === cur()) return "That leaves the word unchanged.";
+  if (nw.length < MIN_LEN) return `Words need at least ${MIN_LEN} letters.`;
+  if (!DICT.has(nw)) return `${UP(nw)} isn't in the dictionary.`;
+  if (used().has(nw)) return `${UP(nw)} is already on the ladder.`;
+  return null;
+}
+
+function fail(text) { ui.msg = { text, kind: "bad" }; ui.shake = true; render(); }
+
+function commit(op, nw, detail, bankFn) {
+  const err = check(nw);
+  if (err) return fail(err);
+  const snap = snapshot();
+  const b = BONUS[G.bonus];
+  const hit = b.test(nw);
+  let nowLit = lit().includes(op) ? lit().slice() : lit().concat(op);
+  const toolkit = nowLit.length === OPS.length;
+  if (toolkit) nowLit = [];
+  const pts = nw.length + (hit ? BONUS_PTS : 0) + (toolkit ? TOOLKIT_PTS : 0);
+  if (bankFn) bankFn();
+  G.chain.push({ w: nw, op, detail, pts, bonus: hit ? b.name : null, toolkit, lit: nowLit });
+  if (hit) G.bonus = nextBonus();
+  G.undo = snap;
+  ui.sel = null; ui.pop = true; ui.freshBonus = hit; ui.justLit = toolkit ? "full" : op;
+  const extras = [hit && `the ${b.name} bonus`, toolkit && "the Toolkit bonus"].filter(Boolean);
+  ui.msg = { text: extras.length ? `${UP(nw)} +${pts}, including ${extras.join(" and ")}!` : `${UP(nw)} +${pts}`, kind: "good" };
+  ui.hint = null;
+  checkAchievements(nw);
+  render();
+}
+
+// Map of each reachable new word to the set of move types that reach it.
+function legalMoves() {
+  const w = cur(), n = w.length, u = used(), out = new Map();
+  const consider = (x, op) => {
+    if (x === w || x.length < MIN_LEN || u.has(x) || !DICT.has(x)) return;
+    if (!out.has(x)) out.set(x, new Set());
+    out.get(x).add(op);
+  };
+  for (const l of new Set(G.bank)) {
+    for (let i = 0; i <= n; i++) consider(ins(w, i, l), "add");
+    for (let i = 0; i < n; i++) consider(w.slice(0, i) + l + w.slice(i + 1), "replace");
+  }
+  for (let i = 0; i < n; i++) {
+    consider(del(w, i), "remove");
+    for (let g = 0; g <= n; g++) if (g !== i && g !== i + 1) consider(shiftTo(w, i, g), "shift");
+    for (let j = i + 1; j < n; j++) consider(swap(w, i, j), "swap");
+  }
+  return out;
+}
+
+// ---------- hints & achievements ----------
+function showHint() {
+  if (G.over) return;
+  const ops = new Set();
+  for (const s of legalMoves().values()) for (const op of s) ops.add(op);
+  const avail = OPS.map(o => o[0]).filter(op => ops.has(op));
+  if (!avail.length) { ui.hint = { text: "No move works from here. Undo your last move or use a power." }; return render(); }
+  const seen = ui.hint && ui.hint.seen ? ui.hint.seen : [];
+  let fresh = avail.filter(op => !seen.includes(op));
+  const cycle = !fresh.length;
+  if (cycle) fresh = avail;
+  const op = pick(fresh);
+  const nextSeen = cycle ? [op] : seen.concat(op);
+  const more = avail.length > 1 ? ` (${avail.length} kinds of move work here. Tap Hint for another.)` : " (It's the only kind of move that works here.)";
+  ui.hint = { text: `Hint: ${OP_HINT[op]}.${more}`, seen: nextSeen };
+  G.hints = (G.hints || 0) + 1;
+  render();
+}
+
+function loadAch() { try { return JSON.parse(localStorage.getItem(ACH)) || {}; } catch { return {}; } }
+function saveAch(a) { try { localStorage.setItem(ACH, JSON.stringify(a)); } catch {} }
+let ACH_MEM = null; // fallback when storage is unavailable
+function achState() { const a = loadAch(); return Object.keys(a).length ? a : (ACH_MEM || a); }
+function checkAchievements(nw) {
+  const have = achState(), unlocked = [];
+  for (const a of ACHIEVEMENTS) {
+    if (a.test(nw)) {
+      G.earned = G.earned || [];
+      if (!G.earned.includes(a.id)) G.earned.push(a.id);
+      if (!have[a.id]) { have[a.id] = new Date().toISOString().slice(0, 10); unlocked.push(a); }
+    }
+  }
+  if (unlocked.length) { saveAch(have); ACH_MEM = have; ui.toast = unlocked; }
+}
+
+// ---------- actions ----------
+function addLetter(bi, gap) {
+  const l = G.bank[bi];
+  commit("add", ins(cur(), gap, l), `added ${UP(l)}`, () => {
+    G.bank[bi] = draw();
+    balance(G.bank, [bi]);
+    ui.newBank = bi;
+  });
+}
+function removeLetter(i) { const w = cur(); commit("remove", del(w, i), `removed ${UP(w[i])}`); }
+function shiftLetter(i, gap) { const w = cur(); commit("shift", shiftTo(w, i, gap), `moved ${UP(w[i])}`); }
+function replaceLetter(ti, bi) {
+  const w = cur(), l = G.bank[bi];
+  commit("replace", w.slice(0, ti) + l + w.slice(ti + 1), `${UP(w[ti])} became ${UP(l)}`, () => {
+    G.bank[bi] = draw();
+    balance(G.bank, [bi]);
+    ui.newBank = bi;
+  });
+}
+function swapLetters(i, j) { const w = cur(); commit("swap", swap(w, i, j), `swapped ${UP(w[i])} and ${UP(w[j])}`); }
+
+function undo() {
+  if (!G.undo) return;
+  const last = cur();
+  Object.assign(G, G.undo);
+  G.undo = null; G.over = false;
+  ui.sel = null; ui.pop = true; ui.hint = null; ui.msg = { text: `Took back ${UP(last)}.`, kind: "info" };
+  render();
+}
+
+// Draw a new bank that gives at least one legal move, preferring one that
+// uses the new letters (Add or Replace). Falls back to any legal move.
+function playableBank() {
+  let fallback = null;
+  for (let tries = 0; tries < 300; tries++) {
+    G.bank = freshBank();
+    const ops = new Set();
+    for (const s of legalMoves().values()) for (const op of s) ops.add(op);
+    if (ops.has("add") || ops.has("replace")) return G.bank;
+    if (ops.size && !fallback) fallback = G.bank;
+  }
+  // Random draws missed: plant a letter that is known to make a word.
+  const helpful = [..."abcdefghijklmnopqrstuvwxyz"].filter(l => { G.bank = [l]; return legalMoves().size > 0; });
+  if (helpful.length) {
+    G.bank = freshBank();
+    const slot = rand(BANK_SIZE), l = pick(helpful);
+    G.bank[slot] = l;
+    // Keep the planted letter; move any third copy out of the other slots.
+    for (let j = 0; j < BANK_SIZE; j++) if (j !== slot && G.bank[j] === l && G.bank.filter(x => x === l).length > MAX_SAME) G.bank[j] = draw(x => x !== l && isVowel(x) === isVowel(l));
+    return G.bank;
+  }
+  return fallback || freshBank();
+}
+
+function usePower(p) {
+  if (!G.powers[p] || G.over) return;
+  ui.sel = null; ui.hint = null;
+  if (p === "exchange") {
+    G.bank = playableBank(); G.powers.exchange = false; G.undo = null;
+    ui.newBank = "all"; ui.msg = { text: "Fresh letters in your bank.", kind: "info" };
+  } else if (p === "choose") {
+    ui.mode = ui.mode ? null : "pick"; ui.chosen = null; ui.msg = null;
+  } else if (p === "backtrack") {
+    const n = Math.min(BACKTRACK_N, G.chain.length - 1);
+    if (!n) return;
+    const gone = G.chain.splice(-n);
+    G.powers.backtrack = false; G.undo = null;
+    ui.pop = true; ui.msg = { text: `Backtracked ${n} word${n > 1 ? "s" : ""} (${gone.reduce((s, c) => s + c.pts, 0)} points).`, kind: "info" };
+  }
+  render();
+}
+function chooseLetter(l) { ui.mode = "discard"; ui.chosen = l; render(); }
+function discardFor(bi) {
+  const old = G.bank[bi];
+  if (old !== ui.chosen && G.bank.filter(x => x === ui.chosen).length >= MAX_SAME) {
+    ui.msg = { text: `You already have two ${UP(ui.chosen)}s. Discard one of them, or cancel and pick another letter.`, kind: "bad" };
+    return render();
+  }
+  G.bank[bi] = ui.chosen; G.powers.choose = false; G.undo = null;
+  ui.newBank = bi; ui.msg = { text: `Swapped ${UP(old)} for ${UP(ui.chosen)}.`, kind: "info" };
+  ui.mode = null; ui.chosen = null; ui.hint = null;
+  render();
+}
+
+// ---------- rendering ----------
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+function gapTargetable(g) {
+  if (ui.mode || G.over || !ui.sel) return false;
+  if (ui.sel.k === "bank") return true;
+  return g !== ui.sel.i && g !== ui.sel.i + 1;
+}
+
+function render() {
+  const w = cur(), n = w.length;
+  const moves = G.over ? 0 : legalMoves().size;
+  if (!G.over && moves === 0) {
+    const canRecover = G.undo || G.powers.exchange || G.powers.choose || (G.powers.backtrack && G.chain.length > 1);
+    if (!canRecover) { G.over = true; ui.sel = null; ui.mode = null; }
+  }
+  const sel = ui.sel;
+
+  // scores
+  const sc = score();
+  const best = Math.max(loadBest(), sc);
+  saveBest(best);
+  $("s-score").textContent = sc;
+  $("s-words").textContent = G.chain.length - 1;
+  $("s-best").textContent = best;
+
+  // bonus
+  const b = BONUS[G.bonus];
+  const bonusEl = $("bonus");
+  bonusEl.innerHTML = `<div class="txt"><b>Category bonus · +${BONUS_PTS}</b><span>Play a word that fits this category.</span></div><div class="cat"><span class="name">${esc(b.name)}</span><span class="hint">${esc(b.hint)}</span></div>`;
+  bonusEl.classList.remove("fresh");
+  if (ui.freshBonus) { void bonusEl.offsetWidth; bonusEl.classList.add("fresh"); }
+
+  // toolkit
+  const L = lit(), tkEl = $("toolkit");
+  tkEl.innerHTML = `<div class="txt"><b>Toolkit bonus · +${TOOLKIT_PTS}</b><span>Use every type of move for a bonus. ${L.length}/${OPS.length} used.</span></div><div class="tk-icons">${OPS.map(([id, name]) =>
+    `<span class="tk${L.includes(id) ? " on" : ""}${ui.justLit === id ? " just" : ""}" title="${name}${L.includes(id) ? " (lit)" : ""}"><span class="ic" aria-hidden="true">${OP_ICON[id]}</span>${name}</span>`).join("")}</div>`;
+  tkEl.classList.remove("full");
+  if (ui.justLit === "full") { void tkEl.offsetWidth; tkEl.classList.add("full"); }
+
+  // pages
+  document.querySelector(".app").classList.toggle("view-ach", ui.view === "ach");
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", (ui.view || "play") === b.dataset.view ? "page" : "false"));
+
+  // word
+  const wordEl = $("word");
+  wordEl.style.setProperty("--n", n);
+  let h = "";
+  for (let i = 0; i <= n; i++) {
+    const t = gapTargetable(i);
+    h += `<button type="button" class="gap${t ? " target" : ""}" data-gap="${i}" ${t ? "" : 'tabindex="-1" aria-hidden="true"'} aria-label="Gap ${i + 1}"></button>`;
+    if (i < n) {
+      const isSel = sel && sel.k === "word" && sel.i === i;
+      const isSwap = sel && ((sel.k === "word" && sel.i !== i) || sel.k === "bank");
+      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}">${esc(w[i])}</button>`;
+    }
+  }
+  wordEl.innerHTML = h;
+  wordEl.classList.remove("shake");
+  if (ui.shake) { void wordEl.offsetWidth; wordEl.classList.add("shake"); }
+
+  // hint
+  let hint;
+  if (G.over) hint = "No moves left.";
+  else if (ui.mode === "pick") hint = "Choose a letter to add to your bank.";
+  else if (ui.mode === "discard") hint = `Tap a bank letter to discard for ${UP(ui.chosen)}.`;
+  else if (!sel) hint = "Tap a bank letter to add or swap it in, or a letter in the word to move, swap or remove it.";
+  else if (sel.k === "bank") hint = `Tap a gap to insert ${UP(G.bank[sel.i])}, or a letter in the word to replace it with ${UP(G.bank[sel.i])}.`;
+  else hint = `Tap a gap to move ${UP(w[sel.i])}, another letter to swap with it, a bank letter to replace it, or <button type="button" class="btn danger" id="remove">Remove ${UP(w[sel.i])}</button>`;
+  $("hint").innerHTML = `<span>${hint}</span>`;
+  $("preview").textContent = "";
+  $("hinttext").textContent = ui.hint ? ui.hint.text : "";
+  $("hintbtn").disabled = G.over || !!ui.mode;
+
+  const msg = $("msg");
+  msg.textContent = ui.msg ? ui.msg.text : "";
+  msg.className = "msg " + (ui.msg ? ui.msg.kind : "");
+
+  // bank
+  $("bank").innerHTML = G.bank.map((l, i) => {
+    const isSel = sel && sel.k === "bank" && sel.i === i;
+    const isNew = ui.newBank === "all" || ui.newBank === i;
+    const isTarget = sel && sel.k === "word";
+    return `<button type="button" class="tile${isSel ? " sel" : ""}${isTarget ? " swap" : ""}${ui.mode === "discard" ? " discard" : ""}${isNew ? " new" : ""}" data-bank="${i}" aria-pressed="${!!isSel}" aria-label="Bank letter ${UP(l)}">${esc(l)}</button>`;
+  }).join("");
+
+  // undo
+  const undoBtn = $("undo");
+  undoBtn.disabled = !G.undo;
+  undoBtn.textContent = G.undo ? `Undo ${UP(cur())}` : "Undo last move";
+  $("newgame").textContent = ui.confirmNew ? "Start over? Tap again" : "New game";
+  $("newgame").classList.toggle("danger", ui.confirmNew);
+
+  // powers
+  const back = Math.min(BACKTRACK_N, G.chain.length - 1);
+  const P = [
+    ["exchange", "Exchange letters", "Trade all 6 bank letters for new ones", G.powers.exchange],
+    ["choose", "Choose a letter", "Add any letter, discard one", G.powers.choose],
+    ["backtrack", "Backtrack", back ? `Remove the last ${back} word${back > 1 ? "s" : ""} from the ladder` : "Nothing to backtrack yet", G.powers.backtrack && back > 0],
+  ];
+  $("powers").innerHTML = P.map(([id, name, desc, ok]) =>
+    `<button type="button" class="power${ui.mode && id === "choose" ? " active" : ""}" data-power="${id}" ${ok && !G.over ? "" : "disabled"}><span class="state">${G.powers[id] ? "Ready" : "Used"}</span><b>${name}</b><span>${desc}</span></button>`).join("");
+  const picker = $("picker");
+  picker.hidden = !ui.mode;
+  if (ui.mode === "pick") {
+    picker.className = "picker";
+    picker.innerHTML = `<div class="bar"><b>Pick a letter</b><button type="button" class="btn" data-cancel>Cancel</button></div><div class="alpha">${"abcdefghijklmnopqrstuvwxyz".split("").map(l => `<button type="button" data-pickl="${l}" aria-label="${UP(l)}">${UP(l)}</button>`).join("")}</div>`;
+  } else if (ui.mode === "discard") {
+    picker.className = "picker";
+    picker.innerHTML = `<div class="bar"><span>Adding <b>${UP(ui.chosen)}</b>. Now tap a bank letter to discard.</span><button type="button" class="btn" data-cancel>Cancel</button></div>`;
+  }
+
+  // ladder
+  $("ladder-count").textContent = `${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"} · ${score()} pts`;
+  const rows = G.chain.map((c, i) => {
+    const latest = i === G.chain.length - 1 && i > 0;
+    const chips = (c.bonus ? ` <span class="chip" title="${esc(c.bonus)}">Category bonus</span>` : "") + (c.toolkit ? ` <span class="chip">Toolkit bonus</span>` : "");
+    return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}"><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${c.bonus && c.toolkit ? `<span class="chip" title="${esc(c.bonus)}">Category + Toolkit bonus</span>` : chips}</span></li>`;
+  });
+  const rungs = $("rungs");
+  if (LAYOUT === "stack") { rungs.innerHTML = rows.join(""); rungs.scrollTop = rungs.scrollHeight; }
+  else { rungs.innerHTML = rows.reverse().join(""); rungs.scrollTop = 0; }
+
+  // achievements
+  const have = achState();
+  const got = ACHIEVEMENTS.filter(a => have[a.id]).length;
+  $("ach-count").textContent = `${got} of ${ACHIEVEMENTS.length}`;
+  $("tab-ach").textContent = `Achievements ${got}/${ACHIEVEMENTS.length}`;
+  const groups = [...new Set(ACHIEVEMENTS.map(a => a.group))];
+  $("ach-list").innerHTML = groups.map(g => `<h3 class="ach-group">${g}</h3>` + ACHIEVEMENTS.filter(a => a.group === g).map(a => {
+    const on = !!have[a.id];
+    const extra = on ? ` · unlocked ${have[a.id]}` : a.progress ? ` · this game ${a.progress()}` : "";
+    return `<div class="badge${on ? " on" : ""}" title="${on ? `Unlocked ${have[a.id]}` : "Locked"}"><span class="mark">${on ? "✓" : a.mark}</span><b>${a.name}</b><span>${a.desc}${extra}</span></div>`;
+  }).join("")).join("");
+  if (ui.toast) {
+    $("toast-slot").innerHTML = `<div class="toast" role="status"><small>Achievement unlocked</small><b>${ui.toast.map(a => a.name).join(" · ")}</b></div>`;
+    ui.toast = null;
+  }
+
+  // stuck / game over
+  const stuck = $("stuck");
+  if (G.over) {
+    stuck.hidden = false;
+    stuck.innerHTML = `<h2>Game over: ${score()} points</h2><p>No legal moves from ${UP(w)}, and no powers left. Your ladder reached ${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"}.${(G.earned || []).length ? ` Achievements reached this game: ${ACHIEVEMENTS.filter(a => G.earned.includes(a.id)).map(a => a.name).join(", ")}.` : ""}</p><div><button type="button" class="btn primary" data-restart>Play again</button></div>`;
+  } else if (moves === 0) {
+    stuck.hidden = false;
+    stuck.innerHTML = `<h2>You're stuck</h2><p>No legal move from ${UP(w)} with these letters. Undo your last move or use a power.</p>`;
+  } else stuck.hidden = true;
+
+  ui.pop = false; ui.freshBonus = false; ui.justLit = null; ui.newBank = -1; ui.shake = false;
+  save();
+}
+
+// preview on hover
+function previewFor(el) {
+  const w = cur(), sel = ui.sel;
+  if (!sel || ui.mode || G.over) return "";
+  if (el.dataset.gap != null && el.classList.contains("target")) {
+    const g = +el.dataset.gap;
+    return sel.k === "bank" ? ins(w, g, G.bank[sel.i]) : shiftTo(w, sel.i, g);
+  }
+  if (el.dataset.tile != null && sel.k === "word" && +el.dataset.tile !== sel.i) return swap(w, sel.i, +el.dataset.tile);
+  if (el.dataset.tile != null && sel.k === "bank") { const i = +el.dataset.tile; return w.slice(0, i) + G.bank[sel.i] + w.slice(i + 1); }
+  if (el.dataset.bank != null && sel.k === "word") { const i = sel.i; return w.slice(0, i) + G.bank[+el.dataset.bank] + w.slice(i + 1); }
+  if (el.id === "remove") return del(w, sel.i);
+  return "";
+}
+document.addEventListener("pointerover", e => {
+  const el = e.target.closest("[data-gap],[data-tile],[data-bank],#remove");
+  const p = $("preview");
+  if (!p) return;
+  const r = el ? previewFor(el) : "";
+  p.textContent = r ? `→ ${r}` : "";
+});
+
+// ---------- input ----------
+document.addEventListener("click", e => {
+  if ($("modal-slot").firstChild) {
+    // While the summary is open, only its own buttons act; tapping the backdrop closes it (unless the game is over).
+    if (e.target.hasAttribute && e.target.hasAttribute("data-modal-back") && !G.over) return closeSummary();
+    if (!e.target.closest(".modal")) return;
+  }
+  const t = e.target.closest("button");
+  if (!t) {
+    // Tapping anywhere off the buttons drops the current selection.
+    if (ui.sel && !e.target.closest("summary, a, details[open] .rules-body")) { ui.sel = null; render(); }
+    return;
+  }
+  if (t.id === "theme-btn") return setTheme(isDark() ? "light" : "dark");
+  if (t.dataset.view) { ui.view = t.dataset.view; ui.sel = null; render(); return window.scrollTo(0, 0); }
+  if (t.id === "hintbtn") return showHint();
+  if (t.id !== "newgame" && ui.confirmNew) { ui.confirmNew = false; }
+  if (t.id === "newgame") {
+    if (G.chain.length <= 1) { newGame(); ui.msg = { text: "New game. Good luck!", kind: "info" }; }
+    else { openSummary(); return; }
+    return render();
+  }
+  if (t.hasAttribute("data-restart")) { openSummary(); return; }
+  if (t.hasAttribute("data-share")) return shareSummary();
+  if (t.hasAttribute("data-close")) return closeSummary();
+  if (t.hasAttribute("data-confirm-new")) { closeSummary(); newGame(); ui.msg = { text: "New game. Good luck!", kind: "info" }; return render(); }
+  if (t.id === "undo") return undo();
+  if (t.id === "remove") return removeLetter(ui.sel.i);
+  if (t.dataset.power) return usePower(t.dataset.power);
+  if (t.hasAttribute("data-cancel")) { ui.mode = null; ui.chosen = null; return render(); }
+  if (t.dataset.pickl) return chooseLetter(t.dataset.pickl);
+  if (G.over) return;
+  if (t.dataset.bank != null) {
+    const i = +t.dataset.bank;
+    if (ui.mode === "discard") return discardFor(i);
+    if (ui.mode) return;
+    if (ui.sel && ui.sel.k === "word") return replaceLetter(ui.sel.i, i);
+    ui.sel = ui.sel && ui.sel.k === "bank" && ui.sel.i === i ? null : { k: "bank", i };
+    ui.msg = null;
+    return render();
+  }
+  if (ui.mode) return;
+  if (t.dataset.gap != null && ui.sel) {
+    const g = +t.dataset.gap;
+    if (!gapTargetable(g)) return;
+    return ui.sel.k === "bank" ? addLetter(ui.sel.i, g) : shiftLetter(ui.sel.i, g);
+  }
+  if (t.dataset.tile != null) {
+    const i = +t.dataset.tile;
+    if (ui.sel && ui.sel.k === "word" && ui.sel.i !== i) return swapLetters(ui.sel.i, i);
+    if (ui.sel && ui.sel.k === "bank") return replaceLetter(i, ui.sel.i);
+    ui.sel = ui.sel && ui.sel.k === "word" && ui.sel.i === i ? null : { k: "word", i };
+    ui.msg = null;
+    return render();
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && $("modal-slot").firstChild) { if (!G.over) closeSummary(); return; }
+  if (e.key === "Escape") { ui.sel = null; ui.mode = null; ui.chosen = null; render(); }
+  else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
+  else if ((e.key === "Delete" || e.key === "Backspace") && ui.sel && ui.sel.k === "word" && !G.over) { e.preventDefault(); removeLetter(ui.sel.i); }
+});
+
+// ---------- end-of-game summary ----------
+function gameStats() {
+  const words = G.chain.slice(1).map(c => c.w);
+  const longest = words.reduce((a, w) => (w.length > a.length ? w : a), "");
+  const avg = words.length ? words.reduce((s, w) => s + w.length, 0) / words.length : 0;
+  return { points: score(), words: words.length, avg, longest, start: G.chain[0].w };
+}
+function shareText(st) {
+  return `Stepwise: ${st.points} points from ${UP(st.start)}\n${st.words} words · avg ${st.avg.toFixed(1)} letters · longest ${UP(st.longest)} (${st.longest.length})`;
+}
+function openSummary() {
+  const st = gameStats();
+  ui.sel = null; ui.mode = null;
+  $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sum-title">
+    <h2 id="sum-title">${G.over ? "Game over" : "Your game"}</h2>
+    <p class="sub">Started from ${UP(st.start)}</p>
+    <div class="stats">
+      <div class="stat-box big"><span class="k">Points</span><span class="v">${st.points}</span></div>
+      <div class="stat-box"><span class="k">Words</span><span class="v">${st.words}</span></div>
+      <div class="stat-box"><span class="k">Average length</span><span class="v">${st.avg.toFixed(1)} <small>letters</small></span></div>
+      <div class="stat-box"><span class="k">Longest word</span><span class="v">${UP(st.longest)} <small>${st.longest.length}</small></span></div>
+    </div>
+    <p class="note" id="share-note" aria-live="polite"></p>
+    <div class="row">
+      ${G.over ? "" : `<button type="button" class="btn" data-close>Keep playing</button>`}
+      <button type="button" class="btn" data-share>Share</button>
+      <button type="button" class="btn primary" data-confirm-new>Start new game</button>
+    </div>
+  </div></div>`;
+  const first = $("modal-slot").querySelector("[data-share]");
+  first && first.focus();
+}
+function closeSummary() { $("modal-slot").innerHTML = ""; }
+async function shareSummary() {
+  const text = shareText(gameStats()), note = $("share-note");
+  try {
+    if (navigator.share) { await navigator.share({ title: "Stepwise", text }); note.textContent = "Shared."; return; }
+  } catch (e) { if (e && e.name === "AbortError") return; }
+  try { await navigator.clipboard.writeText(text); note.textContent = "Results copied. Paste them anywhere to share."; }
+  catch {
+    note.textContent = "Copy your results below.";
+    if (!$("share-box")) note.insertAdjacentHTML("afterend", `<textarea id="share-box" readonly></textarea>`);
+    const box = $("share-box"); box.value = text; box.focus(); box.select();
+  }
+}
+
+// ---------- theme ----------
+const THEME = "morph-ladder:theme";
+const isDark = () => {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+};
+function paintThemeBtn() {
+  const b = $("theme-btn"), dark = isDark();
+  b.textContent = dark ? "Light mode" : "Dark mode";
+  b.setAttribute("aria-pressed", String(dark));
+}
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem(THEME, t); } catch {}
+  paintThemeBtn();
+}
+(() => {
+  let saved = null;
+  try { saved = localStorage.getItem(THEME); } catch {}
+  // Dark is the default; a saved choice wins.
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  paintThemeBtn();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeBtn);
+})();
+
+// ---------- persistence ----------
+const KEY = "morph-ladder:game", BEST = "morph-ladder:best", ACH = "morph-ladder:achievements";
+function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {} }
+function loadBest() { try { return +localStorage.getItem(BEST) || 0; } catch { return 0; } }
+function saveBest(v) { try { localStorage.setItem(BEST, String(v)); } catch {} }
+function valid(g) { return g && Array.isArray(g.chain) && g.chain.length && Array.isArray(g.bank) && g.bank.length === BANK_SIZE && BONUS[g.bonus] && g.powers; }
+
+function applyLayout() {
+  if (LAYOUT !== "stack") return;
+  const app = document.querySelector(".app");
+  app.classList.add("layout-stack");
+  const side = document.createElement("aside");
+  side.className = "side";
+  side.setAttribute("aria-label", "Bonuses");
+  side.append($("bonus"), $("toolkit"));
+  const ladder = document.querySelector(".ladder");
+  ladder.querySelector("h2").textContent = "Recent words";
+  ladder.querySelector("ol").removeAttribute("reversed");
+  ladder.insertAdjacentHTML("beforeend", `<div class="more">Scroll up to see your whole ladder.</div>`);
+  side.prepend(ladder);
+  app.insertBefore(side, $("ach-page"));
+}
+
+function boot(data) {
+  applyLayout();
+  let g = data && data.game;
+  if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
+  if (valid(g)) { G = g; G.deck = (G.deck || []).filter(id => BONUS[id]); ui.pop = true; }
+  else newGame();
+  render();
+}
+window.claude?.hot?.snapshot?.(() => ({ game: G }));
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+</script>
