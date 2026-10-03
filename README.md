@@ -10,7 +10,7 @@ Start from a common 4-letter word with a bank of 6 letters. Each move must make 
 - **Swap** two letters
 - **Replace** a letter with one from the bank (the bank refills)
 
-Each word scores the value of its letters, from 1 for common letters like A and E up to 5 for J, Q, X and Z, and letters from the starting word are worth 0. A word that fits the current **category bonus** (Animal, Color, Music, …) scores +15, and using all five kinds of move lights up the **Toolkit bonus** for +10. Three one-time powers (Exchange letters, Choose a letter, Backtrack), a one-step undo, hints and 17 achievements round it out.
+Each word scores the value of its letters, from 1 for common letters like A and E up to 5 for J, Q, X and Z, and letters from the starting word are worth 0. A word that fits the current **category bonus** (Animal, Color, Music, …) scores +20, and using all five kinds of move lights up the **Toolkit bonus** for +10. Three one-time powers (Exchange letters, Choose a letter, Backtrack), a one-step undo, hints and 17 achievements round it out.
 
 ## Play
 

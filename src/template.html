@@ -10,11 +10,11 @@
   --ink: #17202B;
   --muted: #5B6672;
   --line: #CAD2DA;
-  --tile: #FFFCF4;
-  --tile-edge: #B8AF9B;
+  --tile: #F4CF7A;
+  --tile-edge: #BE8B22;
   --tile-ink: #1C2430;
-  --bank: #F4CF7A;
-  --bank-edge: #BE8B22;
+  --bank: #FFFCF4;
+  --bank-edge: #B8AF9B;
   --accent: #2D4BD2;
   --accent-soft: #DCE2FB;
   --good: #1D7F54;
@@ -26,8 +26,8 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
-    --tile: #F0E9DA; --tile-edge: #8B8270; --tile-ink: #1C2430;
-    --bank: #E6B64C; --bank-edge: #93701F;
+    --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430;
+    --bank: #F0E9DA; --bank-edge: #8B8270;
     --accent: #8197FF; --accent-soft: #232D52;
     --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
     color-scheme: dark;
@@ -35,8 +35,8 @@
 }
 :root[data-theme="dark"] {
   --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
-  --tile: #F0E9DA; --tile-edge: #8B8270; --tile-ink: #1C2430;
-  --bank: #E6B64C; --bank-edge: #93701F;
+  --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430;
+  --bank: #F0E9DA; --bank-edge: #8B8270;
   --accent: #8197FF; --accent-soft: #232D52;
   --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
   color-scheme: dark;
@@ -64,7 +64,7 @@ nav.tabs .theme-btn { margin-left: 6px; }
 nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
-.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 42px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -101,16 +101,17 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 }
 .tile { position: relative; }
 /* Letter value in the tile's bottom-right corner. */
-.tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: max(10px, 0.4em); font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
-.tile.start-letter .pv { opacity: .5; }
+.tile .pv { position: absolute; right: 8%; bottom: 9%; font-family: var(--font-body); font-size: 0.4em; font-weight: 700; line-height: 1; opacity: .85; pointer-events: none; }
 .tile:hover { transform: translateY(-2px); }
 .tile.sel { transform: translateY(-6px); box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .tile.swap { box-shadow: inset 0 -4px 0 var(--tile-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
 .tile.pop { animation: pop 380ms ease-out backwards; animation-delay: calc(var(--i) * 30ms); }
 @keyframes pop { 0% { transform: translateY(8px) scale(.9); opacity: .2; } 100% { transform: none; opacity: 1; } }
-.gap { flex: 0 1 6px; min-width: 0; border: 0; background: none; padding: 0; position: relative; pointer-events: none; transition: flex-basis 140ms ease; }
-.gap.target { flex: 0 6 22px; min-width: 6px; align-self: stretch; pointer-events: auto; cursor: pointer; }
-.gap.target::after { content: ""; position: absolute; left: 50%; top: 10%; bottom: 10%; width: 4px; margin-left: -2px; border-radius: 2px; background: color-mix(in srgb, var(--accent) 35%, transparent); transition: background 120ms, width 120ms, margin 120ms; }
+/* Gaps always show between letters; they only take taps when a move can use them. */
+.gap { flex: 0 6 22px; min-width: 4px; align-self: stretch; border: 0; background: none; padding: 0; position: relative; pointer-events: none; }
+.gap::after { content: ""; position: absolute; left: 50%; top: 10%; bottom: 10%; width: 4px; margin-left: -2px; border-radius: 2px; background: color-mix(in srgb, var(--muted) 18%, transparent); transition: background 120ms, width 120ms, margin 120ms; }
+.gap.target { pointer-events: auto; cursor: pointer; }
+.gap.target::after { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 .gap.target:hover::after, .gap.target:focus-visible::after { background: var(--accent); width: 6px; margin-left: -3px; }
 .word.shake { animation: shake 360ms ease; }
 @keyframes shake { 0%,100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
@@ -154,7 +155,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .power.active { border-color: var(--accent); background: var(--accent-soft); }
 .picker { display: grid; gap: 10px; padding: 12px; border-radius: 11px; background: var(--accent-soft); }
 .alpha { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
-.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--tile); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--tile-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
+.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--bank); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--bank-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
 .alpha button:hover { outline: 2px solid var(--accent); }
 .picker .bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
 
@@ -347,8 +348,8 @@ details.rules summary { cursor: pointer; font-weight: 700; }
         <h3>Scoring</h3>
         <ul>
           <li>Each new word scores the value of its letters, shown in each tile's corner: 1 for A E I L N O R S T U, 2 for D G, 3 for B C M P, 4 for F H K V W Y and 5 for J Q X Z.</li>
-          <li>Letters from the starting word are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
-          <li>A word whose meaning fits the active bonus category scores 15 more, and a new category appears.</li>
+          <li>Letters from the starting word have no number and are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
+          <li>A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
           <li><b>Achievements</b> unlock for long words, long ladders, big scores, bonuses and using the whole alphabet, and stay unlocked across games. See them on the Achievements page.</li>
@@ -375,7 +376,7 @@ const DATA = /*__DATA__*/null;
 const LAYOUT = /*__LAYOUT__*/"side";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
-const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 15, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
+const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
 const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
 // Letter values, 1 (common) to 5 (hard to use). Scrabble values squeezed into 1-5.
 const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorstu", 2: "dg", 3: "bcmp", 4: "fhkvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
@@ -722,7 +723,7 @@ function render() {
       const isSel = sel && sel.k === "word" && sel.i === i;
       const isSwap = sel && ((sel.k === "word" && sel.i !== i) || sel.k === "bank");
       const v = tileValue(w[i], m[i]);
-      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}${m[i] === "s" ? " start-letter" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}, worth ${v}">${esc(w[i])}<span class="pv" aria-hidden="true">${v}</span></button>`;
+      h += `<button type="button" class="tile${isSel ? " sel" : ""}${isSwap ? " swap" : ""}${ui.pop ? " pop" : ""}${m[i] === "s" ? " start-letter" : ""}" style="--i:${i}" data-tile="${i}" aria-pressed="${!!isSel}" aria-label="Letter ${UP(w[i])}${m[i] === "s" ? ", from the starting word, worth 0" : `, worth ${v}`}">${esc(w[i])}${m[i] === "s" ? "" : `<span class="pv" aria-hidden="true">${v}</span>`}</button>`;
     }
   }
   wordEl.innerHTML = h;
