@@ -33,7 +33,7 @@ python3 src/build.py
 
 - `src/template.html` holds the layout, styles and all game logic.
 - `src/build.py` holds the bonus-category word lists and embeds the dictionary, start words and categories into `index.html` and `classic.html`.
-- `src/data/enable1.txt` is the ENABLE word list (public domain), used to check words.
+- `src/data/words.txt` is the dictionary the game checks words against: everyday words only, in the spirit of the NYT Spelling Bee (about 57,000 words). It is cut from `src/data/enable1.txt` (the ENABLE word list, public domain) by `src/data/make_words.py`, which keeps words that are also in SCOWL's common-English lists and used often enough in real text (via `wordfreq`), and drops offensive words. Bonus-category words always count.
 - `src/data/google-10000-english-usa-no-swears.txt` comes from [first20hours/google-10000-english](https://github.com/first20hours/google-10000-english) and is used to pick common starting words.
 
 Commit the rebuilt `index.html` and `classic.html` along with your source changes, since those are the files the host serves.
