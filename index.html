@@ -154,6 +154,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .board .label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .board .mode-line { font-size: 12.5px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
 .board .mode-line b { color: var(--ink); }
+.board .mode-line .low { color: var(--bad); font-weight: 800; }
 .modes { display: grid; gap: 8px; }
 .mode-opt { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 .mode-opt b { font-size: 16px; }
@@ -296,7 +297,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   --tile: #E3915F; --tile-edge: #9E5532; --tile-ink: #24150C;
   --bank: #F3EED9; --bank-edge: #ADA484; --bank-ink: #1C2A1F;
   --accent: #F0AE7A; --accent-soft: #3A3A2A;
-  --good: #A8DA82; --good-soft: #294026; --bad: #F4907A;
+  --good: #A8DA82; --good-soft: #294026; --bad: #FF6A5C;
   --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
   color-scheme: dark;
 }
@@ -799,7 +800,7 @@ function render() {
   $("hint-dots").title = `${hl} of ${HINT_LIMIT} hints left`;
   $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
   $("mode-line").innerHTML = G.mode === "classic"
-    ? `<b>Classic</b> · ${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left`
+    ? `<b>Classic</b> · <span class="steps${stepsLeft() <= 5 ? " low" : ""}">${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left</span>`
     : `<b>Free play</b>`;
 
   const msg = $("msg");
