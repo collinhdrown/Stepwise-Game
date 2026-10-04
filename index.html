@@ -168,7 +168,6 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .modal h3 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .ach-won { display: flex; flex-wrap: wrap; gap: 6px; }
 .ach-won span { font-size: 13px; font-weight: 600; border: 1px solid color-mix(in srgb, var(--good) 45%, var(--line)); background: var(--good-soft); border-radius: 999px; padding: 2px 10px; }
-.ach-won em { font-style: normal; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--good); margin-left: 4px; }
 
 /* Powers */
 .powers { display: grid; gap: 10px; }
@@ -969,8 +968,7 @@ function openSummary() {
   const st = gameStats();
   ui.sel = null; ui.mode = null;
   const fresh = st.words === 0 && !G.over;
-  const earned = ACHIEVEMENTS.filter(a => (G.earned || []).includes(a.id));
-  const isNew = id => (G.newAch || []).includes(id);
+  const earned = ACHIEVEMENTS.filter(a => (G.newAch || []).includes(a.id));
   const modeBtns = Object.entries(MODES).map(([id, m]) =>
     `<button type="button" class="mode-opt${id === G.mode ? " current" : ""}" data-new-mode="${id}"><b>${m.name}</b><span>${m.desc}</span></button>`).join("");
   $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sum-title">
@@ -982,7 +980,7 @@ function openSummary() {
       <div class="stat-box"><span class="k">Average length</span><span class="v">${st.avg.toFixed(1)} <small>letters</small></span></div>
       <div class="stat-box"><span class="k">Longest word</span><span class="v">${UP(st.longest)} <small>${st.longest.length}</small></span></div>
     </div>
-    ${earned.length ? `<h3>Achievements this game</h3><div class="ach-won">${earned.map(a => `<span>${a.name}${isNew(a.id) ? "<em>New</em>" : ""}</span>`).join("")}</div>` : ""}
+    ${earned.length ? `<h3>New achievements</h3><div class="ach-won">${earned.map(a => `<span>${a.name}</span>`).join("")}</div>` : ""}
     <p class="note" id="share-note" aria-live="polite"></p>`}
     <h3>Start a new game</h3>
     <div class="modes">${modeBtns}</div>
