@@ -139,7 +139,24 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
 .btn.primary:hover:not(:disabled) { color: var(--panel); filter: brightness(1.08); }
 .actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
-.actions .grp { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions .grp { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+/* Hints left: glowing dots beside the Hint button that go dark as hints are used. */
+.hint-dots { display: inline-flex; gap: 5px; align-items: center; padding: 0 2px; }
+.hint-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px 1px color-mix(in srgb, var(--accent) 70%, transparent); transition: background 200ms, box-shadow 200ms; }
+.hint-dots i.off { background: var(--line); box-shadow: none; }
+.board .label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.board .mode-line { font-size: 12.5px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.board .mode-line b { color: var(--ink); }
+.modes { display: grid; gap: 8px; }
+.mode-opt { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
+.mode-opt b { font-size: 16px; }
+.mode-opt span { font-size: 13px; color: var(--muted); }
+.mode-opt:hover, .mode-opt:focus-visible { border-color: var(--accent); }
+.mode-opt.current { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); background: var(--accent-soft); }
+.modal h3 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.ach-won { display: flex; flex-wrap: wrap; gap: 6px; }
+.ach-won span { font-size: 13px; font-weight: 600; border: 1px solid color-mix(in srgb, var(--good) 45%, var(--line)); background: var(--good-soft); border-radius: 999px; padding: 2px 10px; }
+.ach-won em { font-style: normal; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--good); margin-left: 4px; }
 
 /* Powers */
 .powers { display: grid; gap: 10px; }
@@ -218,18 +235,19 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .rung.start .w { color: var(--muted); }
 
 /* Stacked layout: history fades out above the word; bonuses take the right column. */
-.layout-stack .side { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.layout-stack .side { display: grid; gap: 16px; align-self: stretch; grid-template-rows: minmax(0, 1fr) auto auto; }
 .app.layout-stack { grid-template-columns: minmax(0, 1fr) clamp(250px, 33vw, 360px); }
 @media (max-width: 600px) { .app.layout-stack { grid-template-columns: minmax(0, 1fr); } }
 .layout-stack .side .bonus { flex-direction: column; align-items: flex-start; }
 .layout-stack .side .toolkit { flex-direction: column; align-items: flex-start; }
 .layout-stack .side .tk-icons { gap: 4px; }
 .layout-stack .side .tk { width: 46px; font-size: 9.5px; letter-spacing: 0.02em; }
-.layout-stack .side .ladder { position: static; max-height: none; display: block; padding: 12px 0 8px; }
+.layout-stack .side .ladder { position: static; max-height: none; display: grid; grid-template-rows: auto minmax(105px, 1fr) auto; gap: 0; padding: 12px 0 8px; }
 .layout-stack .ladder .head { padding: 0 16px 4px; }
 .layout-stack .ladder .head h2 { font-size: 12px; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 /* Shows the last 3 words; scroll up for the rest. Older rows fade toward the top. */
-.layout-stack .rungs { height: 105px; max-height: none; padding: 0 12px 0 16px; overscroll-behavior: contain;
+/* contain: size keeps a long ladder from stretching the column; the list fills whatever height is left. */
+.layout-stack .rungs { contain: size; min-height: 105px; max-height: none; padding: 0 12px 0 16px; overscroll-behavior: contain;
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); }
 .layout-stack .rungs:hover, .layout-stack .rungs:focus-within { -webkit-mask-image: none; mask-image: none; }
 .layout-stack .rung { grid-template-columns: 24px auto minmax(0, 1fr) auto; padding: 0 4px 0 0; height: 35px; border-bottom: 1px dashed var(--line); }
@@ -240,7 +258,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .layout-stack .rung .w { font-size: 17px; }
 .layout-stack .rung:not(.latest) { opacity: .6; }
 .layout-stack .ladder .more { padding: 4px 16px 0; font-size: 11.5px; color: var(--muted); }
-@media (max-width: 600px) { .layout-stack .side { position: static; } }
+@media (max-width: 600px) { .layout-stack .side { grid-template-rows: none; } .layout-stack .rungs { contain: none; height: 105px; } }
 
 .modal-back { position: fixed; inset: 0; z-index: 20; background: color-mix(in srgb, var(--ink) 45%, transparent); display: grid; place-items: center; padding: 16px; }
 .modal { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; width: min(440px, 100%); max-height: 100%; overflow-y: auto; padding: 22px; display: grid; gap: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
@@ -271,7 +289,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   <header class="top">
     <div class="brand">
       <h1>Stepwise</h1>
-      <p>Change one thing at a time. Every step must be a new, real word.</p>
+      <p>Create new words, one step at a time.</p>
       <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn" aria-pressed="false">Dark mode</button></nav>
     </div>
     <div class="scores">
@@ -284,7 +302,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   <main class="play">
 
     <section class="card board">
-      <div class="label">Current word</div>
+      <div class="label-row"><div class="label">Current word</div><span class="mode-line" id="mode-line"></span></div>
       <div class="word" id="word"></div>
       <div class="hintrow" id="hint"></div>
       <div class="preview" id="preview" aria-hidden="true"></div>
@@ -302,6 +320,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
       <div class="grp">
         <button class="btn" id="undo" type="button">Undo last move</button>
         <button class="btn" id="hintbtn" type="button">Hint</button>
+        <span class="hint-dots" id="hint-dots"></span>
       </div>
       <div class="grp">
         <button class="btn" id="newgame" type="button">New game</button>
@@ -309,7 +328,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
     </div>
 
     <section class="card powers">
-      <div class="label">Powers · one use each</div>
+      <div class="label">One use per game</div>
       <div class="row" id="powers"></div>
       <div id="picker" hidden></div>
     </section>
@@ -336,6 +355,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
       <div>
         <h3>Moves</h3>
         <ul>
+          <li>Create a new word from the current word by manipulating its letters or adding letters from the bank.</li>
           <li><b>Add.</b> Tap a bank letter, then a gap in the word. A new letter refills the bank.</li>
           <li><b>Remove.</b> Tap a letter in the word, then Remove. It doesn't go back to the bank.</li>
           <li><b>Shift.</b> Tap a letter in the word, then the gap you want it to move to.</li>
@@ -347,23 +367,11 @@ details.rules summary { cursor: pointer; font-weight: 700; }
       <div>
         <h3>Scoring</h3>
         <ul>
-          <li>Each new word scores the value of its letters, shown in each tile's corner: 1 for A E I L N O R S T U, 2 for D G, 3 for B C M P, 4 for F H K V W Y and 5 for J Q X Z.</li>
-          <li>Letters from the starting word have no number and are worth 0 wherever they move. Letters you bring in from the bank keep their value.</li>
-          <li>A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
-          <li><b>Hint</b> names one kind of move that makes a new word from here. Tap again for another kind.</li>
+          <li>Word scores are determined by their letter values, creating longer words and using rarer letters will net you more points.</li>
+          <li><b>Category bonus.</b> A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
-          <li><b>Achievements</b> unlock for long words, long ladders, big scores, bonuses and using the whole alphabet, and stay unlocked across games. See them on the Achievements page.</li>
-          <li><b>Undo</b> takes back your last move, one step deep. Using a power resets it.</li>
-          <li>The game ends when no move is possible and no powers or undo can help.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Powers</h3>
-        <ul>
-          <li><b>Exchange.</b> Swap your whole bank for 6 new letters.</li>
-          <li><b>Choose a letter.</b> Pick any letter for your bank and discard one.</li>
-          <li><b>Backtrack.</b> Remove the last 5 words from the ladder and their points. Your bank stays as it is.</li>
-          <li>Bank letters are drawn with Scrabble tile frequencies. The bank always holds at least one vowel and one consonant, and never more than two of the same letter.</li>
+          <li><b>Long word bonus.</b> A 6-letter word scores 6 more and a 7-letter word 7 more. Longer words score their length.</li>
+          <li><b>Classic</b> ends after 50 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
         </ul>
       </div>
     </div>
@@ -377,6 +385,13 @@ const LAYOUT = /*__LAYOUT__*/"side";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
 const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
+const STEP_LIMIT = 50, HINT_LIMIT = 3;
+const MODES = {
+  classic: { name: "Classic", desc: "Rack up as many points as you can in 50 steps." },
+  free: { name: "Free play", desc: "Keep playing until you run out of legal moves." },
+};
+// Words of 6+ letters score their length on top (6 for 6 letters, 7 for 7, and so on).
+const lengthBonus = n => n >= 6 ? n : 0;
 const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
 // Letter values, 1 (common) to 5 (hard to use). Scrabble values squeezed into 1-5.
 const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorstu", 2: "dg", 3: "bcmp", 4: "fhkvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
@@ -425,6 +440,7 @@ const lenAch = n => ({ id: `len${n}`, group: "Long words", mark: String(n), name
 const countAch = (id, group, mark, name, desc, goal, get) => ({ id, group, mark, name, desc, test: () => get() >= goal, progress: () => `${Math.min(get(), goal)}/${goal}` });
 const ACHIEVEMENTS = [
   ...[6, 7, 8, 9, 10].map(lenAch),
+  countAch("strides", "Long words", "5×6", "Long Strides", "Play 5 words of 6+ letters in one game", 5, () => steps().filter(c => c.w.length >= 6).length),
   countAch("chain10", "Long ladders", "10", "Ten steps", "Make 10 words in one game", 10, gameWords),
   countAch("chain25", "Long ladders", "25", "Climber", "Make 25 words in one game", 25, gameWords),
   countAch("chain50", "Long ladders", "50", "High rise", "Make 50 words in one game", 50, gameWords),
@@ -434,6 +450,7 @@ const ACHIEVEMENTS = [
   countAch("pts250", "Big scores", "250", "Quarter grand", "Score 250 points in one game", 250, () => score()),
   countAch("pts500", "Big scores", "500", "High scorer", "Score 500 points in one game", 500, () => score()),
   countAch("pts1000", "Big scores", "1k", "Grand", "Score 1,000 points in one game", 1000, () => score()),
+  { id: "noundo", group: "Big scores", mark: "250", name: "No take-backsies", desc: "Score 250 points in one game without using Undo", test: () => !G.usedUndo && score() >= 250, progress: () => G.usedUndo ? "Undo used" : `${Math.min(score(), 250)}/250` },
   countAch("bonus3", "Bonuses", "3", "Category hat trick", "Hit 3 bonus categories in one game", 3, bonusesHit),
   countAch("toolkit3", "Bonuses", "3", "Toolkit hat trick", "Earn the Toolkit bonus 3 times in one game", 3, toolkitsHit),
   countAch("alphabet", "Bonuses", "A–Z", "Alphabet soup", "Use all 26 letters across the words in one game", 26, () => lettersUsed().size),
@@ -460,6 +477,8 @@ const wordValue = (w, m) => [...w].reduce((s, l, i) => s + tileValue(l, m[i]), 0
 const score = () => G.chain.reduce((s, c) => s + c.pts, 0);
 // Toolkit icons lit after the latest move; stored on each step so undo and backtrack restore it.
 const lit = () => G.chain[G.chain.length - 1].lit || [];
+const hintsLeft = () => G.hintsLeft ?? HINT_LIMIT;
+const stepsLeft = () => Math.max(0, STEP_LIMIT - gameWords());
 
 const MAX_SAME = 2;
 // No letter may appear more than MAX_SAME times in the bank. Redraws the fresh
@@ -487,9 +506,10 @@ function nextBonus() {
   return G.deck.pop();
 }
 
-function newGame() {
+function newGame(mode = loadMode()) {
   const start = pick(DATA.starts);
-  G = { chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  saveMode(mode);
+  G = { mode, hintsLeft: HINT_LIMIT, usedUndo: false, newAch: [], chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
   G.bonus = nextBonus();
   ui = { sel: null, mode: null, chosen: null, msg: null, pop: true, freshBonus: true, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null, view: ui.view };
 }
@@ -515,17 +535,22 @@ function commit(op, nw, nm, detail, bankFn) {
   let nowLit = lit().includes(op) ? lit().slice() : lit().concat(op);
   const toolkit = nowLit.length === OPS.length;
   if (toolkit) nowLit = [];
-  const pts = wordValue(nw, nm) + (hit ? BONUS_PTS : 0) + (toolkit ? TOOLKIT_PTS : 0);
+  const long = lengthBonus(nw.length);
+  const pts = wordValue(nw, nm) + long + (hit ? BONUS_PTS : 0) + (toolkit ? TOOLKIT_PTS : 0);
   if (bankFn) bankFn();
-  G.chain.push({ w: nw, m: nm, op, detail, pts, bonus: hit ? b.name : null, toolkit, lit: nowLit });
+  G.chain.push({ w: nw, m: nm, op, detail, pts, bonus: hit ? b.name : null, toolkit, long, lit: nowLit });
   if (hit) G.bonus = nextBonus();
   G.undo = snap;
   ui.sel = null; ui.pop = true; ui.freshBonus = hit; ui.justLit = toolkit ? "full" : op;
-  const extras = [hit && `the ${b.name} bonus`, toolkit && "the Toolkit bonus"].filter(Boolean);
+  const extras = [long && `the ${nw.length}-letter bonus`, hit && `the ${b.name} bonus`, toolkit && "the Toolkit bonus"].filter(Boolean);
   ui.msg = { text: extras.length ? `${UP(nw)} +${pts}, including ${extras.join(" and ")}!` : `${UP(nw)} +${pts}`, kind: "good" };
   ui.hint = null;
   checkAchievements(nw);
+  // Classic ends on the 50th step.
+  const finished = G.mode === "classic" && gameWords() >= STEP_LIMIT;
+  if (finished) { G.over = true; G.undo = null; ui.sel = null; ui.mode = null; }
   render();
+  if (finished) openSummary();
 }
 
 // Map of each reachable new word to the set of move types that reach it.
@@ -551,6 +576,7 @@ function legalMoves() {
 // ---------- hints & achievements ----------
 function showHint() {
   if (G.over) return;
+  if (hintsLeft() <= 0) { ui.hint = { text: "You're out of hints for this game." }; return render(); }
   const ops = new Set();
   for (const s of legalMoves().values()) for (const op of s) ops.add(op);
   const avail = OPS.map(o => o[0]).filter(op => ops.has(op));
@@ -561,8 +587,10 @@ function showHint() {
   if (cycle) fresh = avail;
   const op = pick(fresh);
   const nextSeen = cycle ? [op] : seen.concat(op);
-  const more = avail.length > 1 ? ` (${avail.length} kinds of move work here. Tap Hint for another.)` : " (It's the only kind of move that works here.)";
-  ui.hint = { text: `Hint: ${OP_HINT[op]}.${more}`, seen: nextSeen };
+  G.hintsLeft = hintsLeft() - 1;
+  const left = G.hintsLeft ? ` ${G.hintsLeft} hint${G.hintsLeft > 1 ? "s" : ""} left.` : " That was your last hint.";
+  const more = avail.length > 1 ? ` (${avail.length} kinds of move work here.)` : " (It's the only kind of move that works here.)";
+  ui.hint = { text: `Hint: ${OP_HINT[op]}.${more}${left}`, seen: nextSeen };
   G.hints = (G.hints || 0) + 1;
   render();
 }
@@ -577,7 +605,7 @@ function checkAchievements(nw) {
     if (a.test(nw)) {
       G.earned = G.earned || [];
       if (!G.earned.includes(a.id)) G.earned.push(a.id);
-      if (!have[a.id]) { have[a.id] = new Date().toISOString().slice(0, 10); unlocked.push(a); }
+      if (!have[a.id]) { have[a.id] = new Date().toISOString().slice(0, 10); unlocked.push(a); (G.newAch = G.newAch || []).push(a.id); }
     }
   }
   if (unlocked.length) { saveAch(have); ACH_MEM = have; ui.toast = unlocked; }
@@ -608,7 +636,7 @@ function undo() {
   if (!G.undo) return;
   const last = cur();
   Object.assign(G, G.undo);
-  G.undo = null; G.over = false;
+  G.undo = null; G.over = false; G.usedUndo = true;
   ui.sel = null; ui.pop = true; ui.hint = null; ui.msg = { text: `Took back ${UP(last)}.`, kind: "info" };
   render();
 }
@@ -688,8 +716,8 @@ function render() {
 
   // scores
   const sc = score();
-  const best = Math.max(loadBest(), sc);
-  saveBest(best);
+  const best = Math.max(loadBest(G.mode), sc);
+  saveBest(G.mode, best);
   $("s-score").textContent = sc;
   $("s-words").textContent = G.chain.length - 1;
   $("s-best").textContent = best;
@@ -742,6 +770,13 @@ function render() {
   $("preview").textContent = "";
   $("hinttext").textContent = ui.hint ? ui.hint.text : "";
   $("hintbtn").disabled = G.over || !!ui.mode;
+  const hl = hintsLeft();
+  $("hint-dots").innerHTML = Array.from({ length: HINT_LIMIT }, (_, i) => `<i class="${i < hl ? "" : "off"}"></i>`).join("");
+  $("hint-dots").title = `${hl} of ${HINT_LIMIT} hints left`;
+  $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
+  $("mode-line").innerHTML = G.mode === "classic"
+    ? `<b>Classic</b> · ${stepsLeft()} of ${STEP_LIMIT} steps left`
+    : `<b>Free play</b>`;
 
   const msg = $("msg");
   msg.textContent = ui.msg ? ui.msg.text : "";
@@ -785,8 +820,10 @@ function render() {
   $("ladder-count").textContent = `${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"} · ${score()} pts`;
   const rows = G.chain.map((c, i) => {
     const latest = i === G.chain.length - 1 && i > 0;
-    const chips = (c.bonus ? ` <span class="chip" title="${esc(c.bonus)}">Category bonus</span>` : "") + (c.toolkit ? ` <span class="chip">Toolkit bonus</span>` : "");
-    return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}"><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${c.bonus && c.toolkit ? `<span class="chip" title="${esc(c.bonus)}">Category + Toolkit bonus</span>` : chips}</span></li>`;
+    const kinds = [c.long && "Long word", c.bonus && "Category", c.toolkit && "Toolkit"].filter(Boolean);
+    const chips = kinds.map(k => ` <span class="chip"${k === "Category" ? ` title="${esc(c.bonus)}"` : ""}>${k} bonus</span>`).join("");
+    const combined = kinds.length > 1 ? `<span class="chip" title="${esc(kinds.join(" + "))} bonus">${kinds.join(" + ")} bonus</span>` : chips;
+    return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}"><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${combined}</span></li>`;
   });
   const rungs = $("rungs");
   if (LAYOUT === "stack") { rungs.innerHTML = rows.join(""); rungs.scrollTop = rungs.scrollHeight; }
@@ -810,7 +847,10 @@ function render() {
 
   // stuck / game over
   const stuck = $("stuck");
-  if (G.over) {
+  if (G.over && G.mode === "classic" && gameWords() >= STEP_LIMIT) {
+    stuck.hidden = false;
+    stuck.innerHTML = `<h2>Classic complete: ${score()} points</h2><p>You used all ${STEP_LIMIT} steps and ended on ${UP(w)}.</p><div><button type="button" class="btn primary" data-restart>See your summary</button></div>`;
+  } else if (G.over) {
     stuck.hidden = false;
     stuck.innerHTML = `<h2>Game over: ${score()} points</h2><p>No legal moves from ${UP(w)}, and no powers left. Your ladder reached ${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"}.${(G.earned || []).length ? ` Achievements reached this game: ${ACHIEVEMENTS.filter(a => G.earned.includes(a.id)).map(a => a.name).join(", ")}.` : ""}</p><div><button type="button" class="btn primary" data-restart>Play again</button></div>`;
   } else if (moves === 0) {
@@ -861,15 +901,11 @@ document.addEventListener("click", e => {
   if (t.dataset.view) { ui.view = t.dataset.view; ui.sel = null; render(); return window.scrollTo(0, 0); }
   if (t.id === "hintbtn") return showHint();
   if (t.id !== "newgame" && ui.confirmNew) { ui.confirmNew = false; }
-  if (t.id === "newgame") {
-    if (G.chain.length <= 1) { newGame(); ui.msg = { text: "New game. Good luck!", kind: "info" }; }
-    else { openSummary(); return; }
-    return render();
-  }
+  if (t.id === "newgame") return openSummary();
   if (t.hasAttribute("data-restart")) { openSummary(); return; }
   if (t.hasAttribute("data-share")) return shareSummary();
   if (t.hasAttribute("data-close")) return closeSummary();
-  if (t.hasAttribute("data-confirm-new")) { closeSummary(); newGame(); ui.msg = { text: "New game. Good luck!", kind: "info" }; return render(); }
+  if (t.dataset.newMode) { const m = t.dataset.newMode; closeSummary(); newGame(m); ui.msg = { text: `New ${MODES[m].name} game. Good luck!`, kind: "info" }; return render(); }
   if (t.id === "undo") return undo();
   if (t.id === "remove") return removeLetter(ui.sel.i);
   if (t.dataset.power) return usePower(t.dataset.power);
@@ -912,31 +948,38 @@ function gameStats() {
   const words = G.chain.slice(1).map(c => c.w);
   const longest = words.reduce((a, w) => (w.length > a.length ? w : a), "");
   const avg = words.length ? words.reduce((s, w) => s + w.length, 0) / words.length : 0;
-  return { points: score(), words: words.length, avg, longest, start: G.chain[0].w };
+  return { points: score(), words: words.length, avg, longest, start: G.chain[0].w, mode: MODES[G.mode].name };
 }
 function shareText(st) {
-  return `Stepwise: ${st.points} points from ${UP(st.start)}\n${st.words} words · avg ${st.avg.toFixed(1)} letters · longest ${UP(st.longest)} (${st.longest.length})`;
+  return `Stepwise ${st.mode}: ${st.points} points from ${UP(st.start)}\n${st.words} words · avg ${st.avg.toFixed(1)} letters · longest ${UP(st.longest)} (${st.longest.length})`;
 }
 function openSummary() {
   const st = gameStats();
   ui.sel = null; ui.mode = null;
+  const fresh = st.words === 0 && !G.over;
+  const earned = ACHIEVEMENTS.filter(a => (G.earned || []).includes(a.id));
+  const isNew = id => (G.newAch || []).includes(id);
+  const modeBtns = Object.entries(MODES).map(([id, m]) =>
+    `<button type="button" class="mode-opt${id === G.mode ? " current" : ""}" data-new-mode="${id}"><b>${m.name}</b><span>${m.desc}</span></button>`).join("");
   $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sum-title">
-    <h2 id="sum-title">${G.over ? "Game over" : "Your game"}</h2>
-    <p class="sub">Started from ${UP(st.start)}</p>
+    <h2 id="sum-title">${fresh ? "New game" : G.over ? (G.mode === "classic" && st.words >= STEP_LIMIT ? "Classic complete" : "Game over") : "Your game"}</h2>
+    ${fresh ? `<p class="sub">Pick a mode to start.</p>` : `<p class="sub">${st.mode} · started from ${UP(st.start)}</p>
     <div class="stats">
       <div class="stat-box big"><span class="k">Points</span><span class="v">${st.points}</span></div>
       <div class="stat-box"><span class="k">Words</span><span class="v">${st.words}</span></div>
       <div class="stat-box"><span class="k">Average length</span><span class="v">${st.avg.toFixed(1)} <small>letters</small></span></div>
       <div class="stat-box"><span class="k">Longest word</span><span class="v">${UP(st.longest)} <small>${st.longest.length}</small></span></div>
     </div>
-    <p class="note" id="share-note" aria-live="polite"></p>
+    ${earned.length ? `<h3>Achievements this game</h3><div class="ach-won">${earned.map(a => `<span>${a.name}${isNew(a.id) ? "<em>New</em>" : ""}</span>`).join("")}</div>` : ""}
+    <p class="note" id="share-note" aria-live="polite"></p>`}
+    <h3>Start a new game</h3>
+    <div class="modes">${modeBtns}</div>
     <div class="row">
-      ${G.over ? "" : `<button type="button" class="btn" data-close>Keep playing</button>`}
-      <button type="button" class="btn" data-share>Share</button>
-      <button type="button" class="btn primary" data-confirm-new>Start new game</button>
+      ${G.over ? "" : `<button type="button" class="btn" data-close>${fresh ? "Cancel" : "Keep playing"}</button>`}
+      ${fresh ? "" : `<button type="button" class="btn" data-share>Share</button>`}
     </div>
   </div></div>`;
-  const first = $("modal-slot").querySelector("[data-share]");
+  const first = $("modal-slot").querySelector("[data-share], .mode-opt");
   first && first.focus();
 }
 function closeSummary() { $("modal-slot").innerHTML = ""; }
@@ -981,8 +1024,11 @@ function setTheme(t) {
 // ---------- persistence ----------
 const KEY = "morph-ladder:game", BEST = "morph-ladder:best", ACH = "morph-ladder:achievements";
 function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {} }
-function loadBest() { try { return +localStorage.getItem(BEST) || 0; } catch { return 0; } }
-function saveBest(v) { try { localStorage.setItem(BEST, String(v)); } catch {} }
+function loadBest(mode) { try { return +localStorage.getItem(`${BEST}:${mode}`) || 0; } catch { return 0; } }
+function saveBest(mode, v) { try { localStorage.setItem(`${BEST}:${mode}`, String(v)); } catch {} }
+const MODE = "morph-ladder:mode";
+function loadMode() { try { const m = localStorage.getItem(MODE); return MODES[m] ? m : "classic"; } catch { return "classic"; } }
+function saveMode(m) { try { localStorage.setItem(MODE, m); } catch {} }
 function valid(g) { return g && Array.isArray(g.chain) && g.chain.length && Array.isArray(g.bank) && g.bank.length === BANK_SIZE && BONUS[g.bonus] && g.powers; }
 
 function applyLayout() {
@@ -1005,7 +1051,7 @@ function boot(data) {
   applyLayout();
   let g = data && data.game;
   if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
-  if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); ui.pop = true; }
+  if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
   else newGame();
   render();
 }
