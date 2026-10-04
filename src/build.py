@@ -205,7 +205,7 @@ html = tpl.replace("/*__DATA__*/null", json.dumps(data, separators=(",", ":")))
 ROOT = os.path.dirname(HERE)
 # The template is a page body; give standalone hosting a proper document shell.
 # (Head-only tags at the top of the template stay in <head> under HTML parsing rules.)
-SHELL = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+SHELL = ('<!doctype html>\n<html lang="en" data-theme="organic">\n<head>\n<meta charset="utf-8">\n'
          '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
          '<style>body { margin: 0; } [hidden] { display: none !important; }</style>\n')
 html = SHELL + html
