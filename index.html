@@ -395,7 +395,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
           <li><b>Category bonus.</b> A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
           <li><b>Long word bonus.</b> A 6-letter word scores 6 more and a 7-letter word 7 more. Longer words score their length.</li>
-          <li><b>Classic</b> ends after 50 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
+          <li><b>Classic</b> ends after 25 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
         </ul>
       </div>
     </div>
@@ -409,9 +409,9 @@ const LAYOUT = "stack";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
 const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
-const STEP_LIMIT = 50, HINT_LIMIT = 3;
+const STEP_LIMIT = 25, HINT_LIMIT = 3;
 const MODES = {
-  classic: { name: "Classic", desc: "Rack up as many points as you can in 50 steps." },
+  classic: { name: "Classic", desc: "Rack up as many points as you can in 25 steps." },
   free: { name: "Free play", desc: "Keep playing until you run out of legal moves." },
 };
 // Words of 6+ letters score their length on top (6 for 6 letters, 7 for 7, and so on).

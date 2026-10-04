@@ -2,7 +2,7 @@
 
 A word-ladder game: change one thing at a time, and every step must be a new, real word.
 
-Pick a mode: **Classic** gives you 50 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word with a bank of 6 letters. Each move must make a real word of 3+ letters that isn't already on your ladder:
+Pick a mode: **Classic** gives you 25 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word with a bank of 6 letters. Each move must make a real word of 3+ letters that isn't already on your ladder:
 
 - **Add** a bank letter anywhere in the word (the bank refills)
 - **Remove** a letter
