@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;600;700&family=Libre+Franklin:wght@700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&family=Bitter:wght@600;800&family=Work+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&display=swap">
 <style>
 /* Layout: a type-case workbench. Play area (bonus, word, bank, powers) on the left; the ladder of past words runs down the right. Stacks on phones. */
 :root {
@@ -289,45 +289,9 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 .rules-body b { color: var(--ink); }
 
 
-/* ---------- Extra themes (trial: pick one to keep) ---------- */
-/* Letterpress: printed paper with three inks (vermilion, mustard, teal). */
-:root[data-theme="letterpress"] {
-  --bg: #EFE4CB; --panel: #FAF3E3; --ink: #1F2A33; --muted: #675C4D; --line: #D6C39C;
-  --tile: #D2462F; --tile-edge: #8E2A1B; --tile-ink: #FFF6E8;
-  --bank: #EDBB45; --bank-edge: #A9801C; --bank-ink: #1F2A33;
-  --accent: #1E6E74; --accent-soft: #D3E7E3;
-  --good: #2F7A43; --good-soft: #D9EBD5; --bad: #B33A22;
-  --font-display: "Playfair Display", Georgia, serif; --font-body: "Lora", Georgia, serif;
-  color-scheme: light;
-}
-:root[data-theme="letterpress"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-:root[data-theme="letterpress"] header.top { padding-bottom: 14px; border-bottom: 5px solid; border-image: linear-gradient(90deg, #D2462F 0 33.3%, #EDBB45 33.3% 66.6%, #1E6E74 66.6%) 1; }
-:root[data-theme="letterpress"] .card { border-radius: 3px; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 rgba(30,110,116,.28); }
-:root[data-theme="letterpress"] .board { box-shadow: 5px 5px 0 rgba(210,70,47,.35); }
-:root[data-theme="letterpress"] .brand h1 { font-weight: 900; letter-spacing: 0.01em; }
-:root[data-theme="letterpress"] .bonus .name { color: #D2462F; }
-/* Simple, bold sans for the letters on tiles. */
-:root[data-theme="letterpress"] .tile, :root[data-theme="letterpress"] .alpha button { border-radius: 3px; font-family: "Libre Franklin", system-ui, sans-serif; font-weight: 800; }
-
-/* Trailhead: daytime outdoors, with a sky, mountains and pines behind the page and wooden word tiles. */
-:root[data-theme="trailhead"] {
-  --bg: #E4EEE6; --panel: #FBF8F0; --ink: #22352B; --muted: #5A6C5F; --line: #C6D4C3;
-  --tile: #A86F3E; --tile-edge: #6D4423; --tile-ink: #FFF7EA;
-  --bank: #E8EEF0; --bank-edge: #97A7AC; --bank-ink: #22352B;
-  --accent: #2F6B4E; --accent-soft: #DCEBDF;
-  --good: #2E7A3D; --good-soft: #D8ECD6; --bad: #B2462C;
-  --font-display: "Bitter", Georgia, serif; --font-body: "Work Sans", system-ui, sans-serif;
-  color-scheme: light;
-}
-:root[data-theme="trailhead"] body { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cpath fill='%23B7CDCB' d='M0 300 L0 165 L120 108 L210 150 L330 66 L450 138 L560 92 L680 150 L800 76 L930 138 L1050 98 L1200 148 L1200 300 Z'/%3E%3Cpath fill='%2397B79E' d='M0 300 L0 215 Q150 168 300 208 T600 198 T900 204 T1200 192 L1200 300 Z'/%3E%3Cpath fill='%236F977A' d='M0 300 L12 242 L24 300 Z M21 300 L35 237 L48 300 Z M42 300 L51 258 L60 300 Z M57 300 L66 256 L75 300 Z M69 300 L78 259 L87 300 Z M84 300 L95 249 L106 300 Z M96 300 L110 235 L124 300 Z M115 300 L127 247 L138 300 Z M128 300 L142 235 L156 300 Z M144 300 L153 255 L163 300 Z M161 300 L169 259 L178 300 Z M174 300 L187 237 L200 300 Z M189 300 L199 248 L210 300 Z M201 300 L211 254 L220 300 Z M213 300 L223 253 L233 300 Z M228 300 L240 243 L252 300 Z M246 300 L256 251 L267 300 Z M258 300 L269 250 L279 300 Z M272 300 L281 258 L290 300 Z M285 300 L296 249 L307 300 Z M301 300 L315 235 L328 300 Z M323 300 L337 233 L352 300 Z M345 300 L359 233 L373 300 Z M364 300 L375 247 L386 300 Z M382 300 L393 247 L404 300 Z M395 300 L407 243 L419 300 Z M413 300 L425 241 L437 300 Z M433 300 L444 244 L456 300 Z M450 300 L459 258 L468 300 Z M461 300 L474 236 L488 300 Z M477 300 L490 241 L502 300 Z M492 300 L507 231 L521 300 Z M512 300 L521 258 L530 300 Z M527 300 L539 242 L551 300 Z M543 300 L556 240 L568 300 Z M562 300 L576 233 L590 300 Z M578 300 L587 257 L596 300 Z M594 300 L609 232 L623 300 Z M617 300 L626 258 L635 300 Z M627 300 L639 243 L651 300 Z M646 300 L660 234 L673 300 Z M664 300 L677 238 L690 300 Z M686 300 L699 240 L711 300 Z M700 300 L714 233 L728 300 Z M719 300 L729 255 L738 300 Z M733 300 L743 249 L754 300 Z M750 300 L760 254 L770 300 Z M766 300 L779 237 L792 300 Z M784 300 L799 231 L813 300 Z M801 300 L815 234 L829 300 Z M820 300 L832 245 L843 300 Z M840 300 L853 235 L867 300 Z M863 300 L875 245 L886 300 Z M882 300 L894 240 L907 300 Z M901 300 L914 238 L927 300 Z M924 300 L934 253 L944 300 Z M936 300 L946 253 L956 300 Z M948 300 L959 248 L970 300 Z M960 300 L971 251 L981 300 Z M974 300 L982 262 L990 300 Z M983 300 L996 239 L1009 300 Z M1003 300 L1015 242 L1027 300 Z M1024 300 L1039 230 L1054 300 Z M1050 300 L1059 259 L1068 300 Z M1063 300 L1076 237 L1089 300 Z M1081 300 L1094 237 L1107 300 Z M1096 300 L1109 237 L1123 300 Z M1111 300 L1120 258 L1129 300 Z M1127 300 L1141 234 L1155 300 Z M1144 300 L1156 241 L1169 300 Z M1163 300 L1172 256 L1181 300 Z M1173 300 L1183 253 L1193 300 Z M1188 300 L1200 239 L1213 300 Z'/%3E%3C/svg%3E") center bottom / 100% 34vh no-repeat fixed, linear-gradient(180deg, #CFE5EF 0%, #E2EEE9 45%, #E4EEE6 100%) fixed; }
-:root[data-theme="trailhead"] .card { border-radius: 14px; border-color: #C2D1BE; box-shadow: 0 6px 18px rgba(34,53,43,.08); }
-:root[data-theme="trailhead"] .brand h1 { font-weight: 800; }
-:root[data-theme="trailhead"] .tile, :root[data-theme="trailhead"] .alpha button { border-radius: 8px; font-weight: 800; }
-:root[data-theme="trailhead"] #word .tile { background-image: repeating-linear-gradient(100deg, rgba(255,255,255,.07) 0 2px, transparent 2px 7px), linear-gradient(180deg, #B67C49, #9C6536); }
-:root[data-theme="trailhead"] .bonus .name { color: #A86F3E; }
-
-/* Botanical: deep green with terracotta and cream; extra contrast and breathing room. */
-:root[data-theme="botanical"] {
+/* ---------- Extra themes ---------- */
+/* Organic: deep green with terracotta and cream, a faint pattern of leafy sprigs behind the page. */
+:root[data-theme="organic"] {
   --bg: #142019; --panel: #213229; --ink: #F6F8EE; --muted: #BCC8B0; --line: #3F5746;
   --tile: #E3915F; --tile-edge: #9E5532; --tile-ink: #24150C;
   --bank: #F3EED9; --bank-edge: #ADA484; --bank-ink: #1C2A1F;
@@ -336,11 +300,11 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
   color-scheme: dark;
 }
-:root[data-theme="botanical"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(55% 45% at 0% 0%, rgba(132,170,110,.16), transparent 70%); background-attachment: fixed; }
-:root[data-theme="botanical"] .app { gap: 28px; }
-:root[data-theme="botanical"] .card { border-radius: 22px; border-color: #4A6551; padding: 22px 24px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-:root[data-theme="botanical"] .tile { border-radius: 12px; }
-:root[data-theme="botanical"] .brand h1 { font-weight: 800; }
+:root[data-theme="organic"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cpath d='M20.0 210.0 L30.8 196.9 L43.7 185.8 L58.2 176.9 L74.0 170.6 L90.6 167.0 L107.6 166.2 M30.8 196.9 C36.8 189.8 45.8 189.8 50.8 196.7 C45.9 203.8 36.9 203.8 30.8 196.9 Z M30.8 196.9 L47.8 196.8 M43.7 185.8 C36.6 179.9 36.4 170.9 43.4 165.8 C50.4 170.7 50.6 179.7 43.7 185.8 Z M43.7 185.8 L43.4 168.8 M58.2 176.9 C66.1 172.2 74.6 175.1 77.1 183.3 C70.2 188.3 61.6 185.5 58.2 176.9 Z M58.2 176.9 L74.3 182.4 M74.0 170.6 C69.2 162.7 72.0 154.2 80.2 151.6 C85.3 158.5 82.5 167.1 74.0 170.6 Z M74.0 170.6 L79.3 154.5 M90.6 167.0 C99.6 165.1 106.7 170.6 106.4 179.2 C98.2 181.7 91.0 176.2 90.6 167.0 Z M90.6 167.0 L104.0 177.4 M107.6 166.2 C105.6 157.2 111.1 150.0 119.7 150.3 C122.2 158.5 116.8 165.7 107.6 166.2 Z M107.6 166.2 L117.9 152.7 M107.6 166.2 C112.7 159.9 120.8 159.6 125.5 165.3 C121.3 171.5 113.2 171.9 107.6 166.2 Z M107.6 166.2 L122.9 165.5 M150.0 60.0 L135.2 57.8 L120.2 58.5 L105.7 62.3 L92.2 68.8 M135.2 57.8 C127.4 56.5 123.4 50.0 126.3 43.3 C133.6 43.8 137.6 50.3 135.2 57.8 Z M135.2 57.8 L127.6 45.4 M120.2 58.5 C121.9 66.2 117.2 72.3 109.9 72.1 C107.8 65.1 112.4 59.0 120.2 58.5 Z M120.2 58.5 L111.5 70.1 M105.7 62.3 C98.0 64.1 91.8 59.7 91.8 52.4 C98.8 50.0 105.0 54.5 105.7 62.3 Z M105.7 62.3 L93.9 53.8 M92.2 68.8 C96.7 75.2 94.8 82.6 88.0 85.3 C83.3 79.7 85.1 72.3 92.2 68.8 Z M92.2 68.8 L88.6 82.8 M92.2 68.8 C90.2 75.4 84.0 78.4 78.4 75.5 C79.6 69.2 85.8 66.2 92.2 68.8 Z M92.2 68.8 L80.4 74.5 M170.0 230.0 L163.4 217.6 L155.2 206.3 L145.4 196.3 L134.4 187.7 L122.3 180.7 M163.4 217.6 C159.6 210.3 162.6 202.8 170.2 200.9 C174.3 207.5 171.3 215.0 163.4 217.6 Z M163.4 217.6 L169.1 203.5 M155.2 206.3 C149.4 212.2 141.3 211.7 137.2 205.1 C142.2 199.1 150.2 199.7 155.2 206.3 Z M155.2 206.3 L139.9 205.3 M145.4 196.3 C139.7 190.2 140.6 182.2 147.3 178.4 C153.1 183.5 152.3 191.5 145.4 196.3 Z M145.4 196.3 L147.0 181.0 M134.4 187.7 C130.4 194.9 122.5 196.6 116.8 191.4 C119.9 184.3 127.8 182.6 134.4 187.7 Z M134.4 187.7 L119.4 190.9 M122.3 180.7 C115.1 176.5 113.7 168.5 119.1 163.0 C126.1 166.3 127.5 174.3 122.3 180.7 Z M122.3 180.7 L119.6 165.6 M122.3 180.7 C115.4 182.9 109.0 179.3 108.2 172.6 C114.4 169.9 120.7 173.6 122.3 180.7 Z M122.3 180.7 L110.3 173.8 M60.0 40.0 L71.9 47.3 L82.2 56.8 L90.3 68.2 M71.9 47.3 C77.8 51.0 78.8 57.7 74.2 62.1 C68.4 59.2 67.4 52.5 71.9 47.3 Z M71.9 47.3 L73.8 59.9 M82.2 56.8 C86.0 51.1 92.7 50.2 97.1 55.0 C94.0 60.7 87.3 61.5 82.2 56.8 Z M82.2 56.8 L94.8 55.3 M90.3 68.2 C94.3 73.9 92.6 80.4 86.6 82.8 C82.5 77.8 84.1 71.3 90.3 68.2 Z M90.3 68.2 L87.2 80.6 M90.3 68.2 C96.4 68.9 99.9 73.8 98.2 79.2 C92.6 79.1 89.0 74.1 90.3 68.2 Z M90.3 68.2 L97.0 77.5' fill='none' stroke='%23BFE0A8' stroke-opacity='.11' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(55% 45% at 0% 0%, rgba(132,170,110,.16), transparent 70%); background-size: 260px 260px, auto, auto; background-attachment: fixed; }
+:root[data-theme="organic"] .app { gap: 28px; }
+:root[data-theme="organic"] .card { border-radius: 22px; border-color: #4A6551; padding: 22px 24px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+:root[data-theme="organic"] .tile { border-radius: 12px; }
+:root[data-theme="organic"] .brand h1 { font-weight: 800; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
@@ -1058,7 +1022,7 @@ async function shareSummary() {
 // ---------- theme ----------
 const THEME = "morph-ladder:theme";
 // The toggle cycles through every theme. Dark is the default; a saved choice wins.
-const THEMES = [["dark", "Dark"], ["light", "Light"], ["letterpress", "Letterpress"], ["botanical", "Botanical"], ["trailhead", "Trailhead"]];
+const THEMES = [["dark", "Dark"], ["light", "Light"], ["organic", "Organic"]];
 const THEME_NAME = Object.fromEntries(THEMES);
 const curTheme = () => THEME_NAME[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : "dark";
 const nextTheme = () => THEMES[(THEMES.findIndex(([id]) => id === curTheme()) + 1) % THEMES.length][0];
