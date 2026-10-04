@@ -369,7 +369,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   <div id="modal-slot"></div>
 
   <aside class="card ladder" aria-label="Word chain">
-    <div class="head"><h2>The ladder</h2><span id="ladder-count"></span></div>
+    <div class="head"><h2>Previous Steps</h2><span id="ladder-count"></span></div>
     <ol class="rungs" id="rungs" reversed></ol>
   </aside>
 
@@ -1062,7 +1062,7 @@ function applyLayout() {
   side.setAttribute("aria-label", "Bonuses");
   side.append($("bonus"), $("toolkit"));
   const ladder = document.querySelector(".ladder");
-  ladder.querySelector("h2").textContent = "Recent words";
+  ladder.querySelector("h2").textContent = "Previous Steps";
   ladder.querySelector("ol").removeAttribute("reversed");
   ladder.insertAdjacentHTML("beforeend", `<div class="more">Scroll up to see your whole ladder.</div>`);
   side.prepend(ladder);
