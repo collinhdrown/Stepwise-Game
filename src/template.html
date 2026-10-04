@@ -774,7 +774,7 @@ function render() {
   $("hint-dots").title = `${hl} of ${HINT_LIMIT} hints left`;
   $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
   $("mode-line").innerHTML = G.mode === "classic"
-    ? `<b>Classic</b> · ${stepsLeft()} of ${STEP_LIMIT} steps left`
+    ? `<b>Classic</b> · ${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left`
     : `<b>Free play</b>`;
 
   const msg = $("msg");
