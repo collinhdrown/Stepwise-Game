@@ -13,6 +13,8 @@
   --tile: #F4CF7A;
   --tile-edge: #BE8B22;
   --tile-ink: #1C2430;
+  /* "wise" in the title: the word-tile gold, darkened in light mode so it stays readable. */
+  --title-gold: #B07D14;
   --bank: #FFFCF4;
   --bank-edge: #B8AF9B;
   --accent: #2D4BD2;
@@ -26,7 +28,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
-    --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430;
+    --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430; --title-gold: #E6B64C;
     --bank: #F0E9DA; --bank-edge: #8B8270;
     --accent: #8197FF; --accent-soft: #232D52;
     --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
@@ -35,7 +37,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #10151C; --panel: #19202A; --ink: #E6EBF1; --muted: #93A0AE; --line: #2B3543;
-  --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430;
+  --tile: #E6B64C; --tile-edge: #93701F; --tile-ink: #1C2430; --title-gold: #E6B64C;
   --bank: #F0E9DA; --bank-edge: #8B8270;
   --accent: #8197FF; --accent-soft: #232D52;
   --good: #4CC48E; --good-soft: #163428; --bad: #FF7A6B;
@@ -65,6 +67,10 @@ nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
 .brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 42px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
+.brand h1 .wise { color: var(--title-gold); }
+.brand .title-row { display: flex; align-items: center; gap: 12px; }
+/* Decorative trail of footprints stepping away from the title. */
+.brand .steps { width: 116px; height: 44px; color: var(--accent); flex: none; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -288,7 +294,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 <div class="app">
   <header class="top">
     <div class="brand">
-      <h1>Stepwise</h1>
+      <div class="title-row"><h1>Step<span class="wise">wise</span></h1><svg class="steps" viewBox="0 0 116 44" aria-hidden="true" fill="currentColor"><defs><g id="fp"><ellipse cx="0" cy="3" rx="3.4" ry="5.6"/><circle cx="-2.6" cy="-4.6" r="1.25"/><circle cx="-0.6" cy="-5.6" r="1.15"/><circle cx="1.3" cy="-5.2" r="1"/><circle cx="2.8" cy="-4.1" r="0.9"/><circle cx="3.6" cy="-2.6" r="0.75"/></g></defs><use href="#fp" transform="translate(12 32) rotate(62) scale(1.45 1.45)" opacity="0.25"/><use href="#fp" transform="translate(38 15) rotate(62) scale(-1.45 1.45)" opacity="0.45"/><use href="#fp" transform="translate(66 30) rotate(62) scale(1.45 1.45)" opacity="0.7"/><use href="#fp" transform="translate(94 13) rotate(62) scale(-1.45 1.45)" opacity="1"/></svg></div>
       <p>Create new words, one step at a time.</p>
       <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn" aria-pressed="false">Dark mode</button></nav>
     </div>
