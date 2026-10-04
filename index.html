@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&family=Cabin+Sketch:wght@700&family=Patrick+Hand&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;600;700&family=Libre+Franklin:wght@700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&family=Bitter:wght@600;800&family=Work+Sans:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: a type-case workbench. Play area (bonus, word, bank, powers) on the left; the ladder of past words runs down the right. Stacks on phones. */
 :root {
@@ -290,84 +290,57 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 
 
 /* ---------- Extra themes (trial: pick one to keep) ---------- */
+/* Letterpress: printed paper with three inks (vermilion, mustard, teal). */
 :root[data-theme="letterpress"] {
-  --bg: #EDE3CC; --panel: #F7F0DF; --ink: #231F1A; --muted: #6B5F4E; --line: #CDBC98;
-  --tile: #B8392A; --tile-edge: #7A2117; --tile-ink: #FFF4E4;
-  --bank: #F4EAD2; --bank-edge: #B9A47A; --bank-ink: #231F1A;
-  --accent: #B8392A; --accent-soft: #EFD8C8;
-  --good: #3E6B3A; --good-soft: #DCE5CF; --bad: #A3281B;
+  --bg: #EFE4CB; --panel: #FAF3E3; --ink: #1F2A33; --muted: #675C4D; --line: #D6C39C;
+  --tile: #D2462F; --tile-edge: #8E2A1B; --tile-ink: #FFF6E8;
+  --bank: #EDBB45; --bank-edge: #A9801C; --bank-ink: #1F2A33;
+  --accent: #1E6E74; --accent-soft: #D3E7E3;
+  --good: #2F7A43; --good-soft: #D9EBD5; --bad: #B33A22;
   --font-display: "Playfair Display", Georgia, serif; --font-body: "Lora", Georgia, serif;
   color-scheme: light;
 }
-:root[data-theme="letterpress"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-:root[data-theme="letterpress"] .card { border-radius: 3px; border-color: #231F1A; box-shadow: 4px 4px 0 var(--line); }
+:root[data-theme="letterpress"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+:root[data-theme="letterpress"] header.top { padding-bottom: 14px; border-bottom: 5px solid; border-image: linear-gradient(90deg, #D2462F 0 33.3%, #EDBB45 33.3% 66.6%, #1E6E74 66.6%) 1; }
+:root[data-theme="letterpress"] .card { border-radius: 3px; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 rgba(30,110,116,.28); }
+:root[data-theme="letterpress"] .board { box-shadow: 5px 5px 0 rgba(210,70,47,.35); }
 :root[data-theme="letterpress"] .brand h1 { font-weight: 900; letter-spacing: 0.01em; }
-:root[data-theme="letterpress"] .tile { border-radius: 3px; }
+:root[data-theme="letterpress"] .bonus .name { color: #D2462F; }
+/* Simple, bold sans for the letters on tiles. */
+:root[data-theme="letterpress"] .tile, :root[data-theme="letterpress"] .alpha button { border-radius: 3px; font-family: "Libre Franklin", system-ui, sans-serif; font-weight: 800; }
 
+/* Trailhead: daytime outdoors, with a sky, mountains and pines behind the page and wooden word tiles. */
+:root[data-theme="trailhead"] {
+  --bg: #E4EEE6; --panel: #FBF8F0; --ink: #22352B; --muted: #5A6C5F; --line: #C6D4C3;
+  --tile: #A86F3E; --tile-edge: #6D4423; --tile-ink: #FFF7EA;
+  --bank: #E8EEF0; --bank-edge: #97A7AC; --bank-ink: #22352B;
+  --accent: #2F6B4E; --accent-soft: #DCEBDF;
+  --good: #2E7A3D; --good-soft: #D8ECD6; --bad: #B2462C;
+  --font-display: "Bitter", Georgia, serif; --font-body: "Work Sans", system-ui, sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="trailhead"] body { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cpath fill='%23B7CDCB' d='M0 300 L0 165 L120 108 L210 150 L330 66 L450 138 L560 92 L680 150 L800 76 L930 138 L1050 98 L1200 148 L1200 300 Z'/%3E%3Cpath fill='%2397B79E' d='M0 300 L0 215 Q150 168 300 208 T600 198 T900 204 T1200 192 L1200 300 Z'/%3E%3Cpath fill='%236F977A' d='M0 300 L12 242 L24 300 Z M21 300 L35 237 L48 300 Z M42 300 L51 258 L60 300 Z M57 300 L66 256 L75 300 Z M69 300 L78 259 L87 300 Z M84 300 L95 249 L106 300 Z M96 300 L110 235 L124 300 Z M115 300 L127 247 L138 300 Z M128 300 L142 235 L156 300 Z M144 300 L153 255 L163 300 Z M161 300 L169 259 L178 300 Z M174 300 L187 237 L200 300 Z M189 300 L199 248 L210 300 Z M201 300 L211 254 L220 300 Z M213 300 L223 253 L233 300 Z M228 300 L240 243 L252 300 Z M246 300 L256 251 L267 300 Z M258 300 L269 250 L279 300 Z M272 300 L281 258 L290 300 Z M285 300 L296 249 L307 300 Z M301 300 L315 235 L328 300 Z M323 300 L337 233 L352 300 Z M345 300 L359 233 L373 300 Z M364 300 L375 247 L386 300 Z M382 300 L393 247 L404 300 Z M395 300 L407 243 L419 300 Z M413 300 L425 241 L437 300 Z M433 300 L444 244 L456 300 Z M450 300 L459 258 L468 300 Z M461 300 L474 236 L488 300 Z M477 300 L490 241 L502 300 Z M492 300 L507 231 L521 300 Z M512 300 L521 258 L530 300 Z M527 300 L539 242 L551 300 Z M543 300 L556 240 L568 300 Z M562 300 L576 233 L590 300 Z M578 300 L587 257 L596 300 Z M594 300 L609 232 L623 300 Z M617 300 L626 258 L635 300 Z M627 300 L639 243 L651 300 Z M646 300 L660 234 L673 300 Z M664 300 L677 238 L690 300 Z M686 300 L699 240 L711 300 Z M700 300 L714 233 L728 300 Z M719 300 L729 255 L738 300 Z M733 300 L743 249 L754 300 Z M750 300 L760 254 L770 300 Z M766 300 L779 237 L792 300 Z M784 300 L799 231 L813 300 Z M801 300 L815 234 L829 300 Z M820 300 L832 245 L843 300 Z M840 300 L853 235 L867 300 Z M863 300 L875 245 L886 300 Z M882 300 L894 240 L907 300 Z M901 300 L914 238 L927 300 Z M924 300 L934 253 L944 300 Z M936 300 L946 253 L956 300 Z M948 300 L959 248 L970 300 Z M960 300 L971 251 L981 300 Z M974 300 L982 262 L990 300 Z M983 300 L996 239 L1009 300 Z M1003 300 L1015 242 L1027 300 Z M1024 300 L1039 230 L1054 300 Z M1050 300 L1059 259 L1068 300 Z M1063 300 L1076 237 L1089 300 Z M1081 300 L1094 237 L1107 300 Z M1096 300 L1109 237 L1123 300 Z M1111 300 L1120 258 L1129 300 Z M1127 300 L1141 234 L1155 300 Z M1144 300 L1156 241 L1169 300 Z M1163 300 L1172 256 L1181 300 Z M1173 300 L1183 253 L1193 300 Z M1188 300 L1200 239 L1213 300 Z'/%3E%3C/svg%3E") center bottom / 100% 34vh no-repeat fixed, linear-gradient(180deg, #CFE5EF 0%, #E2EEE9 45%, #E4EEE6 100%) fixed; }
+:root[data-theme="trailhead"] .card { border-radius: 14px; border-color: #C2D1BE; box-shadow: 0 6px 18px rgba(34,53,43,.08); }
+:root[data-theme="trailhead"] .brand h1 { font-weight: 800; }
+:root[data-theme="trailhead"] .tile, :root[data-theme="trailhead"] .alpha button { border-radius: 8px; font-weight: 800; }
+:root[data-theme="trailhead"] #word .tile { background-image: repeating-linear-gradient(100deg, rgba(255,255,255,.07) 0 2px, transparent 2px 7px), linear-gradient(180deg, #B67C49, #9C6536); }
+:root[data-theme="trailhead"] .bonus .name { color: #A86F3E; }
+
+/* Botanical: deep green with terracotta and cream; extra contrast and breathing room. */
 :root[data-theme="botanical"] {
-  --bg: #1B271F; --panel: #243328; --ink: #EEF0E2; --muted: #A8B39A; --line: #384A3C;
-  --tile: #D9895C; --tile-edge: #985331; --tile-ink: #2A1A10;
-  --bank: #E9E2C8; --bank-edge: #A39B7C; --bank-ink: #22301E;
-  --accent: #E8A774; --accent-soft: #3A3A28;
-  --good: #A2D07E; --good-soft: #2B4026; --bad: #F08B6C;
+  --bg: #142019; --panel: #213229; --ink: #F6F8EE; --muted: #BCC8B0; --line: #3F5746;
+  --tile: #E3915F; --tile-edge: #9E5532; --tile-ink: #24150C;
+  --bank: #F3EED9; --bank-edge: #ADA484; --bank-ink: #1C2A1F;
+  --accent: #F0AE7A; --accent-soft: #3A3A2A;
+  --good: #A8DA82; --good-soft: #294026; --bad: #F4907A;
   --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
   color-scheme: dark;
 }
-:root[data-theme="botanical"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(60% 50% at 0% 0%, rgba(132,170,110,.22), transparent 70%), radial-gradient(50% 45% at 100% 100%, rgba(217,137,92,.16), transparent 70%); background-attachment: fixed; }
-:root[data-theme="botanical"] .card { border-radius: 24px; border-color: #3E5442; background: linear-gradient(160deg, #283A2D, #213026); }
+:root[data-theme="botanical"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(55% 45% at 0% 0%, rgba(132,170,110,.16), transparent 70%); background-attachment: fixed; }
+:root[data-theme="botanical"] .app { gap: 28px; }
+:root[data-theme="botanical"] .card { border-radius: 22px; border-color: #4A6551; padding: 22px 24px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
 :root[data-theme="botanical"] .tile { border-radius: 12px; }
-:root[data-theme="botanical"] .brand h1 { font-weight: 800; font-style: italic; }
-
-:root[data-theme="riso"] {
-  --bg: #F3EEE2; --panel: #FBF7EE; --ink: #1D2B6B; --muted: #57609A; --line: #C7C3D6;
-  --tile: #FF5C8A; --tile-edge: #C62F5E; --tile-ink: #1D2B6B;
-  --bank: #FFE45C; --bank-edge: #C8A91B; --bank-ink: #1D2B6B;
-  --accent: #D92B66; --accent-soft: #FFDCE6;
-  --good: #0E8A75; --good-soft: #CDEFE6; --bad: #D33A2C;
-  --font-display: "Archivo Black", Impact, sans-serif; --font-body: "Space Grotesk", system-ui, sans-serif;
-  color-scheme: light;
-}
-:root[data-theme="riso"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(rgba(29,43,107,.10) 1px, transparent 1.4px); background-size: auto, 7px 7px; }
-:root[data-theme="riso"] .card { border-radius: 0; border: 2px solid var(--ink); box-shadow: 6px 6px 0 #FF5C8A; }
-:root[data-theme="riso"] .tile { border-radius: 2px; font-weight: 400; }
-:root[data-theme="riso"] .brand h1 { font-weight: 400; text-shadow: 3px 3px 0 #FF5C8A; }
-:root[data-theme="riso"] .stat .v, :root[data-theme="riso"] .bonus .name { font-weight: 400; }
-
-:root[data-theme="nocturne"] {
-  --bg: #0D0A1E; --panel: #191433; --ink: #EDE6FF; --muted: #A39BC8; --line: #2F2857;
-  --tile: #E9C46A; --tile-edge: #A5812B; --tile-ink: #1A1534;
-  --bank: #CBBDF4; --bank-edge: #8676C6; --bank-ink: #1A1534;
-  --accent: #E9C46A; --accent-soft: #2D2547;
-  --good: #7EE0B5; --good-soft: #173832; --bad: #FF8A9A;
-  --font-display: "Cormorant Garamond", Georgia, serif; --font-body: "Jost", system-ui, sans-serif;
-  color-scheme: dark;
-}
-:root[data-theme="nocturne"] body { background-image:
-  radial-gradient(1.2px 1.2px at 12% 18%, #fff8, transparent), radial-gradient(1px 1px at 68% 9%, #fff9, transparent),
-  radial-gradient(1.4px 1.4px at 84% 42%, #ffe9a8aa, transparent), radial-gradient(1px 1px at 33% 64%, #fff7, transparent),
-  radial-gradient(1.2px 1.2px at 52% 31%, #fff6, transparent), radial-gradient(1px 1px at 91% 80%, #fff8, transparent),
-  radial-gradient(1.3px 1.3px at 7% 87%, #ffe9a899, transparent), radial-gradient(1px 1px at 46% 92%, #fff6, transparent),
-  radial-gradient(80% 60% at 50% -10%, rgba(120,90,220,.28), transparent 70%);
-  background-size: 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 100% 100%;
-  background-attachment: fixed; }
-:root[data-theme="nocturne"] .card { border-color: #3A3168; background: rgba(25,20,51,.82); box-shadow: 0 0 0 1px rgba(233,196,106,.06), 0 12px 40px rgba(0,0,0,.35); }
-:root[data-theme="nocturne"] .tile { font-weight: 700; }
-/* Cormorant uses old-style figures by default; lining figures keep scores readable. */
-:root[data-theme="nocturne"] * { font-variant-numeric: lining-nums tabular-nums; }
-:root[data-theme="nocturne"] .brand h1 { font-size: 56px; letter-spacing: 0.02em; }
-
-:root[data-theme="chalk"] {
-  --bg: #22302A; --panel: #2A3933; --ink: #F2F0E6; --muted: #B8C2B6; --line: #55665C;
-  --tile: #F4E59E; --tile-edge: #B4A25A; --tile-ink: #22302A;
-  --bank: #EFEDE3; --bank-edge: #A7AB9F; --bank-ink: #22302A;
-  --accent: #9FD3F0; --accent-soft: #2F4949;
-  --good: #B5E3A0; --good-soft: #30463A; --bad: #F4A0A0;
-  --font-display: "Cabin Sketch", "Comic Sans MS", cursive; --font-body: "Patrick Hand", "Comic Sans MS", cursive;
-  color-scheme: dark;
-}
-:root[data-theme="chalk"] body { font-size: 17px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(70% 60% at 30% 20%, rgba(255,255,255,.05), transparent 70%); background-attachment: fixed; }
-:root[data-theme="chalk"] .card { border: 2px dashed rgba(242,240,230,.28); border-radius: 8px; background: rgba(42,57,51,.85); }
-:root[data-theme="chalk"] .tile, :root[data-theme="chalk"] .alpha button { border-radius: 6px; font-family: var(--font-body); font-weight: 400; }
+:root[data-theme="botanical"] .brand h1 { font-weight: 800; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
@@ -1085,7 +1058,7 @@ async function shareSummary() {
 // ---------- theme ----------
 const THEME = "morph-ladder:theme";
 // The toggle cycles through every theme. Dark is the default; a saved choice wins.
-const THEMES = [["dark", "Dark"], ["light", "Light"], ["letterpress", "Letterpress"], ["botanical", "Botanical"], ["riso", "Risograph"], ["nocturne", "Nocturne"], ["chalk", "Chalkboard"]];
+const THEMES = [["dark", "Dark"], ["light", "Light"], ["letterpress", "Letterpress"], ["botanical", "Botanical"], ["trailhead", "Trailhead"]];
 const THEME_NAME = Object.fromEntries(THEMES);
 const curTheme = () => THEME_NAME[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : "dark";
 const nextTheme = () => THEMES[(THEMES.findIndex(([id]) => id === curTheme()) + 1) % THEMES.length][0];
