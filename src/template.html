@@ -287,11 +287,12 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .modal textarea { width: 100%; min-height: 90px; font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--bg); color: var(--ink); }
 
 details.rules { grid-column: 1 / -1; }
-details.rules summary { cursor: pointer; font-weight: 700; }
+details.rules summary { cursor: pointer; font-weight: 700; font-family: var(--font-display); font-size: 20px; }
 .rules-body { display: grid; gap: 6px 28px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 12px; color: var(--muted); font-size: 14px; }
 .rules-body h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); }
 .rules-body ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .rules-body b { color: var(--ink); }
+details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 
 
 /* ---------- Extra themes ---------- */
@@ -381,17 +382,16 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 
   <details class="card rules" id="rules">
     <summary>How to play</summary>
+    <p class="goal">Turn the current word into a new one by rearranging its letters or bringing in letters from the bank. Every step must make a real word of 3 or more letters that isn't already on your ladder.</p>
     <div class="rules-body">
       <div>
         <h3>Moves</h3>
         <ul>
-          <li>Create a new word from the current word by manipulating its letters or adding letters from the bank.</li>
           <li><b>Add.</b> Tap a bank letter, then a gap in the word. A new letter refills the bank.</li>
           <li><b>Remove.</b> Tap a letter in the word, then Remove. It doesn't go back to the bank.</li>
           <li><b>Shift.</b> Tap a letter in the word, then the gap you want it to move to.</li>
           <li><b>Swap.</b> Tap a letter in the word, then another letter to trade places.</li>
           <li><b>Replace.</b> Tap a letter in the word, then a bank letter to put in its place (or the other way round). A new letter refills the bank.</li>
-          <li>Each move must make a real word of 3+ letters that isn't already on the ladder.</li>
         </ul>
       </div>
       <div>
@@ -794,7 +794,7 @@ function render() {
   if (G.over) hint = "No moves left.";
   else if (ui.mode === "pick") hint = "Choose a letter to add to your bank.";
   else if (ui.mode === "discard") hint = `Tap a bank letter to discard for ${UP(ui.chosen)}.`;
-  else if (!sel) hint = "Tap a bank letter to add or swap it in, or a letter in the word to move, swap or remove it.";
+  else if (!sel) hint = "Tap a bank letter to add or swap it in, or tap a letter in the current word to move, swap or remove it.";
   else if (sel.k === "bank") hint = `Tap a gap to insert ${UP(G.bank[sel.i])}, or a letter in the word to replace it with ${UP(G.bank[sel.i])}.`;
   else hint = `Tap a gap to move ${UP(w[sel.i])}, another letter to swap with it, a bank letter to replace it, or <button type="button" class="btn danger" id="remove">Remove ${UP(w[sel.i])}</button>`;
   $("hint").innerHTML = `<span>${hint}</span>`;
