@@ -2,7 +2,7 @@
 
 A word-ladder game: change one thing at a time, and every step must be a new, real word.
 
-Pick a mode: **Classic** gives you 50 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word with a bank of 6 letters. Each move must make a real word of 3+ letters that isn't already on your ladder:
+Pick a mode: **Classic** gives you 25 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word with a bank of 6 letters. Each move must make a real word of 3+ letters that isn't already on your ladder:
 
 - **Add** a bank letter anywhere in the word (the bank refills)
 - **Remove** a letter
@@ -16,7 +16,7 @@ Each word scores the value of its letters, from 1 for common letters like A and 
 
 The game is a single self-contained page with no server or dependencies:
 
-- `index.html` is the main layout (recent words and bonuses in the right column).
+- `index.html` is the main layout (previous steps and bonuses in the right column).
 - `classic.html` is the original layout (full ladder in the right column).
 
 Open either file in a browser, or serve the repository with any static host. To publish with **GitHub Pages**: Settings → Pages → Source: *Deploy from a branch* → Branch: `main`, folder `/ (root)`. The game will be at `https://<user>.github.io/<repo>/`.

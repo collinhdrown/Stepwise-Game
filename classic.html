@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="organic">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&display=swap">
 <style>
 /* Layout: a type-case workbench. Play area (bonus, word, bank, powers) on the left; the ladder of past words runs down the right. Stacks on phones. */
 :root {
@@ -64,7 +65,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .app:not(.view-ach) > #ach-page { display: none; }
 #ach-page { grid-column: 1 / -1; }
 #toast-slot, #modal-slot { position: fixed; }
-nav.tabs { display: flex; gap: 6px; margin-top: 12px; }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 nav.tabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13.5px; cursor: pointer; color: var(--muted); }
 nav.tabs .theme-btn { margin-left: 6px; }
 nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
@@ -132,7 +133,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 
 .bankrow { display: grid; gap: 8px; justify-items: center; padding-top: 6px; border-top: 1px dashed var(--line); }
 .bank { display: flex; gap: 8px; justify-content: center; width: 100%; }
-.bank .tile { flex: 0 1 52px; min-width: 0; font-size: 26px; background: var(--bank); box-shadow: inset 0 -4px 0 var(--bank-edge), 0 1px 2px rgba(0,0,0,.18); }
+.bank .tile { flex: 0 1 52px; min-width: 0; font-size: 26px; background: var(--bank); color: var(--bank-ink, var(--tile-ink)); box-shadow: inset 0 -4px 0 var(--bank-edge), 0 1px 2px rgba(0,0,0,.18); }
 .bank .tile.sel { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .bank .tile.swap { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
 .bank .tile.discard { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px var(--bad); }
@@ -153,6 +154,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .board .label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .board .mode-line { font-size: 12.5px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
 .board .mode-line b { color: var(--ink); }
+.board .mode-line .low { color: var(--bad); font-weight: 800; }
 .modes { display: grid; gap: 8px; }
 .mode-opt { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 .mode-opt b { font-size: 16px; }
@@ -177,7 +179,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .power.active { border-color: var(--accent); background: var(--accent-soft); }
 .picker { display: grid; gap: 10px; padding: 12px; border-radius: 11px; background: var(--accent-soft); }
 .alpha { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
-.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--bank); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--bank-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
+.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--bank); color: var(--bank-ink, var(--tile-ink)); box-shadow: inset 0 -3px 0 var(--bank-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
 .alpha button:hover { outline: 2px solid var(--accent); }
 .picker .bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
 
@@ -198,7 +200,17 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .toast b { font-family: var(--font-display); font-size: 20px; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 12px); } 10%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 0); } }
 .ach { display: grid; gap: 10px; }
+.ach .head h2 { margin: 0; font-family: var(--font-display); }
+.ach .ach-head { margin-top: 14px; }
 .ach .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.top-grid { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; max-width: 420px; }
+.top-grid > b { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
+.top-grid .rank { font-size: 12px; font-weight: 700; color: var(--muted); padding-right: 4px; }
+.top-grid .cell { min-height: 46px; display: flex; justify-content: center; align-items: baseline; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, var(--bg)); }
+.top-grid .cell strong { font-family: var(--font-display); font-size: 20px; font-variant-numeric: lining-nums tabular-nums; color: var(--ink); }
+.top-grid .cell small { font-size: 11.5px; color: var(--muted); }
+.top-grid .cell.live { border-color: var(--accent); }
+.top-grid .cell.empty { color: var(--muted); border-style: dashed; background: none; }
 .ach-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
 .badge { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 9px 11px; border-radius: 10px; border: 1px dashed var(--line); color: var(--muted); }
 .badge .mark { grid-row: 1 / span 2; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; border: 2px solid var(--line); font-variant-numeric: tabular-nums; }
@@ -287,6 +299,24 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 .rules-body ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .rules-body b { color: var(--ink); }
 
+
+/* ---------- Extra themes ---------- */
+/* Organic (labelled Default): deep green with terracotta and cream, faint dotted map trails behind the page. */
+:root[data-theme="organic"] {
+  --bg: #142019; --panel: #213229; --ink: #F6F8EE; --muted: #BCC8B0; --line: #3F5746;
+  --tile: #E3915F; --tile-edge: #9E5532; --tile-ink: #24150C;
+  --bank: #F3EED9; --bank-edge: #ADA484; --bank-ink: #1C2A1F;
+  --accent: #F0AE7A; --accent-soft: #3A3A2A;
+  --good: #A8DA82; --good-soft: #294026; --bad: #FF6A5C;
+  --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root[data-theme="organic"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke='%23BFE0A8' stroke-opacity='.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke-width='2.4' stroke-dasharray='0 10' d='M-20.0 140.0 Q-4.4 143.6 10.9 148.2 Q25.8 154.0 40.4 160.6 Q54.7 167.9 68.6 175.8 Q82.1 184.3 95.5 193.1 Q109.0 201.7 122.5 210.2 Q136.4 218.2 150.4 225.9 Q164.9 232.6 180.0 238.1 Q195.3 242.5 211.0 245.8 Q226.8 248.2 242.7 249.8 Q258.7 250.7 274.7 250.2 Q290.7 248.9 306.5 246.9 Q322.3 244.4 338.1 241.5 Q353.8 238.9 369.6 236.3 Q385.5 234.0 401.3 231.9 Q417.2 230.1 433.2 228.6 Q449.1 227.3 465.0 225.7 Q480.9 223.8 496.8 221.9 Q512.7 220.0 528.6 218.1 Q544.5 216.3 560.4 214.3 Q576.2 211.8 591.8 208.6 Q607.4 205.0 622.9 200.8 Q638.0 195.7 652.6 189.1 Q666.4 181.0 679.0 171.2 Q690.5 160.0 701.0 147.9 Q710.3 134.9 718.4 121.2 Q725.1 106.6 730.1 91.4 Q733.8 75.8 736.3 60.0 Q737.4 44.1 736.7 28.1 Q734.7 12.2 731.7 -3.5 Q728.1 -19.1 723.7 -34.5 Q718.6 -49.6 713.2 -64.7 Q707.7 -79.7 702.5 -94.9 Q697.4 -110.0 692.7 -125.3 Q688.1 -140.6 683.3 -155.9 Q678.0 -171.0 672.4 -186.0 Q666.8 -201.0 661.7 -216.1 Q657.3 -231.5 654.2 -247.2 Q652.4 -263.1 652.2 -279.1 Q654.0 -295.0 657.3 -310.7 Q662.5 -325.8 669.5 -340.2 Q677.6 -354.0 686.3 -367.4 Q695.6 -380.4 705.2 -393.2 Q715.4 -405.6 726.5 -417.1 Q738.2 -428.0 750.1 -438.7 Q762.3 -449.1 774.4 -459.5 Q786.6 -469.9 799.0 -480.0 Q811.4 -490.1 823.8 -500.2 Q836.5 -509.9 849.4 -519.4 Q862.4 -528.8 875.7 -537.7 Q889.4 -545.8 903.8 -552.8 Q918.8 -558.5 934.1 -563.1 Q949.8 -566.3 965.7 -567.9 Q981.7 -567.8 997.6 -566.3 M731.7 -3.5 Q723.1 -13.2 714.8 -23.2 Q706.4 -33.2 698.1 -43.2 Q689.8 -53.2 681.4 -63.1 Q673.4 -73.3 665.4 -83.5 Q657.8 -94.1 650.3 -104.7 Q642.9 -115.4 635.6 -126.2 Q628.2 -136.9 620.8 -147.5 Q613.2 -158.1 605.6 -168.6 Q598.0 -179.2 590.0 -189.5 Q581.6 -199.4 573.0 -209.1 Q563.9 -218.4 554.8 -227.7 Q545.2 -236.5 535.6 -245.2 M731.7 -3.5 Q734.8 -16.1 737.6 -28.8 Q740.2 -41.6 742.7 -54.3 Q745.4 -67.1 748.1 -79.8 Q750.9 -92.4 753.7 -105.2 Q756.8 -117.8 759.7 -130.4 Q763.0 -143.0 766.9 -155.4 Q771.5 -167.6 776.9 -179.4 Q783.4 -190.7 790.8 -201.4 Q798.8 -211.6 807.3 -221.4 Q816.1 -231.0 825.0 -240.5 Q834.3 -249.5 844.0 -258.3 M652.4 -263.1 Q645.3 -274.0 638.3 -285.0 Q631.1 -295.8 623.4 -306.3 Q615.0 -316.2 605.8 -325.3 Q595.5 -333.4 584.8 -340.7 Q573.6 -347.2 561.7 -352.6 Q549.5 -356.9 536.8 -359.7 Q523.8 -361.0 510.8 -360.9 Q497.9 -359.9 485.0 -357.8 Q472.3 -355.0 459.9 -351.3 Q447.5 -347.4 435.1 -343.3 Q423.0 -338.6 411.0 -333.7 Q399.1 -328.4 387.6 -322.4 Q376.5 -315.6 365.7 -308.4 Q355.5 -300.3 345.7 -291.7 M652.4 -263.1 Q657.0 -275.3 661.7 -287.4 Q666.5 -299.5 671.2 -311.6 Q676.2 -323.6 682.0 -335.2 Q688.1 -346.7 694.1 -358.3 Q700.0 -369.8 705.5 -381.6 Q710.9 -393.4 716.2 -405.3 Q721.4 -417.2 726.9 -429.0 Q732.7 -440.6 739.2 -451.9 Q746.5 -462.6 754.6 -472.8 Q763.1 -482.6 771.8 -492.3 M-20.0 620.0 Q-4.2 617.2 11.5 614.5 Q27.3 611.7 43.0 608.7 Q58.7 605.6 74.4 602.4 Q90.1 599.6 105.9 597.1 Q121.7 594.6 137.6 592.4 Q153.5 590.7 169.5 590.0 Q185.5 589.9 201.4 591.0 Q217.2 593.5 232.6 598.1 Q247.4 604.0 261.8 611.1 Q275.4 619.4 288.1 629.2 Q300.0 639.9 311.2 651.3 Q321.7 663.4 331.0 676.4 Q339.2 690.1 346.7 704.3 Q353.4 718.8 360.0 733.4 Q366.5 748.0 373.1 762.6 Q379.5 777.3 385.5 792.1 Q391.3 807.0 397.1 821.9 Q403.2 836.7 409.3 851.5 Q415.5 866.3 422.1 880.8 Q428.8 895.4 435.5 909.9 Q441.7 924.7 447.3 939.6 Q452.4 954.8 457.0 970.1 Q460.9 985.6 463.9 1001.3 Q465.3 1017.3 465.1 1033.3 Q463.5 1049.2 461.0 1065.0 Q457.4 1080.6 452.8 1095.9 Q447.4 1111.0 441.8 1125.9 Q436.4 1141.0 431.4 1156.2 Q426.2 1171.3 420.6 1186.3 Q414.4 1201.1 407.5 1215.5 Q400.1 1229.7 392.7 1243.9 Q385.1 1258.0 377.8 1272.2 Q370.6 1286.5 363.6 1300.9 Q356.6 1315.3 350.2 1329.9 Q344.6 1344.9 339.9 1360.2 Q336.5 1375.9 334.1 1391.7 Q332.9 1407.6 332.7 1423.6 Q333.1 1439.6 334.0 1455.6 Q335.4 1471.5 337.5 1487.4 Q340.4 1503.1 343.7 1518.8 Q347.4 1534.4 351.8 1549.7 Q357.0 1564.9 362.6 1579.9 Q368.5 1594.7 374.9 1609.4 Q381.1 1624.1 387.8 1638.7 Q394.5 1653.2 401.3 1667.7 Q407.7 1682.4 414.0 1697.1 M346.7 704.3 Q357.8 711.0 368.8 717.9 Q379.6 725.1 390.1 732.9 Q399.7 741.6 409.0 750.7 Q417.8 760.2 426.0 770.4 Q433.8 780.8 441.5 791.2 Q449.1 801.8 456.7 812.4 Q464.1 823.0 471.8 833.5 Q479.4 844.0 486.5 854.9 Q493.0 866.2 498.7 877.9 Q503.4 890.0 507.5 902.3 M346.7 704.3 Q346.3 717.3 345.9 730.3 Q344.7 743.2 342.9 756.1 Q340.5 768.9 338.1 781.7 Q335.5 794.4 332.7 807.1 Q330.2 819.9 328.6 832.8 Q328.3 845.8 329.8 858.7 Q332.7 871.3 336.4 883.8 Q340.9 896.0 345.5 908.1 Q350.8 920.0 356.7 931.6 Q363.3 942.8 370.5 953.6 Q378.3 964.0 386.9 973.8 Q396.6 982.5 407.2 990.0 Q418.4 996.6 430.2 1001.9 Q442.7 1005.6 455.5 1008.0 M407.5 1215.5 Q408.0 1228.5 407.9 1241.5 Q407.5 1254.5 407.2 1267.5 Q406.8 1280.5 406.2 1293.5 Q405.2 1306.4 403.4 1319.3 Q401.2 1332.1 399.2 1345.0 Q397.1 1357.8 395.4 1370.7 Q394.0 1383.6 392.5 1396.5 Q390.6 1409.4 387.9 1422.1 Q384.9 1434.8 381.9 1447.4 M407.5 1215.5 Q398.2 1224.6 389.0 1233.8 Q379.9 1243.1 370.5 1252.1 Q361.3 1261.2 352.0 1270.3 Q342.7 1279.4 333.7 1288.8 Q325.0 1298.4 316.2 1308.0 Q307.4 1317.6 298.8 1327.3 Q289.7 1336.6 280.6 1345.9 Q271.9 1355.6 263.1 1365.2 Q254.7 1375.1 246.8 1385.4 Q239.7 1396.3 234.1 1408.0 Q229.5 1420.2 226.2 1432.7 Q223.9 1445.5 222.5 1458.5 Q222.5 1471.5 223.4 1484.4 M1620.0 260.0 Q1604.4 256.3 1588.9 252.4 Q1573.5 248.0 1558.4 242.7 Q1543.4 237.1 1528.6 231.1 Q1513.8 225.0 1499.2 218.4 Q1484.5 212.1 1469.8 205.8 Q1455.1 199.5 1440.3 193.6 Q1425.1 188.5 1409.8 183.8 Q1394.3 179.7 1378.7 176.4 Q1362.9 173.6 1347.1 171.0 Q1331.3 168.5 1315.6 165.6 Q1299.9 162.7 1284.1 159.7 Q1268.5 156.2 1253.1 152.1 Q1237.8 147.4 1222.5 142.7 Q1207.2 138.1 1191.8 133.5 Q1176.5 129.0 1161.2 124.1 Q1146.1 118.8 1131.2 113.0 Q1116.5 106.7 1102.1 99.8 Q1087.8 92.7 1073.5 85.5 Q1059.3 78.1 1045.3 70.3 Q1031.8 61.7 1019.0 52.1 Q1007.1 41.5 996.2 29.7 Q986.6 16.9 978.4 3.2 Q971.8 -11.4 966.3 -26.4 Q961.7 -41.8 958.4 -57.4 Q955.7 -73.2 953.3 -89.0 Q950.6 -104.8 947.8 -120.5 Q945.4 -136.3 943.0 -152.2 Q941.3 -168.1 940.5 -184.1 Q940.7 -200.1 942.2 -216.0 Q944.9 -231.8 948.4 -247.4 Q953.3 -262.6 959.0 -277.5 Q965.2 -292.3 971.6 -307.0 Q978.1 -321.6 985.3 -335.9 Q993.0 -349.9 1001.1 -363.7 Q1009.8 -377.1 1018.9 -390.3 Q1028.4 -403.2 1037.9 -416.1 Q1047.3 -429.0 1056.9 -441.7 Q1067.0 -454.2 1077.7 -466.1 Q1089.1 -477.3 1101.3 -487.7 Q1113.8 -497.6 1126.5 -507.4 Q1139.0 -517.3 1151.7 -527.1 Q1164.4 -536.9 1176.7 -547.1 Q1188.5 -557.8 1200.2 -568.8 Q1211.5 -580.1 1222.4 -591.8 Q1233.1 -603.7 1244.0 -615.4 Q1255.3 -626.8 1267.4 -637.2 M943.0 -152.2 Q935.7 -162.9 928.4 -173.6 Q921.2 -184.4 913.8 -195.1 Q906.4 -205.8 898.5 -216.1 Q890.1 -226.1 881.2 -235.6 Q872.0 -244.8 862.2 -253.3 Q851.5 -260.7 840.1 -266.9 Q828.2 -272.1 816.0 -276.6 Q803.6 -280.6 791.1 -284.3 Q778.5 -287.3 765.7 -289.7 Q752.9 -292.0 740.1 -293.8 Q727.2 -295.6 714.2 -296.9 Q701.3 -297.7 688.3 -297.8 Q675.3 -297.8 662.3 -297.1 M943.0 -152.2 Q946.5 -164.7 950.4 -177.1 Q955.1 -189.2 960.6 -201.0 Q966.4 -212.6 972.7 -224.0 Q980.0 -234.8 988.5 -244.6 Q998.4 -253.0 1009.1 -260.4 Q1020.6 -266.4 1032.6 -271.4 Q1045.0 -275.6 1057.6 -278.7 Q1070.4 -281.0 1083.2 -283.2 Q1096.1 -285.0 1109.0 -286.5 Q1121.9 -287.8 1134.9 -288.3 Q1147.9 -288.2 1160.9 -287.9 Q1173.9 -286.8 1186.7 -284.7 M380.0 1020.0 Q385.5 1005.0 390.9 989.9 Q395.7 974.7 399.7 959.2 Q402.3 943.4 403.7 927.4 Q404.0 911.4 403.5 895.5 Q402.3 879.5 400.8 863.6 Q399.5 847.6 398.6 831.6 Q397.9 815.7 396.9 799.7 Q396.0 783.7 394.7 767.8 Q392.5 751.9 389.0 736.3 Q384.9 720.8 380.7 705.4 Q376.9 689.9 373.4 674.2 Q370.4 658.5 367.5 642.8 Q364.7 627.0 362.2 611.2 Q360.3 595.3 359.5 579.4 Q359.7 563.4 360.5 547.4 Q361.6 531.4 363.4 515.5 Q365.9 499.7 369.2 484.1 Q373.6 468.7 378.5 453.5 Q384.1 438.5 390.5 423.8 Q397.4 409.4 405.2 395.4 Q414.0 382.0 423.8 369.4 Q434.9 357.9 447.2 347.6 Q460.6 338.9 474.9 331.6 Q489.6 325.5 504.7 320.1 Q520.0 315.4 535.5 311.6 Q551.3 309.2 567.3 308.1 Q583.3 308.6 599.2 310.7 Q614.8 314.2 630.0 319.2 Q644.7 325.5 658.7 333.2 Q672.4 341.5 685.8 350.2 Q699.2 359.0 712.5 367.9 Q725.7 377.0 738.8 386.1 Q751.8 395.5 764.3 405.4 Q776.3 416.0 788.0 427.0 Q799.5 438.1 810.8 449.4 Q821.8 461.0 832.5 472.9 Q843.0 485.0 853.1 497.4 M376.9 689.9 Q367.6 680.8 358.3 671.7 Q349.2 662.4 339.8 653.4 Q330.5 644.3 321.5 634.9 Q312.7 625.4 303.7 616.0 Q294.4 606.9 285.2 597.7 Q276.3 588.2 267.3 578.8 Q258.7 569.1 250.6 558.9 Q243.5 548.1 237.8 536.4 M376.9 689.9 Q380.2 677.3 383.2 664.7 Q385.7 651.9 387.2 639.0 Q387.8 626.0 387.4 613.0 Q386.6 600.0 385.4 587.1 Q384.1 574.2 382.7 561.2 Q381.1 548.3 379.4 535.4 Q378.2 522.5 377.6 509.5 Q377.6 496.5 378.2 483.5 M504.7 320.1 Q514.1 311.1 524.1 302.9 Q534.6 295.2 545.6 288.2 Q557.3 282.5 569.6 278.4 Q582.4 276.1 595.4 275.4 Q608.3 276.7 621.1 279.1 Q633.6 282.8 645.7 287.5 Q657.2 293.6 667.9 301.0 Q677.9 309.3 687.4 318.1 Q697.0 326.9 706.3 336.0 Q715.1 345.6 723.5 355.5 Q731.8 365.4 740.0 375.5 Q748.4 385.5 756.8 395.4 Q765.5 405.1 774.5 414.4 M504.7 320.1 Q517.5 322.3 530.4 324.4 Q543.1 326.8 555.9 329.3 Q568.7 331.5 581.6 333.2 Q594.5 334.3 607.5 334.7 Q620.5 334.8 633.5 334.3 Q646.5 333.6 659.5 332.4 Q672.4 331.0 685.3 329.4 Q698.2 327.6 711.0 325.4 Q723.7 322.8 736.4 319.9 Q749.0 316.9 761.7 314.0 M1180.0 -20.0 Q1177.2 -4.2 1174.1 11.4 Q1170.8 27.1 1168.0 42.9 Q1166.1 58.8 1164.8 74.7 Q1164.6 90.7 1165.0 106.7 Q1166.6 122.6 1169.4 138.4 Q1173.3 153.9 1178.7 168.9 Q1185.5 183.4 1193.0 197.5 Q1201.1 211.4 1209.7 224.8 Q1218.5 238.2 1227.3 251.6 Q1235.9 265.1 1244.4 278.6 Q1252.9 292.1 1261.4 305.8 Q1269.4 319.6 1276.8 333.8 Q1284.1 348.0 1291.2 362.3 Q1298.5 376.6 1306.0 390.7 Q1314.3 404.4 1323.0 417.8 Q1332.4 430.8 1342.5 443.2 Q1353.7 454.6 1365.7 465.2 Q1378.2 475.2 1391.6 484.0 Q1405.3 492.2 1419.1 500.2 Q1432.9 508.4 1446.4 517.0 Q1459.5 526.2 1472.6 535.4 Q1485.7 544.5 1499.1 553.2 Q1513.0 561.1 1527.3 568.4 Q1541.8 575.1 1556.6 581.2 Q1571.6 586.9 1586.8 591.9 Q1602.2 596.2 1617.9 599.2 Q1633.8 600.7 1649.8 601.3 Q1665.8 600.9 1681.8 599.9 Q1697.7 598.7 1713.7 597.5 Q1729.6 596.3 1745.6 595.4 Q1761.6 594.4 1777.5 593.2 Q1793.5 592.3 1809.5 591.8 Q1825.5 591.6 1841.5 591.9 Q1857.5 593.2 1873.3 595.4 M1323.0 417.8 Q1334.6 423.7 1345.9 430.1 Q1356.7 437.4 1366.9 445.4 Q1376.7 454.0 1385.9 463.2 Q1394.2 473.2 1401.1 484.2 Q1407.1 495.7 1412.4 507.6 Q1417.0 519.7 1420.3 532.3 Q1423.1 545.0 1425.5 557.8 Q1428.2 570.5 1430.6 583.3 Q1432.4 596.2 1433.9 609.1 M1323.0 417.8 Q1325.4 430.6 1327.1 443.5 Q1328.0 456.5 1328.0 469.5 Q1326.8 482.4 1324.8 495.3 Q1321.9 507.9 1317.6 520.2 Q1312.4 532.1 1306.0 543.5 Q1298.5 554.0 1289.9 563.8 Q1280.4 572.7 1270.1 580.6 Q1259.0 587.4 1247.5 593.5 Q1235.7 598.9 1223.8 604.0 M1620.0 860.0 Q1604.4 863.6 1589.0 867.9 Q1573.9 873.2 1559.2 879.6 Q1545.1 887.1 1531.3 895.1 Q1517.6 903.4 1504.2 912.2 Q1491.1 921.3 1478.2 930.9 Q1465.7 940.8 1453.4 951.1 Q1441.5 961.7 1429.8 972.6 Q1418.5 984.0 1407.8 995.9 Q1397.3 1008.0 1386.8 1020.0 Q1376.1 1031.9 1365.1 1043.6 Q1354.0 1055.0 1342.5 1066.2 Q1331.1 1077.4 1319.4 1088.4 Q1307.5 1099.0 1295.7 1109.8 Q1284.4 1121.1 1273.5 1132.8 Q1263.1 1145.1 1253.3 1157.7 Q1243.9 1170.6 1234.6 1183.7 Q1225.5 1196.8 1217.1 1210.4 Q1209.4 1224.5 1202.1 1238.7 Q1195.3 1253.2 1188.9 1267.9 Q1182.6 1282.5 1176.0 1297.1 Q1169.7 1311.8 1163.6 1326.6 Q1157.2 1341.3 1150.3 1355.7 Q1143.3 1370.1 1136.1 1384.4 Q1129.1 1398.8 1122.5 1413.4 Q1116.1 1428.0 1109.5 1442.6 Q1102.1 1456.8 1093.9 1470.5 Q1084.5 1483.5 1074.3 1495.8 Q1063.2 1507.3 1051.3 1518.0 Q1038.9 1528.2 1026.0 1537.6 Q1012.7 1546.6 999.4 1555.4 Q986.0 1564.1 972.6 1572.8 Q959.3 1581.8 946.5 1591.4 Q934.3 1601.7 922.3 1612.3 Q910.9 1623.6 900.0 1635.2 Q889.1 1646.9 878.1 1658.6 Q866.9 1670.0 855.5 1681.2 Q844.0 1692.4 832.3 1703.3 M1376.1 1031.9 Q1373.9 1044.7 1372.0 1057.6 Q1370.2 1070.5 1369.0 1083.4 Q1367.9 1096.4 1366.8 1109.3 Q1365.9 1122.3 1365.5 1135.3 Q1365.9 1148.3 1366.6 1161.3 Q1367.2 1174.2 1367.3 1187.2 Q1366.5 1200.2 1364.9 1213.1 Q1362.9 1226.0 1360.1 1238.6 Q1356.4 1251.1 1351.6 1263.2 Q1346.3 1275.1 1340.2 1286.6 M1376.1 1031.9 Q1364.4 1037.7 1352.8 1043.5 Q1341.2 1049.5 1329.8 1055.5 Q1318.3 1061.7 1306.9 1068.0 Q1295.6 1074.4 1284.2 1080.7 Q1272.8 1086.8 1261.4 1093.0 Q1250.1 1099.5 1239.0 1106.2 Q1227.7 1112.8 1216.5 1119.4 Q1205.6 1126.5 1195.2 1134.2 Q1185.0 1142.3 1175.6 1151.2 M1331.1 1077.4 Q1328.4 1090.1 1325.5 1102.8 Q1322.6 1115.5 1319.6 1128.1 Q1316.9 1140.9 1314.3 1153.6 Q1312.0 1166.4 1310.6 1179.3 Q1310.1 1192.3 1310.9 1205.3 Q1313.1 1218.1 1316.1 1230.7 Q1320.4 1243.0 1325.6 1254.9 Q1331.9 1266.3 1339.0 1277.2 Q1346.8 1287.6 1354.9 1297.8 Q1363.3 1307.7 1371.7 1317.6 Q1380.4 1327.2 1389.2 1336.9 Q1397.6 1346.8 1405.7 1356.9 Q1413.7 1367.1 1422.1 1377.1 Q1430.5 1387.0 1439.4 1396.5 M1331.1 1077.4 Q1318.4 1080.2 1305.8 1083.5 Q1293.5 1087.6 1281.6 1092.8 Q1270.2 1099.1 1259.5 1106.5 Q1249.7 1115.1 1240.7 1124.4 Q1232.0 1134.1 1224.0 1144.3 Q1217.2 1155.4 1211.3 1167.0 Q1206.3 1179.0 1202.0 1191.2 Q1198.3 1203.7 1194.9 1216.3 Q1192.0 1228.9 1189.3 1241.6 Q1187.0 1254.4 1184.5 1267.2 Q1181.9 1279.9 1179.0 1292.6 Q1176.3 1305.3 1173.6 1318.0 Q1170.8 1330.7 1167.4 1343.3 Q1163.9 1355.8 1160.6 1368.4 Q1157.2 1380.9 1154.1 1393.5 M700.0 -20.0 Q701.5 -4.1 702.4 11.9 Q702.5 27.9 702.5 43.9 Q702.9 59.9 703.3 75.9 Q703.6 91.9 704.1 107.9 Q704.9 123.9 705.9 139.8 Q707.5 155.8 710.0 171.6 Q713.5 187.2 718.2 202.5 Q723.5 217.6 729.5 232.4 Q736.2 246.9 743.4 261.2 Q751.3 275.1 759.5 288.9 Q768.1 302.4 776.9 315.7 Q786.1 328.8 796.1 341.3 Q806.5 353.5 817.3 365.3 Q828.7 376.5 840.7 387.1 Q853.6 396.6 867.2 404.9 Q881.4 412.3 896.2 418.4 Q911.3 423.6 926.7 428.1 Q942.3 431.8 958.1 434.2 Q974.0 435.7 990.0 436.6 Q1006.0 436.6 1022.0 436.2 Q1037.9 435.0 1053.8 432.9 Q1069.4 429.3 1084.6 424.3 Q1099.3 418.0 1113.2 410.2 Q1126.4 401.1 1138.9 391.1 Q1150.3 379.9 1160.6 367.6 Q1169.9 354.6 1178.1 340.9 Q1185.5 326.7 1191.7 311.9 Q1196.5 296.7 1200.2 281.1 Q1202.5 265.3 1203.2 249.3 Q1202.1 233.3 1199.6 217.5 Q1195.7 202.0 1190.3 186.9 Q1183.9 172.3 1176.4 158.2 Q1167.5 144.9 1157.6 132.3 Q1147.1 120.2 1135.8 108.9 M990.0 436.6 Q1001.4 430.3 1012.9 424.3 Q1024.8 419.1 1037.2 415.0 Q1049.9 412.4 1062.9 411.3 Q1075.9 411.4 1088.8 412.2 Q1101.7 413.8 1114.5 416.4 Q1127.1 419.6 1139.6 423.2 Q1152.1 426.7 1164.6 430.2 Q1177.0 434.0 1189.4 438.1 Q1201.6 442.6 1213.4 448.0 Q1225.0 453.9 1236.2 460.4 Q1247.3 467.3 1258.1 474.5 Q1269.0 481.5 1279.8 488.8 Q1290.7 495.9 1302.0 502.4 M990.0 436.6 Q1001.4 442.8 1013.1 448.4 Q1025.2 453.2 1037.5 457.4 Q1049.9 461.4 1062.1 465.7 Q1074.2 470.7 1085.8 476.5 Q1096.8 483.4 1107.1 491.3 Q1116.6 500.2 1124.7 510.3 Q1131.8 521.2 1138.1 532.6 Q1143.9 544.2 1149.1 556.2 M786.1 328.8 Q797.4 335.3 808.7 341.7 Q820.3 347.5 832.0 353.2 Q843.7 359.0 855.0 365.4 Q865.7 372.7 875.9 380.8 Q885.5 389.6 894.6 398.9 Q903.3 408.5 911.7 418.4 Q919.7 428.7 927.2 439.3 Q934.4 450.1 941.3 461.1 Q947.6 472.5 952.8 484.4 Q956.7 496.8 959.6 509.5 Q961.7 522.3 962.6 535.3 Q962.2 548.3 960.9 561.2 M786.1 328.8 Q789.1 341.4 791.3 354.3 Q792.5 367.2 793.3 380.2 Q793.7 393.2 794.1 406.2 Q794.5 419.2 794.9 432.2 Q795.8 445.1 797.4 458.0 Q800.0 470.8 802.9 483.4 Q806.3 496.0 810.5 508.3 Q815.6 520.2 821.0 532.1 M-20.0 380.0 Q-4.1 381.4 11.9 382.9 Q27.8 384.3 43.8 385.1 Q59.8 384.8 75.7 383.0 Q91.4 380.0 107.0 376.3 Q122.2 371.5 137.2 365.8 Q151.7 359.2 165.7 351.3 Q178.8 342.1 190.9 331.6 Q201.7 319.9 211.4 307.1 Q219.4 293.3 226.0 278.7 Q230.8 263.4 233.9 247.7 Q235.5 231.8 236.0 215.8 Q236.0 199.8 235.7 183.8 Q235.4 167.8 235.5 151.8 Q236.0 135.8 237.0 119.9 Q238.4 103.9 240.4 88.1 Q243.5 72.4 247.8 57.0 Q253.0 41.8 258.5 26.8 Q264.5 11.9 271.1 -2.6 Q278.2 -16.9 285.9 -31.0 Q294.5 -44.5 304.2 -57.2 Q315.2 -68.8 327.2 -79.4 Q340.1 -88.9 353.5 -97.6 Q367.5 -105.4 381.9 -112.4 Q396.5 -118.8 411.4 -124.7 Q426.4 -130.2 441.6 -135.2 Q457.0 -139.7 472.4 -144.1 Q487.7 -148.5 503.2 -152.7 Q518.7 -156.6 534.3 -160.0 Q550.0 -163.1 565.7 -166.1 Q581.6 -168.5 597.5 -169.8 Q613.5 -170.4 629.5 -170.6 Q645.5 -169.8 661.5 -168.8 Q677.4 -167.6 693.4 -166.2 Q709.3 -164.8 725.2 -163.1 Q741.0 -160.8 756.7 -157.4 Q772.0 -152.9 787.3 -148.1 Q802.4 -142.8 817.4 -137.3 Q832.4 -131.6 847.2 -125.7 Q862.0 -119.6 876.6 -112.9 Q890.9 -105.9 905.1 -98.4 Q919.0 -90.6 932.8 -82.4 Q946.3 -73.9 959.8 -65.2 Q973.2 -56.5 986.6 -47.8 Q1000.1 -39.2 1013.5 -30.5 Q1027.1 -22.1 1040.8 -13.7 Q1054.7 -5.7 1068.5 2.2 Q1082.6 9.8 1096.7 17.4 Q1110.8 25.0 1124.8 32.8 Q1138.5 41.0 1152.2 49.3 Q1165.8 57.7 1179.2 66.4 M597.5 -169.8 Q608.3 -177.0 618.9 -184.5 Q629.4 -192.2 639.5 -200.4 Q649.2 -209.0 658.7 -217.9 Q667.6 -227.4 675.4 -237.8 Q681.9 -249.1 686.7 -261.1 Q690.0 -273.7 692.1 -286.5 Q692.7 -299.5 691.3 -312.5 Q688.3 -325.1 684.2 -337.4 Q678.8 -349.3 672.0 -360.3 M597.5 -169.8 Q609.6 -165.0 622.1 -161.2 Q634.8 -158.6 647.7 -157.1 Q660.7 -157.2 673.6 -159.0 Q686.2 -162.1 698.4 -166.7 Q710.1 -172.3 721.3 -179.0 Q731.5 -186.9 741.2 -195.7 Q750.3 -205.0 758.7 -214.9 Q766.7 -225.1 774.6 -235.4 Q782.3 -245.9 790.2 -256.2 M1620.0 560.0 Q1604.1 558.0 1588.4 555.2 Q1572.8 551.4 1557.4 547.1 Q1542.3 542.0 1527.5 535.8 Q1513.1 528.8 1499.2 520.9 Q1485.6 512.5 1472.1 503.9 Q1458.7 495.2 1445.4 486.3 Q1432.1 477.4 1419.0 468.2 Q1405.9 459.0 1393.0 449.6 Q1380.3 439.8 1367.7 430.0 Q1355.1 420.0 1342.4 410.4 Q1329.6 400.7 1316.7 391.3 Q1303.5 382.2 1290.4 373.1 Q1277.2 364.0 1264.0 354.9 Q1251.0 345.7 1238.1 336.2 Q1225.8 326.0 1214.0 315.1 Q1202.7 303.8 1191.6 292.3 Q1181.1 280.2 1170.8 267.9 Q1160.4 255.8 1150.2 243.5 Q1140.5 230.8 1131.2 217.7 Q1122.3 204.4 1113.8 190.9 Q1105.3 177.3 1096.8 163.8 Q1088.2 150.3 1079.1 137.1 Q1069.5 124.3 1059.5 111.8 Q1049.3 99.5 1038.8 87.5 Q1027.8 75.8 1016.6 64.4 Q1004.7 53.7 992.5 43.4 Q980.0 33.4 966.9 24.2 Q953.3 15.7 939.3 8.0 Q924.9 0.9 910.6 -6.1 Q896.3 -13.4 882.4 -21.3 Q868.7 -29.6 855.4 -38.4 Q842.5 -47.9 830.2 -58.1 Q818.7 -69.2 807.7 -80.9 Q797.4 -93.1 787.5 -105.7 Q778.2 -118.7 769.3 -132.0 Q761.2 -145.8 753.5 -159.8 Q746.7 -174.3 741.0 -189.2 Q736.2 -204.5 732.7 -220.1 Q730.0 -235.9 727.6 -251.7 Q726.0 -267.6 724.6 -283.6 Q723.9 -299.6 723.8 -315.6 Q723.8 -331.6 723.9 -347.6 Q723.4 -363.5 722.9 -379.5 M1122.3 204.4 Q1111.1 197.9 1099.9 191.3 Q1088.9 184.3 1077.9 177.4 Q1066.7 170.9 1055.4 164.5 Q1044.0 158.1 1032.7 151.6 Q1021.6 144.9 1010.8 137.7 Q1000.3 130.1 989.6 122.6 Q978.8 115.4 968.1 108.1 Q957.4 100.7 947.0 92.9 Q937.0 84.5 927.4 75.8 Q918.3 66.5 909.9 56.6 Q902.3 46.0 895.5 34.9 Q889.5 23.4 884.1 11.6 Q879.1 -0.4 874.5 -12.6 Q870.7 -25.0 867.4 -37.6 M1122.3 204.4 Q1121.0 191.5 1120.3 178.5 Q1119.9 165.5 1119.7 152.5 Q1119.5 139.5 1119.2 126.5 Q1118.3 113.6 1116.9 100.6 Q1115.0 87.8 1112.8 75.0 Q1109.9 62.3 1106.3 49.8 Q1102.0 37.5 1097.2 25.4 Q1091.6 13.7 1085.4 2.3 Q1078.8 -8.9 1071.5 -19.7 Q1063.3 -29.7 1054.5 -39.4 M882.4 -21.3 Q869.4 -21.3 856.4 -21.7 Q843.4 -22.1 830.4 -22.0 Q817.5 -20.9 804.6 -18.7 Q792.2 -15.1 780.4 -9.6 Q769.3 -2.7 758.9 5.0 Q749.3 13.7 740.4 23.3 Q732.0 33.2 724.3 43.6 Q717.6 54.8 711.8 66.4 Q707.6 78.7 704.7 91.4 Q702.7 104.2 701.2 117.1 M882.4 -21.3 Q875.4 -32.2 868.0 -42.9 Q860.3 -53.4 852.2 -63.6 Q843.7 -73.4 834.6 -82.7 Q824.6 -91.0 814.0 -98.5 Q802.8 -105.1 791.1 -110.9 Q779.0 -115.7 766.6 -119.5 Q753.9 -122.0 741.0 -123.5 Q728.0 -124.5 715.0 -125.0 Q702.0 -124.7 689.1 -123.3 Q676.3 -121.2 663.6 -118.4 Q651.0 -115.0 638.6 -111.2 Q626.4 -106.8 614.3 -101.8 M1000.0 1020.0 Q996.4 1004.4 993.0 988.8 Q989.9 973.1 987.6 957.3 Q985.7 941.4 984.1 925.4 Q983.0 909.5 982.0 893.5 Q980.8 877.6 979.3 861.6 Q977.4 845.7 975.5 829.9 Q973.3 814.0 970.7 798.2 Q967.5 782.5 963.5 767.0 Q959.5 751.6 955.8 736.0 Q952.2 720.4 948.5 704.8 Q944.5 689.3 940.6 673.8 Q937.1 658.2 933.6 642.6 Q930.1 627.0 926.4 611.4 Q922.2 596.0 917.9 580.6 Q913.6 565.2 909.3 549.7 Q905.5 534.2 902.4 518.5 Q899.5 502.8 897.0 487.0 Q894.6 471.1 892.2 455.3 Q889.7 439.5 887.0 423.8 Q883.5 408.2 879.2 392.7 Q874.5 377.4 869.1 362.4 Q863.1 347.5 856.7 332.9 Q849.5 318.6 841.4 304.8 Q833.0 291.2 824.4 277.7 Q815.8 264.2 807.4 250.6 Q798.5 237.3 789.0 224.4 Q778.9 212.0 767.8 200.4 Q755.9 189.8 743.2 180.0 Q730.1 170.9 716.6 162.3 Q702.8 154.1 688.9 146.2 Q674.8 138.6 660.4 131.7 M922.2 596.0 Q913.0 586.8 904.0 577.4 Q895.3 567.8 886.9 557.9 Q878.3 548.1 869.6 538.5 Q860.6 529.1 851.4 519.9 Q841.9 511.0 832.2 502.3 Q822.5 493.7 812.5 485.4 Q802.1 477.7 791.3 470.4 Q780.1 463.7 768.5 457.9 Q756.6 452.7 744.3 448.5 Q731.7 445.3 718.8 443.4 Q705.9 442.3 692.9 441.9 M922.2 596.0 Q924.4 583.2 926.4 570.3 Q927.9 557.4 929.1 544.4 Q929.7 531.5 929.7 518.5 Q929.5 505.5 929.2 492.5 Q929.0 479.5 929.0 466.5 Q929.5 453.5 931.1 440.6 Q933.8 427.9 937.8 415.5 Q943.3 403.7 950.2 392.7 Q958.5 382.7 967.9 373.7 Q978.3 365.9 989.7 359.6 M-20.0 980.0 Q-6.0 972.2 7.8 964.2 Q21.9 956.6 36.3 949.7 Q50.9 942.9 65.5 936.5 Q80.0 929.8 94.4 922.8 Q108.7 915.6 122.8 908.0 Q136.8 900.2 150.7 892.4 Q165.0 885.1 179.4 878.1 Q193.7 871.1 208.0 863.8 Q222.3 856.6 236.6 849.6 Q251.3 843.2 266.0 836.9 Q280.8 830.7 295.6 824.8 Q310.5 818.9 325.5 813.4 Q340.8 808.7 356.3 804.6 Q371.9 801.3 387.6 798.1 Q403.4 795.3 419.3 793.4 Q435.2 792.5 451.2 792.5 Q467.2 793.8 483.1 795.7 Q498.9 798.2 514.6 800.9 Q530.4 803.7 546.2 806.2 Q562.1 808.0 578.0 809.8 Q593.9 811.6 609.8 813.8 Q625.6 815.7 641.5 817.5 Q657.5 818.8 673.5 819.8 Q689.4 820.6 705.4 821.7 Q721.3 822.9 737.3 823.9 Q753.3 824.3 769.3 824.8 Q785.3 825.5 801.3 826.3 Q817.2 827.2 833.2 828.5 M483.1 795.7 Q495.4 791.6 507.7 787.2 Q519.9 782.9 532.3 779.0 Q544.8 775.3 557.2 771.4 Q569.5 767.2 581.6 762.4 Q593.6 757.4 605.7 752.6 Q617.7 747.8 629.9 743.2 Q642.2 738.9 654.5 734.9 Q666.9 730.9 679.4 727.2 Q692.0 723.9 704.5 720.6 Q717.1 717.2 729.6 713.9 Q742.3 710.9 755.0 708.1 M483.1 795.7 Q493.5 803.4 503.9 811.2 Q514.5 818.7 525.2 826.1 Q536.1 833.2 547.3 839.8 Q558.6 846.3 570.1 852.4 Q581.4 858.7 592.7 865.2 Q603.8 871.9 615.1 878.4 Q626.1 885.3 636.8 892.7 Q647.3 900.4 657.4 908.6 Q667.3 917.0 677.2 925.4'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(55% 45% at 0% 0%, rgba(132,170,110,.16), transparent 70%); background-size: cover, auto, auto; background-position: center, 0 0, 0 0; background-attachment: fixed; }
+:root[data-theme="organic"] .app { gap: 28px; }
+:root[data-theme="organic"] .card { border-radius: 22px; border-color: #4A6551; padding: 22px 24px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+:root[data-theme="organic"] .tile { border-radius: 12px; }
+:root[data-theme="organic"] .brand h1 { font-weight: 800; }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
@@ -295,7 +325,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
     <div class="brand">
       <h1>Stepwise</h1>
       <p>Create new words, one step at a time.</p>
-      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn" aria-pressed="false">Dark mode</button></nav>
+      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
     </div>
     <div class="scores">
       <div class="stat"><span class="k">Words</span><span class="v" id="s-words">0</span></div>
@@ -341,8 +371,9 @@ details.rules summary { cursor: pointer; font-weight: 700; }
     <section class="card toolkit" id="toolkit"></section>
   </main>
   <section class="card ach" id="ach-page" aria-label="Achievements">
-    <div class="head"><h2 style="margin:0;font-family:var(--font-display)">Achievements</h2><span class="label" id="ach-count"></span></div>
-    <p style="margin:0;color:var(--muted)">Unlocked achievements stay with you from game to game in this browser.</p>
+    <div class="head"><h2>Top scores</h2></div>
+    <div class="top" id="top-scores"></div>
+    <div class="head ach-head"><h2>Achievements</h2><span class="label" id="ach-count"></span></div>
     <div class="ach-list" id="ach-list"></div>
     <div><button type="button" class="btn primary" data-view="play">Back to the game</button></div>
   </section>
@@ -350,7 +381,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
   <div id="modal-slot"></div>
 
   <aside class="card ladder" aria-label="Word chain">
-    <div class="head"><h2>The ladder</h2><span id="ladder-count"></span></div>
+    <div class="head"><h2>Previous Steps</h2><span id="ladder-count"></span></div>
     <ol class="rungs" id="rungs" reversed></ol>
   </aside>
 
@@ -376,7 +407,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
           <li><b>Category bonus.</b> A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
           <li><b>Long word bonus.</b> A 6-letter word scores 6 more and a 7-letter word 7 more. Longer words score their length.</li>
-          <li><b>Classic</b> ends after 50 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
+          <li><b>Classic</b> ends after 25 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
         </ul>
       </div>
     </div>
@@ -390,9 +421,9 @@ const LAYOUT = /*__LAYOUT__*/"side";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
 const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
-const STEP_LIMIT = 50, HINT_LIMIT = 3;
+const STEP_LIMIT = 25, HINT_LIMIT = 3;
 const MODES = {
-  classic: { name: "Classic", desc: "Rack up as many points as you can in 50 steps." },
+  classic: { name: "Classic", desc: "Rack up as many points as you can in 25 steps." },
   free: { name: "Free play", desc: "Keep playing until you run out of legal moves." },
 };
 // Words of 6+ letters score their length on top (6 for 6 letters, 7 for 7, and so on).
@@ -514,7 +545,7 @@ function nextBonus() {
 function newGame(mode = loadMode()) {
   const start = pick(DATA.starts);
   saveMode(mode);
-  G = { mode, hintsLeft: HINT_LIMIT, usedUndo: false, newAch: [], chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  G = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), mode, hintsLeft: HINT_LIMIT, usedUndo: false, newAch: [], chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
   G.bonus = nextBonus();
   ui = { sel: null, mode: null, chosen: null, msg: null, pop: true, freshBonus: true, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null, view: ui.view };
 }
@@ -721,6 +752,7 @@ function render() {
 
   // scores
   const sc = score();
+  recordTop(sc);
   const best = Math.max(loadBest(G.mode), sc);
   saveBest(G.mode, best);
   $("s-score").textContent = sc;
@@ -780,7 +812,7 @@ function render() {
   $("hint-dots").title = `${hl} of ${HINT_LIMIT} hints left`;
   $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
   $("mode-line").innerHTML = G.mode === "classic"
-    ? `<b>Classic</b> · ${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left`
+    ? `<b>Classic</b> · <span class="steps${stepsLeft() <= 5 ? " low" : ""}">${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left</span>`
     : `<b>Free play</b>`;
 
   const msg = $("msg");
@@ -839,6 +871,12 @@ function render() {
   const got = ACHIEVEMENTS.filter(a => have[a.id]).length;
   $("ach-count").textContent = `${got} of ${ACHIEVEMENTS.length}`;
   $("tab-ach").textContent = `Achievements ${got}/${ACHIEVEMENTS.length}`;
+  const tops = { classic: loadTop("classic"), free: loadTop("free") };
+  $("top-scores").innerHTML = `<div class="top-grid"><span></span><b>Classic</b><b>Free play</b>` +
+    ["1st", "2nd", "3rd"].map((r, i) => `<span class="rank">${r}</span>` + ["classic", "free"].map(m => {
+      const e = tops[m][i];
+      return e ? `<div class="cell${e.id === G.id ? " live" : ""}"><strong>${e.score}</strong>${e.date ? `<small>${e.date}</small>` : ""}</div>` : `<div class="cell empty">–</div>`;
+    }).join("")).join("") + `</div>`;
   const groups = [...new Set(ACHIEVEMENTS.map(a => a.group))];
   $("ach-list").innerHTML = groups.map(g => `<h3 class="ach-group">${g}</h3>` + ACHIEVEMENTS.filter(a => a.group === g).map(a => {
     const on = !!have[a.id];
@@ -902,7 +940,7 @@ document.addEventListener("click", e => {
     if (ui.sel && !e.target.closest("summary, a, details[open] .rules-body")) { ui.sel = null; render(); }
     return;
   }
-  if (t.id === "theme-btn") return setTheme(isDark() ? "light" : "dark");
+  if (t.id === "theme-btn") return setTheme(nextTheme());
   if (t.dataset.view) { ui.view = t.dataset.view; ui.sel = null; render(); return window.scrollTo(0, 0); }
   if (t.id === "hintbtn") return showHint();
   if (t.id !== "newgame" && ui.confirmNew) { ui.confirmNew = false; }
@@ -1002,14 +1040,15 @@ async function shareSummary() {
 
 // ---------- theme ----------
 const THEME = "morph-ladder:theme";
-const isDark = () => {
-  const t = document.documentElement.dataset.theme;
-  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-};
+// The toggle cycles through every theme. The green "organic" look is the default; a saved choice wins.
+const THEMES = [["organic", "Default"], ["dark", "Dark"], ["light", "Light"]];
+const THEME_NAME = Object.fromEntries(THEMES);
+const curTheme = () => THEME_NAME[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : "organic";
+const nextTheme = () => THEMES[(THEMES.findIndex(([id]) => id === curTheme()) + 1) % THEMES.length][0];
 function paintThemeBtn() {
-  const b = $("theme-btn"), dark = isDark();
-  b.textContent = dark ? "Light mode" : "Dark mode";
-  b.setAttribute("aria-pressed", String(dark));
+  const b = $("theme-btn");
+  b.textContent = `Theme: ${THEME_NAME[curTheme()]}`;
+  b.title = `Switch to ${THEME_NAME[nextTheme()]}`;
 }
 function setTheme(t) {
   document.documentElement.dataset.theme = t;
@@ -1019,10 +1058,8 @@ function setTheme(t) {
 (() => {
   let saved = null;
   try { saved = localStorage.getItem(THEME); } catch {}
-  // Dark is the default; a saved choice wins.
-  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = THEME_NAME[saved] ? saved : "organic";
   paintThemeBtn();
-  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeBtn);
 })();
 
 // ---------- persistence ----------
@@ -1030,6 +1067,21 @@ const KEY = "morph-ladder:game", BEST = "morph-ladder:best", ACH = "morph-ladder
 function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {} }
 function loadBest(mode) { try { return +localStorage.getItem(`${BEST}:${mode}`) || 0; } catch { return 0; } }
 function saveBest(mode, v) { try { localStorage.setItem(`${BEST}:${mode}`, String(v)); } catch {} }
+// Top 3 games per mode, as [{ id, score, date }]. The current game holds its own entry, keeping its highest score.
+const TOP = "morph-ladder:scores";
+function loadTop(mode) {
+  try { const l = JSON.parse(localStorage.getItem(`${TOP}:${mode}`)); if (Array.isArray(l)) return l; } catch {}
+  return [];
+}
+function recordTop(sc) {
+  if (!sc) return;
+  if (!G.id) G.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const list = loadTop(G.mode), mine = list.find(e => e.id === G.id);
+  if (mine) { if (sc <= mine.score) return; mine.score = sc; }
+  else list.push({ id: G.id, score: sc, date: new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" }) });
+  list.sort((a, b) => b.score - a.score);
+  try { localStorage.setItem(`${TOP}:${G.mode}`, JSON.stringify(list.slice(0, 3))); } catch {}
+}
 const MODE = "morph-ladder:mode";
 function loadMode() { try { const m = localStorage.getItem(MODE); return MODES[m] ? m : "classic"; } catch { return "classic"; } }
 function saveMode(m) { try { localStorage.setItem(MODE, m); } catch {} }
@@ -1044,7 +1096,7 @@ function applyLayout() {
   side.setAttribute("aria-label", "Bonuses");
   side.append($("bonus"), $("toolkit"));
   const ladder = document.querySelector(".ladder");
-  ladder.querySelector("h2").textContent = "Recent words";
+  ladder.querySelector("h2").textContent = "Previous Steps";
   ladder.querySelector("ol").removeAttribute("reversed");
   ladder.insertAdjacentHTML("beforeend", `<div class="more">Scroll up to see your whole ladder.</div>`);
   side.prepend(ladder);
