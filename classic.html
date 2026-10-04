@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&family=Cabin+Sketch:wght@700&family=Patrick+Hand&display=swap">
 <style>
 /* Layout: a type-case workbench. Play area (bonus, word, bank, powers) on the left; the ladder of past words runs down the right. Stacks on phones. */
 :root {
@@ -64,7 +65,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .app:not(.view-ach) > #ach-page { display: none; }
 #ach-page { grid-column: 1 / -1; }
 #toast-slot, #modal-slot { position: fixed; }
-nav.tabs { display: flex; gap: 6px; margin-top: 12px; }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 nav.tabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13.5px; cursor: pointer; color: var(--muted); }
 nav.tabs .theme-btn { margin-left: 6px; }
 nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
@@ -132,7 +133,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 
 .bankrow { display: grid; gap: 8px; justify-items: center; padding-top: 6px; border-top: 1px dashed var(--line); }
 .bank { display: flex; gap: 8px; justify-content: center; width: 100%; }
-.bank .tile { flex: 0 1 52px; min-width: 0; font-size: 26px; background: var(--bank); box-shadow: inset 0 -4px 0 var(--bank-edge), 0 1px 2px rgba(0,0,0,.18); }
+.bank .tile { flex: 0 1 52px; min-width: 0; font-size: 26px; background: var(--bank); color: var(--bank-ink, var(--tile-ink)); box-shadow: inset 0 -4px 0 var(--bank-edge), 0 1px 2px rgba(0,0,0,.18); }
 .bank .tile.sel { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 3px var(--accent), 0 8px 14px rgba(0,0,0,.2); }
 .bank .tile.swap { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent); }
 .bank .tile.discard { box-shadow: inset 0 -4px 0 var(--bank-edge), 0 0 0 2px var(--bad); }
@@ -177,7 +178,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .power.active { border-color: var(--accent); background: var(--accent-soft); }
 .picker { display: grid; gap: 10px; padding: 12px; border-radius: 11px; background: var(--accent-soft); }
 .alpha { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
-.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--bank); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--bank-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
+.alpha button { aspect-ratio: 1; border: 0; border-radius: 6px; background: var(--bank); color: var(--bank-ink, var(--tile-ink)); box-shadow: inset 0 -3px 0 var(--bank-edge); font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; padding: 0 0 3px; }
 .alpha button:hover { outline: 2px solid var(--accent); }
 .picker .bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
 
@@ -287,6 +288,87 @@ details.rules summary { cursor: pointer; font-weight: 700; }
 .rules-body ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .rules-body b { color: var(--ink); }
 
+
+/* ---------- Extra themes (trial: pick one to keep) ---------- */
+:root[data-theme="letterpress"] {
+  --bg: #EDE3CC; --panel: #F7F0DF; --ink: #231F1A; --muted: #6B5F4E; --line: #CDBC98;
+  --tile: #B8392A; --tile-edge: #7A2117; --tile-ink: #FFF4E4;
+  --bank: #F4EAD2; --bank-edge: #B9A47A; --bank-ink: #231F1A;
+  --accent: #B8392A; --accent-soft: #EFD8C8;
+  --good: #3E6B3A; --good-soft: #DCE5CF; --bad: #A3281B;
+  --font-display: "Playfair Display", Georgia, serif; --font-body: "Lora", Georgia, serif;
+  color-scheme: light;
+}
+:root[data-theme="letterpress"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+:root[data-theme="letterpress"] .card { border-radius: 3px; border-color: #231F1A; box-shadow: 4px 4px 0 var(--line); }
+:root[data-theme="letterpress"] .brand h1 { font-weight: 900; letter-spacing: 0.01em; }
+:root[data-theme="letterpress"] .tile { border-radius: 3px; }
+
+:root[data-theme="botanical"] {
+  --bg: #1B271F; --panel: #243328; --ink: #EEF0E2; --muted: #A8B39A; --line: #384A3C;
+  --tile: #D9895C; --tile-edge: #985331; --tile-ink: #2A1A10;
+  --bank: #E9E2C8; --bank-edge: #A39B7C; --bank-ink: #22301E;
+  --accent: #E8A774; --accent-soft: #3A3A28;
+  --good: #A2D07E; --good-soft: #2B4026; --bad: #F08B6C;
+  --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root[data-theme="botanical"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(60% 50% at 0% 0%, rgba(132,170,110,.22), transparent 70%), radial-gradient(50% 45% at 100% 100%, rgba(217,137,92,.16), transparent 70%); background-attachment: fixed; }
+:root[data-theme="botanical"] .card { border-radius: 24px; border-color: #3E5442; background: linear-gradient(160deg, #283A2D, #213026); }
+:root[data-theme="botanical"] .tile { border-radius: 12px; }
+:root[data-theme="botanical"] .brand h1 { font-weight: 800; font-style: italic; }
+
+:root[data-theme="riso"] {
+  --bg: #F3EEE2; --panel: #FBF7EE; --ink: #1D2B6B; --muted: #57609A; --line: #C7C3D6;
+  --tile: #FF5C8A; --tile-edge: #C62F5E; --tile-ink: #1D2B6B;
+  --bank: #FFE45C; --bank-edge: #C8A91B; --bank-ink: #1D2B6B;
+  --accent: #D92B66; --accent-soft: #FFDCE6;
+  --good: #0E8A75; --good-soft: #CDEFE6; --bad: #D33A2C;
+  --font-display: "Archivo Black", Impact, sans-serif; --font-body: "Space Grotesk", system-ui, sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="riso"] body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(rgba(29,43,107,.10) 1px, transparent 1.4px); background-size: auto, 7px 7px; }
+:root[data-theme="riso"] .card { border-radius: 0; border: 2px solid var(--ink); box-shadow: 6px 6px 0 #FF5C8A; }
+:root[data-theme="riso"] .tile { border-radius: 2px; font-weight: 400; }
+:root[data-theme="riso"] .brand h1 { font-weight: 400; text-shadow: 3px 3px 0 #FF5C8A; }
+:root[data-theme="riso"] .stat .v, :root[data-theme="riso"] .bonus .name { font-weight: 400; }
+
+:root[data-theme="nocturne"] {
+  --bg: #0D0A1E; --panel: #191433; --ink: #EDE6FF; --muted: #A39BC8; --line: #2F2857;
+  --tile: #E9C46A; --tile-edge: #A5812B; --tile-ink: #1A1534;
+  --bank: #CBBDF4; --bank-edge: #8676C6; --bank-ink: #1A1534;
+  --accent: #E9C46A; --accent-soft: #2D2547;
+  --good: #7EE0B5; --good-soft: #173832; --bad: #FF8A9A;
+  --font-display: "Cormorant Garamond", Georgia, serif; --font-body: "Jost", system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root[data-theme="nocturne"] body { background-image:
+  radial-gradient(1.2px 1.2px at 12% 18%, #fff8, transparent), radial-gradient(1px 1px at 68% 9%, #fff9, transparent),
+  radial-gradient(1.4px 1.4px at 84% 42%, #ffe9a8aa, transparent), radial-gradient(1px 1px at 33% 64%, #fff7, transparent),
+  radial-gradient(1.2px 1.2px at 52% 31%, #fff6, transparent), radial-gradient(1px 1px at 91% 80%, #fff8, transparent),
+  radial-gradient(1.3px 1.3px at 7% 87%, #ffe9a899, transparent), radial-gradient(1px 1px at 46% 92%, #fff6, transparent),
+  radial-gradient(80% 60% at 50% -10%, rgba(120,90,220,.28), transparent 70%);
+  background-size: 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 100% 100%;
+  background-attachment: fixed; }
+:root[data-theme="nocturne"] .card { border-color: #3A3168; background: rgba(25,20,51,.82); box-shadow: 0 0 0 1px rgba(233,196,106,.06), 0 12px 40px rgba(0,0,0,.35); }
+:root[data-theme="nocturne"] .tile { font-weight: 700; }
+/* Cormorant uses old-style figures by default; lining figures keep scores readable. */
+:root[data-theme="nocturne"] * { font-variant-numeric: lining-nums tabular-nums; }
+:root[data-theme="nocturne"] .brand h1 { font-size: 56px; letter-spacing: 0.02em; }
+
+:root[data-theme="chalk"] {
+  --bg: #22302A; --panel: #2A3933; --ink: #F2F0E6; --muted: #B8C2B6; --line: #55665C;
+  --tile: #F4E59E; --tile-edge: #B4A25A; --tile-ink: #22302A;
+  --bank: #EFEDE3; --bank-edge: #A7AB9F; --bank-ink: #22302A;
+  --accent: #9FD3F0; --accent-soft: #2F4949;
+  --good: #B5E3A0; --good-soft: #30463A; --bad: #F4A0A0;
+  --font-display: "Cabin Sketch", "Comic Sans MS", cursive; --font-body: "Patrick Hand", "Comic Sans MS", cursive;
+  color-scheme: dark;
+}
+:root[data-theme="chalk"] body { font-size: 17px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(70% 60% at 30% 20%, rgba(255,255,255,.05), transparent 70%); background-attachment: fixed; }
+:root[data-theme="chalk"] .card { border: 2px dashed rgba(242,240,230,.28); border-radius: 8px; background: rgba(42,57,51,.85); }
+:root[data-theme="chalk"] .tile, :root[data-theme="chalk"] .alpha button { border-radius: 6px; font-family: var(--font-body); font-weight: 400; }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
@@ -295,7 +377,7 @@ details.rules summary { cursor: pointer; font-weight: 700; }
     <div class="brand">
       <h1>Stepwise</h1>
       <p>Create new words, one step at a time.</p>
-      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn" aria-pressed="false">Dark mode</button></nav>
+      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
     </div>
     <div class="scores">
       <div class="stat"><span class="k">Words</span><span class="v" id="s-words">0</span></div>
@@ -902,7 +984,7 @@ document.addEventListener("click", e => {
     if (ui.sel && !e.target.closest("summary, a, details[open] .rules-body")) { ui.sel = null; render(); }
     return;
   }
-  if (t.id === "theme-btn") return setTheme(isDark() ? "light" : "dark");
+  if (t.id === "theme-btn") return setTheme(nextTheme());
   if (t.dataset.view) { ui.view = t.dataset.view; ui.sel = null; render(); return window.scrollTo(0, 0); }
   if (t.id === "hintbtn") return showHint();
   if (t.id !== "newgame" && ui.confirmNew) { ui.confirmNew = false; }
@@ -1002,14 +1084,15 @@ async function shareSummary() {
 
 // ---------- theme ----------
 const THEME = "morph-ladder:theme";
-const isDark = () => {
-  const t = document.documentElement.dataset.theme;
-  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-};
+// The toggle cycles through every theme. Dark is the default; a saved choice wins.
+const THEMES = [["dark", "Dark"], ["light", "Light"], ["letterpress", "Letterpress"], ["botanical", "Botanical"], ["riso", "Risograph"], ["nocturne", "Nocturne"], ["chalk", "Chalkboard"]];
+const THEME_NAME = Object.fromEntries(THEMES);
+const curTheme = () => THEME_NAME[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : "dark";
+const nextTheme = () => THEMES[(THEMES.findIndex(([id]) => id === curTheme()) + 1) % THEMES.length][0];
 function paintThemeBtn() {
-  const b = $("theme-btn"), dark = isDark();
-  b.textContent = dark ? "Light mode" : "Dark mode";
-  b.setAttribute("aria-pressed", String(dark));
+  const b = $("theme-btn");
+  b.textContent = `Theme: ${THEME_NAME[curTheme()]}`;
+  b.title = `Switch to ${THEME_NAME[nextTheme()]}`;
 }
 function setTheme(t) {
   document.documentElement.dataset.theme = t;
@@ -1019,10 +1102,8 @@ function setTheme(t) {
 (() => {
   let saved = null;
   try { saved = localStorage.getItem(THEME); } catch {}
-  // Dark is the default; a saved choice wins.
-  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = THEME_NAME[saved] ? saved : "dark";
   paintThemeBtn();
-  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeBtn);
 })();
 
 // ---------- persistence ----------
