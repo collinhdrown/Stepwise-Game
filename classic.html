@@ -200,11 +200,13 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .toast b { font-family: var(--font-display); font-size: 20px; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 12px); } 10%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 0); } }
 .ach { display: grid; gap: 10px; }
+.ach .head h2 { margin: 0; font-family: var(--font-display); }
+.ach .ach-head { margin-top: 14px; }
 .ach .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-.top-grid { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; max-width: 420px; margin-top: 8px; }
+.top-grid { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; max-width: 420px; }
 .top-grid > b { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
 .top-grid .rank { font-size: 12px; font-weight: 700; color: var(--muted); padding-right: 4px; }
-.top-grid .cell { display: flex; justify-content: center; align-items: baseline; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, var(--bg)); }
+.top-grid .cell { min-height: 46px; display: flex; justify-content: center; align-items: baseline; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, var(--bg)); }
 .top-grid .cell strong { font-family: var(--font-display); font-size: 20px; font-variant-numeric: lining-nums tabular-nums; color: var(--ink); }
 .top-grid .cell small { font-size: 11.5px; color: var(--muted); }
 .top-grid .cell.live { border-color: var(--accent); }
@@ -369,9 +371,9 @@ details.rules summary { cursor: pointer; font-weight: 700; }
     <section class="card toolkit" id="toolkit"></section>
   </main>
   <section class="card ach" id="ach-page" aria-label="Achievements">
-    <div class="head"><h2 style="margin:0;font-family:var(--font-display)">Achievements</h2><span class="label" id="ach-count"></span></div>
-    <p style="margin:0;color:var(--muted)">Unlocked achievements stay with you from game to game in this browser.</p>
+    <div class="head"><h2>Top scores</h2></div>
     <div class="top" id="top-scores"></div>
+    <div class="head ach-head"><h2>Achievements</h2><span class="label" id="ach-count"></span></div>
     <div class="ach-list" id="ach-list"></div>
     <div><button type="button" class="btn primary" data-view="play">Back to the game</button></div>
   </section>
@@ -750,7 +752,7 @@ function render() {
 
   // scores
   const sc = score();
-  recordTop(sc); // before saveBest, so a first-time list is seeded only from earlier games' best
+  recordTop(sc);
   const best = Math.max(loadBest(G.mode), sc);
   saveBest(G.mode, best);
   $("s-score").textContent = sc;
@@ -870,7 +872,7 @@ function render() {
   $("ach-count").textContent = `${got} of ${ACHIEVEMENTS.length}`;
   $("tab-ach").textContent = `Achievements ${got}/${ACHIEVEMENTS.length}`;
   const tops = { classic: loadTop("classic"), free: loadTop("free") };
-  $("top-scores").innerHTML = `<h3 class="ach-group">Top scores</h3><div class="top-grid"><span></span><b>Classic</b><b>Free play</b>` +
+  $("top-scores").innerHTML = `<div class="top-grid"><span></span><b>Classic</b><b>Free play</b>` +
     ["1st", "2nd", "3rd"].map((r, i) => `<span class="rank">${r}</span>` + ["classic", "free"].map(m => {
       const e = tops[m][i];
       return e ? `<div class="cell${e.id === G.id ? " live" : ""}"><strong>${e.score}</strong>${e.date ? `<small>${e.date}</small>` : ""}</div>` : `<div class="cell empty">–</div>`;
@@ -1066,11 +1068,10 @@ function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {}
 function loadBest(mode) { try { return +localStorage.getItem(`${BEST}:${mode}`) || 0; } catch { return 0; } }
 function saveBest(mode, v) { try { localStorage.setItem(`${BEST}:${mode}`, String(v)); } catch {} }
 // Top 3 games per mode, as [{ id, score, date }]. The current game holds its own entry, keeping its highest score.
-const TOP = "morph-ladder:top";
+const TOP = "morph-ladder:scores";
 function loadTop(mode) {
   try { const l = JSON.parse(localStorage.getItem(`${TOP}:${mode}`)); if (Array.isArray(l)) return l; } catch {}
-  const b = loadBest(mode);
-  return b ? [{ id: "earlier", score: b, date: "" }] : [];
+  return [];
 }
 function recordTop(sc) {
   if (!sc) return;
