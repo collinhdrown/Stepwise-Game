@@ -11,10 +11,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # words.txt is everyday words only (see data/make_words.py); enable1.txt is the full list it is cut from.
 DICT = set(open(os.path.join(HERE, "data/words.txt")).read().split())
 FULL = set(open(os.path.join(HERE, "data/enable1.txt")).read().split())
+# Words Collin asked for that the lists above leave out (BOT, BAO). They count everywhere, with their plurals,
+# and can also go in a bonus category below.
+EXTRA = {f for w in "bot bao".split() for f in (w, w + "s")}
+FULL |= EXTRA
 COMMON = open(os.path.join(HERE, "data/google-10000-english-usa-no-swears.txt")).read().split()
 
 MIN_LEN, MAX_LEN = 3, 15
-WORDS = sorted(w for w in DICT if MIN_LEN <= len(w) <= MAX_LEN and re.fullmatch(r"[a-z]+", w))
+WORDS = sorted(w for w in DICT | EXTRA if MIN_LEN <= len(w) <= MAX_LEN and re.fullmatch(r"[a-z]+", w))
 WSET = set(WORDS)
 
 CATEGORIES = {
@@ -44,7 +48,7 @@ sawfish shad shellfish skate snapper sprat starfish stingray sturgeon sunfish sw
 turbot walleye whitebait whitefish whiting wrasse yellowtail
 """,
     "food": """
-apple bread cake rice bean pea corn meat beef pork ham egg milk cheese butter cream honey jam soup stew pie tart bun
+bao apple bread cake rice bean pea corn meat beef pork ham egg milk cheese butter cream honey jam soup stew pie tart bun
 roll toast pasta noodle pizza taco salad fruit grape lemon lime melon peach pear plum berry cherry date fig kiwi mango
 olive onion leek kale beet yam potato tomato carrot radish celery pepper garlic ginger herb mint basil sage thyme salt
 sugar flour oat bran wheat barley rye nut almond pecan walnut cashew candy fudge toffee cookie biscuit muffin scone
@@ -207,10 +211,8 @@ def expand(words):
 
 cats = {k: expand(v) for k, v in CATEGORIES.items()}
 missing = {k: [w for w in v if w not in FULL] for k, v in CATEGORIES.items()}
-# Words Collin asked for that words.txt leaves out; they count everywhere, with their plurals.
-EXTRA = "bot".split()
 # Hand-picked category words always count, even when they are too rare for words.txt (PESTO, ORCA).
-WORDS = sorted(WSET.union(*cats.values(), expand(EXTRA)))
+WORDS = sorted(WSET.union(*cats.values()))
 WSET = set(WORDS)
 
 
