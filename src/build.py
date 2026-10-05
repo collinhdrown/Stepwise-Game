@@ -11,9 +11,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # words.txt is everyday words only (see data/make_words.py); enable1.txt is the full list it is cut from.
 DICT = set(open(os.path.join(HERE, "data/words.txt")).read().split())
 FULL = set(open(os.path.join(HERE, "data/enable1.txt")).read().split())
-# Words Collin asked for that the lists above leave out (BOT, BAO, BLOG). They count everywhere, with their plurals,
+# Words Collin asked for that the lists above leave out (BOT, BAO, BLOG, BITER). They count everywhere, with their plurals,
 # and can also go in a bonus category below.
-EXTRA = {f for w in "bot bao blog".split() for f in (w, w + "s")}
+EXTRA = {f for w in "bot bao blog biter".split() for f in (w, w + "s")}
 FULL |= EXTRA
 COMMON = open(os.path.join(HERE, "data/google-10000-english-usa-no-swears.txt")).read().split()
 
