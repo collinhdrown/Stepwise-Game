@@ -207,8 +207,10 @@ def expand(words):
 
 cats = {k: expand(v) for k, v in CATEGORIES.items()}
 missing = {k: [w for w in v if w not in FULL] for k, v in CATEGORIES.items()}
+# Words Collin asked for that words.txt leaves out; they count everywhere, with their plurals.
+EXTRA = "bot".split()
 # Hand-picked category words always count, even when they are too rare for words.txt (PESTO, ORCA).
-WORDS = sorted(WSET.union(*cats.values()))
+WORDS = sorted(WSET.union(*cats.values(), expand(EXTRA)))
 WSET = set(WORDS)
 
 
