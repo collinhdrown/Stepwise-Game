@@ -2,7 +2,7 @@
 
 A word-ladder game: change one thing at a time, and every step must be a new, real word.
 
-Pick a mode: **Classic** gives you 25 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word with a bank of 6 letters. Each move must make a real word of 3+ letters that isn't already on your ladder:
+Pick a mode: **Classic** gives you 25 steps to score as many points as you can, and **Free play** goes on until you run out of legal moves. Start from a common 4-letter word, dealt so at least 3 kinds of move work, with a bank of 6 letters that always holds at least 2 vowels and 2 consonants. Each move must make a real word of 3+ letters that isn't already on your ladder:
 
 - **Add** a bank letter anywhere in the word (the bank refills)
 - **Remove** a letter
@@ -10,7 +10,7 @@ Pick a mode: **Classic** gives you 25 steps to score as many points as you can, 
 - **Swap** two letters
 - **Replace** a letter with one from the bank (the bank refills)
 
-Each word scores the value of its letters, from 1 for common letters like A and E up to 5 for J, Q, X and Z, and letters from the starting word are worth 0. Words of 6+ letters score their length on top (+6 for 6 letters, +7 for 7). A word that fits the current **category bonus** (Animal, Color, Music, …) scores +20, and using all five kinds of move lights up the **Toolkit bonus** for +10. Three one-time powers (Exchange letters, Choose a letter, Backtrack), a one-step undo, 3 hints per game and 19 achievements round it out.
+Each word scores the value of its letters, from 1 for common letters like A and E up to 5 for J, Q, X and Z, and letters from the starting word are worth 0. Words of 6+ letters score their length on top (+6 for 6 letters, +7 for 7). A word that fits the current **category bonus** (Animal, Color, Music, …) scores +20, and using all five kinds of move lights up the **Toolkit bonus** for +10. Three one-time powers (Exchange letters, Choose a letter, Backtrack), a one-step undo, 3 hints per game, 19 achievements and a Stats tab (top scores, score spread, word records and move mix) round it out.
 
 ## Play
 
@@ -21,7 +21,7 @@ The game is a single self-contained page with no server or dependencies:
 
 Open either file in a browser, or serve the repository with any static host. To publish with **GitHub Pages**: Settings → Pages → Source: *Deploy from a branch* → Branch: `main`, folder `/ (root)`. The game will be at `https://<user>.github.io/<repo>/`.
 
-Progress, best score, achievements and the light/dark choice are saved in the player's browser (`localStorage`).
+Progress, game history, achievements and the theme choice are saved in the player's browser (`localStorage`).
 
 ## Change the game
 

@@ -61,9 +61,10 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .app { max-width: 1060px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr) clamp(190px, 28vw, 300px); align-items: start; }
 @media (max-width: 600px) { .app { grid-template-columns: minmax(0, 1fr); } }
-.app.view-ach > main, .app.view-ach > aside, .app.view-ach > details { display: none; }
-.app:not(.view-ach) > #ach-page { display: none; }
-#ach-page { grid-column: 1 / -1; }
+.app.view-ach > main, .app.view-ach > aside, .app.view-ach > details,
+.app.view-stats > main, .app.view-stats > aside, .app.view-stats > details { display: none; }
+.app:not(.view-ach) > #ach-page, .app:not(.view-stats) > #stats-page { display: none; }
+#ach-page, #stats-page { grid-column: 1 / -1; }
 #toast-slot, #modal-slot { position: fixed; }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 nav.tabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13.5px; cursor: pointer; color: var(--muted); }
@@ -71,7 +72,8 @@ nav.tabs .theme-btn { margin-left: 6px; }
 nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
-.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 48px; letter-spacing: -0.01em; margin: 0; line-height: 1; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 48px; letter-spacing: -0.01em; margin: 0; line-height: 1; display: flex; align-items: flex-end; gap: 10px; }
+.brand h1 .feet { width: 0.95em; height: auto; flex: none; margin-bottom: 0.02em; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -200,17 +202,6 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .toast b { font-family: var(--font-display); font-size: 20px; }
 @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 12px); } 10%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 0); } }
 .ach { display: grid; gap: 10px; }
-.ach .head h2 { margin: 0; font-family: var(--font-display); }
-.ach .ach-head { margin-top: 14px; }
-.ach .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-.top-grid { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; max-width: 420px; }
-.top-grid > b { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
-.top-grid .rank { font-size: 12px; font-weight: 700; color: var(--muted); padding-right: 4px; }
-.top-grid .cell { min-height: 46px; display: flex; justify-content: center; align-items: baseline; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, var(--bg)); }
-.top-grid .cell strong { font-family: var(--font-display); font-size: 20px; font-variant-numeric: lining-nums tabular-nums; color: var(--ink); }
-.top-grid .cell small { font-size: 11.5px; color: var(--muted); }
-.top-grid .cell.live { border-color: var(--accent); }
-.top-grid .cell.empty { color: var(--muted); border-style: dashed; background: none; }
 .ach-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
 .badge { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 9px 11px; border-radius: 10px; border: 1px dashed var(--line); color: var(--muted); }
 .badge .mark { grid-row: 1 / span 2; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; border: 2px solid var(--line); font-variant-numeric: tabular-nums; }
@@ -298,6 +289,54 @@ details.rules summary { cursor: pointer; font-weight: 700; font-family: var(--fo
 .rules-body h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); }
 .rules-body ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .rules-body b { color: var(--ink); }
+/* ---------- worked example (How to play) ---------- */
+.example { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 14px; display: grid; gap: 10px; }
+.example h3 { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); }
+.ex-row { display: grid; grid-template-columns: minmax(150px, 1fr) auto auto; align-items: end; gap: 6px 22px; padding: 8px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.ex-row:last-child { border-bottom: 0; }
+.ex-what { align-self: center; }
+.ex-what b { color: var(--ink); }
+.ex-op { display: inline-block; min-width: 64px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.ex-move { display: flex; align-items: flex-end; gap: 10px; }
+.ex-to { color: var(--muted); padding-bottom: 5px; }
+.ex-word { position: relative; padding-top: 18px; display: flex; gap: 3px; }
+.ex-word svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.ex-bank { display: flex; gap: 3px; align-items: flex-end; flex-wrap: wrap; }
+.ex-bank .ex-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 4px; padding-bottom: 6px; }
+.mt { width: 24px; height: 26px; border-radius: 5px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; text-transform: uppercase; padding-bottom: 2px;
+  background: var(--tile); color: var(--tile-ink); box-shadow: inset 0 -3px 0 var(--tile-edge); }
+.mt.b { background: var(--bank); color: var(--bank-ink, var(--tile-ink)); box-shadow: inset 0 -3px 0 var(--bank-edge); }
+.mt.hl { box-shadow: inset 0 -3px 0 var(--tile-edge), 0 0 0 2px var(--accent); }
+.mt.b.hl { box-shadow: inset 0 -3px 0 var(--bank-edge), 0 0 0 2px var(--accent); }
+.mt.gone { opacity: .35; }
+.mt.b.fresh { box-shadow: inset 0 -3px 0 var(--bank-edge), 0 0 0 2px var(--good); }
+.ex-note { grid-column: 1 / -1; font-size: 12.5px; margin-top: -2px; }
+@media (max-width: 640px) { .ex-row { grid-template-columns: 1fr; gap: 8px; } }
+
+/* ---------- stats page ---------- */
+.stats-page, #stats-body { display: grid; gap: 22px; }
+.stats-page .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.stats-page .head h2 { margin: 0; font-family: var(--font-display); }
+.st-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 28px; }
+.st-block h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.st-block h4 { margin: 0 0 6px; font-size: 14px; color: var(--ink); }
+.st-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.st-list li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 10px; border-radius: 8px; background: color-mix(in srgb, var(--panel) 70%, var(--bg)); border: 1px solid var(--line); }
+.st-list li.live { border-color: var(--accent); }
+.st-list .w { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); }
+.st-list .n { color: var(--muted); font-variant-numeric: tabular-nums lining-nums; }
+.st-list .rk { color: var(--muted); width: 1.6em; }
+.st-list .sc { font-family: var(--font-display); font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums lining-nums; margin-right: auto; }
+.st-empty { color: var(--muted); font-size: 14px; margin: 0; }
+.st-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.st-chart .bar { fill: var(--accent); }
+.st-chart .bar:hover { fill: color-mix(in srgb, var(--accent) 75%, var(--ink)); }
+.st-chart .axis { stroke: var(--line); stroke-width: 1; }
+.st-chart text { fill: var(--muted); font-size: 11px; font-family: var(--font-body); }
+.st-chart .mean { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.st-chart .mean-label { fill: var(--ink); font-weight: 700; }
+.st-cap { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+.st-cap b { color: var(--ink); }
 details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 
 
@@ -324,9 +363,9 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 <div class="app">
   <header class="top">
     <div class="brand">
-      <h1>Stepwise</h1>
+      <h1>Stepwise<svg class="feet" viewBox="0 0 112 128" aria-hidden="true" fill="currentColor"><g transform="translate(4 38) rotate(-6 25 45) translate(50 0) scale(-1 1)"><path d="M10 25C9 16 17 12 27 12.5C37 13 44 18 43 28C42 38 38 46 37 56C36 66 38 76 32 83C27 89 17 88 15 81C13 74 17 66 19 58C21 50 18 46 14 41C11 36 10 31 10 25Z"/><circle cx="14" cy="6.5" r="5.2"/><circle cx="23.5" cy="3.6" r="3.6"/><circle cx="30.5" cy="5" r="3.1"/><circle cx="36.4" cy="8.6" r="2.7"/><circle cx="40.8" cy="13.6" r="2.3"/></g><g transform="translate(60 2) rotate(6 25 45)"><path d="M10 25C9 16 17 12 27 12.5C37 13 44 18 43 28C42 38 38 46 37 56C36 66 38 76 32 83C27 89 17 88 15 81C13 74 17 66 19 58C21 50 18 46 14 41C11 36 10 31 10 25Z"/><circle cx="14" cy="6.5" r="5.2"/><circle cx="23.5" cy="3.6" r="3.6"/><circle cx="30.5" cy="5" r="3.1"/><circle cx="36.4" cy="8.6" r="2.7"/><circle cx="40.8" cy="13.6" r="2.3"/></g></svg></h1>
       <p>Create new words, one step at a time.</p>
-      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
+      <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" data-view="stats">Stats</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
     </div>
     <div class="scores">
       <div class="stat"><span class="k">Words</span><span class="v" id="s-words">0</span></div>
@@ -372,10 +411,14 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
     <section class="card toolkit" id="toolkit"></section>
   </main>
   <section class="card ach" id="ach-page" aria-label="Achievements">
-    <div class="head"><h2>Top scores</h2></div>
-    <div class="top" id="top-scores"></div>
-    <div class="head ach-head"><h2>Achievements</h2><span class="label" id="ach-count"></span></div>
+    <div class="head"><h2 style="margin:0;font-family:var(--font-display)">Achievements</h2><span class="label" id="ach-count"></span></div>
+    <p style="margin:0;color:var(--muted)">Unlocked achievements stay with you from game to game in this browser.</p>
     <div class="ach-list" id="ach-list"></div>
+    <div><button type="button" class="btn primary" data-view="play">Back to the game</button></div>
+  </section>
+  <section class="card stats-page" id="stats-page" aria-label="Stats">
+    <div class="head"><h2>Stats</h2><span class="label" id="stats-count"></span></div>
+    <div id="stats-body"></div>
     <div><button type="button" class="btn primary" data-view="play">Back to the game</button></div>
   </section>
   <div id="toast-slot"></div>
@@ -411,6 +454,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
         </ul>
       </div>
     </div>
+    <div class="example" id="how-example"></div>
   </details>
 </div>
 
@@ -529,9 +573,20 @@ function capRepeats(bank, fresh) {
   }
   return bank;
 }
+// The bank always holds at least MIN_EACH vowels and MIN_EACH consonants. Fresh slots are
+// redrawn first; an older slot changes only when the fresh ones can't fix it.
+const MIN_EACH = 2;
 function balance(bank, fresh) {
-  if (!bank.some(isVowel)) bank[pick(fresh)] = draw(isVowel);
-  else if (bank.every(isVowel)) bank[pick(fresh)] = draw(l => !isVowel(l));
+  fresh = fresh.slice();
+  for (const vowel of [true, false]) {
+    for (let guard = 0; bank.filter(l => isVowel(l) === vowel).length < MIN_EACH && guard < BANK_SIZE; guard++) {
+      const other = i => isVowel(bank[i]) !== vowel;
+      const slots = fresh.filter(other);
+      const i = pick(slots.length ? slots : [...bank.keys()].filter(other));
+      bank[i] = draw(l => isVowel(l) === vowel);
+      if (!fresh.includes(i)) fresh.push(i);
+    }
+  }
   return capRepeats(bank, fresh);
 }
 function freshBank() { return balance(Array.from({ length: BANK_SIZE }, () => draw()), [...Array(BANK_SIZE).keys()]); }
@@ -542,10 +597,18 @@ function nextBonus() {
   return G.deck.pop();
 }
 
+const START_KINDS = 3;
+const moveKinds = () => { const k = new Set(); for (const s of legalMoves().values()) for (const op of s) k.add(op); return k; };
 function newGame(mode = loadMode()) {
-  const start = pick(DATA.starts);
   saveMode(mode);
-  G = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), mode, hintsLeft: HINT_LIMIT, usedUndo: false, newAch: [], chain: [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }], bank: freshBank(), bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  G = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), mode, hintsLeft: HINT_LIMIT, usedUndo: false, newAch: [], chain: [], bank: [], bonus: null, deck: [], powers: { exchange: true, choose: true, backtrack: true }, undo: null, over: false, earned: [] };
+  // Deal a start word and bank that allow at least START_KINDS different kinds of move.
+  for (let tries = 0; tries < 500; tries++) {
+    const start = pick(DATA.starts);
+    G.chain = [{ w: start, m: startMask(start), op: "start", detail: "", pts: 0, bonus: null }];
+    G.bank = freshBank();
+    if (moveKinds().size >= START_KINDS) break;
+  }
   G.bonus = nextBonus();
   ui = { sel: null, mode: null, chosen: null, msg: null, pop: true, freshBonus: true, newBank: -1, confirmNew: false, shake: false, hint: null, toast: null, view: ui.view };
 }
@@ -696,7 +759,7 @@ function playableBank() {
     G.bank[slot] = l;
     // Keep the planted letter; move any third copy out of the other slots.
     for (let j = 0; j < BANK_SIZE; j++) if (j !== slot && G.bank[j] === l && G.bank.filter(x => x === l).length > MAX_SAME) G.bank[j] = draw(x => x !== l && isVowel(x) === isVowel(l));
-    return G.bank;
+    return balance(G.bank, [...G.bank.keys()].filter(j => j !== slot));
   }
   return fallback || freshBank();
 }
@@ -752,7 +815,7 @@ function render() {
 
   // scores
   const sc = score();
-  recordTop(sc);
+  recordGame(sc);
   const best = Math.max(loadBest(G.mode), sc);
   saveBest(G.mode, best);
   $("s-score").textContent = sc;
@@ -775,6 +838,8 @@ function render() {
 
   // pages
   document.querySelector(".app").classList.toggle("view-ach", ui.view === "ach");
+  document.querySelector(".app").classList.toggle("view-stats", ui.view === "stats");
+  if (ui.view === "stats") renderStats();
   document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", (ui.view || "play") === b.dataset.view ? "page" : "false"));
 
   // word
@@ -871,12 +936,6 @@ function render() {
   const got = ACHIEVEMENTS.filter(a => have[a.id]).length;
   $("ach-count").textContent = `${got} of ${ACHIEVEMENTS.length}`;
   $("tab-ach").textContent = `Achievements ${got}/${ACHIEVEMENTS.length}`;
-  const tops = { classic: loadTop("classic"), free: loadTop("free") };
-  $("top-scores").innerHTML = `<div class="top-grid"><span></span><b>Classic</b><b>Free play</b>` +
-    ["1st", "2nd", "3rd"].map((r, i) => `<span class="rank">${r}</span>` + ["classic", "free"].map(m => {
-      const e = tops[m][i];
-      return e ? `<div class="cell${e.id === G.id ? " live" : ""}"><strong>${e.score}</strong>${e.date ? `<small>${e.date}</small>` : ""}</div>` : `<div class="cell empty">–</div>`;
-    }).join("")).join("") + `</div>`;
   const groups = [...new Set(ACHIEVEMENTS.map(a => a.group))];
   $("ach-list").innerHTML = groups.map(g => `<h3 class="ach-group">${g}</h3>` + ACHIEVEMENTS.filter(a => a.group === g).map(a => {
     const on = !!have[a.id];
@@ -1067,20 +1126,36 @@ const KEY = "morph-ladder:game", BEST = "morph-ladder:best", ACH = "morph-ladder
 function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {} }
 function loadBest(mode) { try { return +localStorage.getItem(`${BEST}:${mode}`) || 0; } catch { return 0; } }
 function saveBest(mode, v) { try { localStorage.setItem(`${BEST}:${mode}`, String(v)); } catch {} }
-// Top 3 games per mode, as [{ id, score, date }]. The current game holds its own entry, keeping its highest score.
-const TOP = "morph-ladder:scores";
-function loadTop(mode) {
-  try { const l = JSON.parse(localStorage.getItem(`${TOP}:${mode}`)); if (Array.isArray(l)) return l; } catch {}
-  return [];
+// Every game played in this browser, for the Stats tab: { id, mode, date, score, words: [[word, points, move], ...] }.
+// The current game keeps its entry up to date as it is played. Older games are dropped past HIST_MAX.
+const HIST = "morph-ladder:history", HIST_MAX = 1000;
+let history = null;
+function loadHistory() {
+  if (history) return history;
+  try { history = JSON.parse(localStorage.getItem(HIST)); } catch {}
+  if (!Array.isArray(history)) {
+    // First run: carry over the top scores kept by the earlier version (scores only, no words).
+    history = [];
+    for (const mode of Object.keys(MODES)) {
+      try { for (const e of JSON.parse(localStorage.getItem(`morph-ladder:scores:${mode}`)) || []) history.push({ id: e.id, mode, date: e.date || "", score: e.score, words: [] }); } catch {}
+    }
+  }
+  return history;
 }
-function recordTop(sc) {
-  if (!sc) return;
+function recordGame(sc) {
   if (!G.id) G.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const list = loadTop(G.mode), mine = list.find(e => e.id === G.id);
-  if (mine) { if (sc <= mine.score) return; mine.score = sc; }
-  else list.push({ id: G.id, score: sc, date: new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" }) });
-  list.sort((a, b) => b.score - a.score);
-  try { localStorage.setItem(`${TOP}:${G.mode}`, JSON.stringify(list.slice(0, 3))); } catch {}
+  const h = loadHistory(), words = G.chain.slice(1).map(c => [c.w, c.pts, c.op]);
+  let e = h.find(x => x.id === G.id);
+  if (!words.length) { if (e && !e.words.length && e.score === sc) return; }
+  if (!e) {
+    if (!words.length) return;
+    e = { id: G.id, mode: G.mode, date: new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" }), score: 0, words: [] };
+    h.push(e);
+  }
+  if (e.score === sc && e.words.length === words.length && (!words.length || e.words[words.length - 1][0] === words[words.length - 1][0])) return;
+  e.score = sc; e.words = words;
+  if (h.length > HIST_MAX) h.splice(0, h.length - HIST_MAX);
+  try { localStorage.setItem(HIST, JSON.stringify(h)); } catch {}
 }
 const MODE = "morph-ladder:mode";
 function loadMode() { try { const m = localStorage.getItem(MODE); return MODES[m] ? m : "classic"; } catch { return "classic"; } }
@@ -1103,8 +1178,101 @@ function applyLayout() {
   app.insertBefore(side, $("ach-page"));
 }
 
+// ---------- worked example in How to play ----------
+const EXAMPLE = [
+  { op: "Shift", text: "the S to the front", from: "pots", to: "spot", bank: "lnower", fromHl: [3], toHl: [0], arrow: { kind: "shift", i: 3, gap: 0 } },
+  { op: "Swap", text: "the P and the T", from: "spot", to: "stop", bank: "lnower", fromHl: [1, 3], toHl: [1, 3], arrow: { kind: "swap", i: 1, j: 3 } },
+  { op: "Add", text: "the O from the bank", from: "stop", to: "stoop", bank: "lnower", used: 2, toHl: [3], arrow: { kind: "add", gap: 3, l: "o" } },
+  { op: "Replace", text: "the P with the L", from: "stoop", to: "stool", bank: "lnawer", fresh: 2, used: 0, fromHl: [4], toHl: [4], arrow: { kind: "replace", i: 4, l: "l" },
+    note: "The bank drew a new A to fill the O's spot." },
+  { op: "Remove", text: "the S", from: "stool", to: "tool", bank: "inawer", fresh: 0, fromHl: [0], gone: [0], arrow: { kind: "remove", i: 0 },
+    note: "The bank drew a new I to fill the L's spot." },
+];
+function renderExample() {
+  const P = 27, cx = i => i * P + 12, gx = g => g * P - 1.5;
+  const tiles = (w, hl = [], gone = []) => [...w].map((l, i) => `<span class="mt${hl.includes(i) ? " hl" : ""}${gone.includes(i) ? " gone" : ""}">${l}</span>`).join("");
+  const arrow = (a, n, k) => {
+    const id = `exh${k}`, w = n * P;
+    const head = `<defs><marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1L9 5L0 9z" fill="var(--accent)"/></marker></defs>`;
+    const line = (d, both) => `<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#${id})"${both ? ` marker-start="url(#${id})"` : ""}/>`;
+    const label = (x, l) => `<text x="${x}" y="-2" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent)">${UP(l)}</text>`;
+    let body = "";
+    if (a.kind === "shift") { const x1 = cx(a.i), x2 = gx(a.gap); body = line(`M${x1} 17 C${x1} 2 ${x2} 2 ${x2} 15`); }
+    if (a.kind === "swap") { const x1 = cx(a.i), x2 = cx(a.j); body = line(`M${x1} 15 C${x1} 2 ${x2} 2 ${x2} 15`, true); }
+    if (a.kind === "add") body = label(gx(a.gap), a.l) + line(`M${gx(a.gap)} 2 L${gx(a.gap)} 15`);
+    if (a.kind === "replace") body = label(cx(a.i), a.l) + line(`M${cx(a.i)} 2 L${cx(a.i)} 15`);
+    if (a.kind === "remove") { const x = cx(a.i); body = `<path d="M${x - 4} 5L${x + 4} 13M${x + 4} 5L${x - 4} 13" stroke="var(--bad)" stroke-width="2" stroke-linecap="round"/>`; }
+    return `<svg width="${w}" height="18" viewBox="0 0 ${w} 18">${head}${body}</svg>`;
+  };
+  const bank = s => `<span class="ex-label">Bank</span>` + [...s.bank].map((l, i) => `<span class="mt b${i === s.used ? " hl" : ""}${i === s.fresh ? " fresh" : ""}">${l}</span>`).join("");
+  $("how-example").innerHTML = `<h3>Example</h3>
+    <div class="ex-row"><div class="ex-what">Start with <b>POTS</b> and the bank <b>LNOWER</b>.</div><div class="ex-move"><div class="ex-word">${tiles("pots")}</div></div><div class="ex-bank">${bank({ bank: "lnower" })}</div></div>` +
+    EXAMPLE.map((s, k) => `<div class="ex-row">
+      <div class="ex-what"><span class="ex-op">${s.op}</span>${s.text} to get <b>${UP(s.to)}</b></div>
+      <div class="ex-move"><div class="ex-word">${arrow(s.arrow, s.from.length, k)}${tiles(s.from, s.fromHl, s.gone)}</div><span class="ex-to">→</span><div class="ex-word">${tiles(s.to, s.toHl)}</div></div>
+      <div class="ex-bank">${bank(s)}</div>${s.note ? `<div class="ex-note">${s.note}</div>` : ""}
+    </div>`).join("");
+}
+
+// ---------- stats page ----------
+const MOVE_NAMES = [["add", "Add"], ["remove", "Remove"], ["shift", "Shift"], ["swap", "Swap"], ["replace", "Replace"]];
+const niceStep = raw => { const p = 10 ** Math.floor(Math.log10(Math.max(raw, 1))); return [1, 2, 5, 10].map(m => m * p).find(s => s >= raw) || 10 * p; };
+const roundTop = (x, y, w, h, r) => { r = Math.min(r, w / 2, h); return `M${x} ${y + h}V${y + r}Q${x} ${y} ${x + r} ${y}H${x + w - r}Q${x + w} ${y} ${x + w} ${y + r}V${y + h}Z`; };
+function histogram(scores) {
+  if (!scores.length) return `<p class="st-empty">No games yet.</p>`;
+  const max = Math.max(...scores), step = niceStep(Math.ceil((max + 1) / 8)), bins = Math.max(1, Math.ceil((max + 1) / step));
+  const counts = Array(bins).fill(0); scores.forEach(s => counts[Math.min(bins - 1, Math.floor(s / step))]++);
+  const W = 480, H = 150, top = 18, bw = W / bins, cmax = Math.max(...counts), mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const y = c => top + (H - top) * (1 - c / cmax);
+  let svg = `<svg viewBox="0 -4 ${W} ${H + 22}" role="img" aria-label="Score histogram">`;
+  counts.forEach((c, i) => {
+    const lo = i * step, hi = lo + step - 1, label = step === 1 ? `${lo}` : `${lo}–${hi}`;
+    if (c) svg += `<path class="bar" d="${roundTop(i * bw + 1, y(c), bw - 2, H - y(c), 4)}"><title>${label} points: ${c} game${c === 1 ? "" : "s"}</title></path><text x="${i * bw + bw / 2}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
+    if (i % Math.ceil(bins / 6) === 0) svg += `<text x="${i * bw}" y="${H + 14}">${lo}</text>`;
+  });
+  const mx = (mean / (bins * step)) * W;
+  svg += `<line class="axis" x1="0" x2="${W}" y1="${H}" y2="${H}"/><text x="${W}" y="${H + 14}" text-anchor="end">${bins * step}</text>`;
+  svg += `<line class="mean" x1="${mx}" x2="${mx}" y1="14" y2="${H}"/><text class="mean-label" x="${mx + (mx > W * 0.7 ? -4 : 4)}" y="10" text-anchor="${mx > W * 0.7 ? "end" : "start"}" dy="-2">Mean ${mean.toFixed(1)}</text>`;
+  svg += `</svg>`;
+  return svg + `<p class="st-cap"><b>${scores.length}</b> game${scores.length === 1 ? "" : "s"} · mean <b>${mean.toFixed(1)}</b> · best <b>${max}</b></p>`;
+}
+function renderStats() {
+  const games = loadHistory().filter(g => g.score > 0 || g.words.length);
+  $("stats-count").textContent = `${games.length} game${games.length === 1 ? "" : "s"} played`;
+  if (!games.length) { $("stats-body").innerHTML = `<p class="st-empty">Play a game and your stats will show up here.</p>`; return; }
+  const modes = Object.keys(MODES), byMode = m => games.filter(g => g.mode === m);
+  const list = (rows, empty = "Nothing yet.") => rows.length ? `<ol class="st-list">${rows.join("")}</ol>` : `<p class="st-empty">${empty}</p>`;
+  const top5 = m => list(byMode(m).slice().sort((a, b) => b.score - a.score).slice(0, 5).map((g, i) =>
+    `<li class="${g.id === G.id ? "live" : ""}"><span class="rk">${i + 1}.</span><span class="sc">${g.score}</span><span class="n">${esc(g.date)}${g.id === G.id ? " · this game" : ""}</span></li>`), "No games yet.");
+  const words = games.flatMap(g => g.words);
+  const best = new Map(), seen = new Map();
+  words.forEach(([w, pts]) => { best.set(w, Math.max(best.get(w) ?? 0, pts)); seen.set(w, (seen.get(w) || 0) + 1); });
+  const uniq = [...best.keys()];
+  const longest = uniq.slice().sort((a, b) => b.length - a.length || best.get(b) - best.get(a) || a.localeCompare(b)).slice(0, 10);
+  const scoring = uniq.slice().sort((a, b) => best.get(b) - best.get(a) || a.localeCompare(b)).slice(0, 10);
+  const common = uniq.slice().sort((a, b) => seen.get(b) - seen.get(a) || a.localeCompare(b)).slice(0, 10);
+  const row = (w, n) => `<li><span class="w">${esc(w)}</span><span class="n">${n}</span></li>`;
+  const ops = Object.fromEntries(MOVE_NAMES.map(([k]) => [k, 0])); words.forEach(([, , op]) => { if (op in ops) ops[op]++; });
+  const total = Object.values(ops).reduce((a, b) => a + b, 0), omax = Math.max(1, ...Object.values(ops));
+  const opChart = total ? `<svg viewBox="0 0 320 ${MOVE_NAMES.length * 28}" role="img" aria-label="Moves used">` + MOVE_NAMES.map(([k, name], i) => {
+    const w = (ops[k] / omax) * 190, yy = i * 28;
+    return `<text x="0" y="${yy + 17}">${name}</text>` + (ops[k] ? `<path class="bar" d="M70 ${yy + 5}H${70 + w - 4}Q${70 + w} ${yy + 5} ${70 + w} ${yy + 9}V${yy + 19}Q${70 + w} ${yy + 23} ${70 + w - 4} ${yy + 23}H70Z"><title>${name}: ${ops[k]} (${Math.round(100 * ops[k] / total)}%)</title></path>` : "") +
+      `<text x="${70 + w + 6}" y="${yy + 17}">${ops[k]} · ${Math.round(100 * ops[k] / total)}%</text>`;
+  }).join("") + `</svg>` : `<p class="st-empty">No moves yet.</p>`;
+  $("stats-body").innerHTML = `
+    <div class="st-block"><h3>Top scores</h3><div class="st-grid">${modes.map(m => `<div><h4>${MODES[m].name}</h4>${top5(m)}</div>`).join("")}</div></div>
+    <div class="st-block"><h3>Score spread</h3><div class="st-grid">${modes.map(m => `<div class="st-chart"><h4>${MODES[m].name}</h4>${histogram(byMode(m).map(g => g.score))}</div>`).join("")}</div></div>
+    <div class="st-block"><h3>Words</h3><div class="st-grid">
+      <div><h4>Longest</h4>${list(longest.map(w => row(w, `${w.length} letters`)))}</div>
+      <div><h4>Highest scoring</h4>${list(scoring.map(w => row(w, `${best.get(w)} pts`)))}</div>
+      <div><h4>Most played</h4>${list(common.map(w => row(w, `×${seen.get(w)}`)))}</div>
+    </div></div>
+    <div class="st-block st-chart"><h3>Moves used</h3><div style="max-width:420px">${opChart}</div></div>`;
+}
+
 function boot(data) {
   applyLayout();
+  renderExample();
   let g = data && data.game;
   if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
   if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
