@@ -67,7 +67,7 @@ nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
 .brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 48px; letter-spacing: -0.01em; margin: 0; line-height: 1; display: flex; align-items: flex-end; gap: 10px; }
-.brand h1 .steps-mark { width: 0.95em; height: auto; flex: none; margin-bottom: 0.06em; }
+.brand h1 .steps-mark { width: 0.62em; height: auto; flex: none; margin-bottom: 0.02em; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -358,7 +358,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 <div class="app">
   <header class="top">
     <div class="brand">
-      <h1>Stepwise<svg class="steps-mark" viewBox="0 0 64 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="miter" stroke-linecap="square"><path d="M3 45H11V36H19V27H27V18H34V25H41V13H49V4H61"/></svg></h1>
+      <h1>Stepwise<svg class="steps-mark" viewBox="0 0 34 50" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="miter" stroke-linecap="square"><path d="M3 3H10V11H17V19H24V25H31M24 25V31H17V39H10V47H3"/></svg></h1>
       <p>Create new words, one step at a time.</p>
       <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" data-view="stats">Stats</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
     </div>
@@ -1216,20 +1216,23 @@ function histogram(scores) {
   if (!scores.length) return `<p class="st-empty">No games yet.</p>`;
   // Buckets of 10 points; the x axis runs symmetrically around the mean so the mean sits in the middle.
   const B = 10, min = Math.min(...scores), max = Math.max(...scores), mean = scores.reduce((a, b) => a + b, 0) / scores.length;
-  const half = Math.max(mean - min, max + B - mean, B * 2) + B / 2, x0 = mean - half, x1 = mean + half;
+  const half = Math.max(60, Math.max(mean - min, max + B - mean) * 1.4 + 20), x0 = mean - half, x1 = mean + half;
   const first = Math.floor(x0 / B), last = Math.floor(x1 / B);
   const counts = new Map(); scores.forEach(s => counts.set(Math.floor(s / B), (counts.get(Math.floor(s / B)) || 0) + 1));
   const W = 480, H = 150, top = 18, cmax = Math.max(...counts.values()), sx = v => ((v - x0) / (x1 - x0)) * W, y = c => top + (H - top) * (1 - c / cmax);
-  const bw = sx(B) - sx(0), tickEvery = bw * 5 >= 60 ? 5 : bw * 10 >= 60 ? 10 : 20;
+  const bw = sx(B) - sx(0), labelEvery = bw >= 30 ? 1 : bw >= 15 ? 2 : bw >= 6 ? 5 : 10, barW = Math.max(3, Math.min(8, bw * 0.4));
   let svg = `<svg viewBox="0 -4 ${W} ${H + 22}" role="img" aria-label="Score histogram, buckets of 10 points">`;
   for (let k = first; k <= last; k++) {
     const c = counts.get(k) || 0, lo = k * B, x = sx(lo);
     if (c) {
-      const bx = Math.max(0, x + 1), bxe = Math.min(W, x + bw - 1);
-      svg += `<path class="bar" d="${roundTop(bx, y(c), bxe - bx, H - y(c), 4)}"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></path>`;
-      if (bw >= 14) svg += `<text x="${(bx + bxe) / 2}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
+      const mid = x + bw / 2, bx = Math.max(0, mid - barW / 2), bxe = Math.min(W, mid + barW / 2);
+      svg += `<path class="bar" d="${roundTop(bx, y(c), bxe - bx, H - y(c), 3)}"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></path><rect x="${mid - Math.max(bw, 12) / 2}" y="${top}" width="${Math.max(bw, 12)}" height="${H - top}" fill="transparent"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></rect>`;
+      svg += `<text x="${mid}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
     }
-    if (lo >= 0 && k % tickEvery === 0 && x >= 0 && x <= W - 10) svg += `<line class="axis" x1="${x}" x2="${x}" y1="${H}" y2="${H + 4}"/><text x="${x}" y="${H + 16}" text-anchor="middle">${lo}</text>`;
+    if (lo >= 0 && x >= 0 && x <= W) {
+      svg += `<line class="axis" x1="${x}" x2="${x}" y1="${H}" y2="${H + 3}"/>`;
+      if (k % labelEvery === 0 && x >= 8 && x <= W - 8) svg += `<text x="${x}" y="${H + 15}" text-anchor="middle">${lo}</text>`;
+    }
   }
   svg += `<line class="axis" x1="0" x2="${W}" y1="${H}" y2="${H}"/>`;
   svg += `<line class="mean" x1="${W / 2}" x2="${W / 2}" y1="14" y2="${H}"/><text class="mean-label" x="${W / 2}" y="8" text-anchor="middle">Mean ${mean.toFixed(1)}</text></svg>`;
