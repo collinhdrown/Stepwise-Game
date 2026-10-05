@@ -1120,7 +1120,8 @@ const KEY = "morph-ladder:game", BEST = "morph-ladder:best", ACH = "morph-ladder
 function save() { try { localStorage.setItem(KEY, JSON.stringify(G)); } catch {} }
 function loadBest(mode) { try { return +localStorage.getItem(`${BEST}:${mode}`) || 0; } catch { return 0; } }
 function saveBest(mode, v) { try { localStorage.setItem(`${BEST}:${mode}`, String(v)); } catch {} }
-// Every game played in this browser, for the Stats tab: { id, mode, date, score, words: [[word, points, move], ...] }.
+// Every game played in this browser, for the Stats tab: { id, mode, date, score, words: [[word, points, move, letter points], ...] }.
+// Letter points leave out every bonus; the Highest scoring list ranks by them.
 // The current game keeps its entry up to date as it is played. Older games are dropped past HIST_MAX.
 const HIST = "morph-ladder:history", HIST_MAX = 1000;
 let history = null;
@@ -1138,7 +1139,7 @@ function loadHistory() {
 }
 function recordGame(sc) {
   if (!G.id) G.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const h = loadHistory(), words = G.chain.slice(1).map(c => [c.w, c.pts, c.op]);
+  const h = loadHistory(), words = G.chain.slice(1).map(c => [c.w, c.pts, c.op, wordValue(c.w, c.m)]);
   let e = h.find(x => x.id === G.id);
   if (!words.length) { if (e && !e.words.length && e.score === sc) return; }
   if (!e) {
@@ -1248,7 +1249,7 @@ function renderStats() {
     `<li class="${g.id === G.id ? "live" : ""}"><span class="rk">${i + 1}.</span><span class="sc">${g.score}</span><span class="n">${esc(g.date)}${g.id === G.id ? " · this game" : ""}</span></li>`), "No games yet.");
   const words = games.flatMap(g => g.words);
   const best = new Map(), seen = new Map();
-  words.forEach(([w, pts]) => { best.set(w, Math.max(best.get(w) ?? 0, pts)); seen.set(w, (seen.get(w) || 0) + 1); });
+  words.forEach(([w, , , lp]) => { best.set(w, Math.max(best.get(w) ?? 0, lp ?? wordValue(w, "p".repeat(w.length)))); seen.set(w, (seen.get(w) || 0) + 1); });
   const uniq = [...best.keys()];
   const longest = uniq.slice().sort((a, b) => b.length - a.length || best.get(b) - best.get(a) || a.localeCompare(b)).slice(0, 10);
   const scoring = uniq.slice().sort((a, b) => best.get(b) - best.get(a) || a.localeCompare(b)).slice(0, 10);
