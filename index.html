@@ -233,6 +233,10 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .rung { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; padding: 7px 8px 7px 0; border-bottom: 1px solid var(--line); }
 .rung:last-child { border-bottom: 0; }
 .rung.latest { animation: pop 380ms ease-out; }
+.rung.pick { cursor: pointer; border-radius: 8px; padding-left: 6px; margin-left: -6px; }
+.rung.pick:hover, .rung.pick:focus-visible { background: var(--accent-soft); outline: none; }
+.rung.pick .w { color: var(--accent); }
+.rungs:has(.pick) .rung:not(.pick) { opacity: .5; }
 .rung .n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .rung .w { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.05em; text-transform: uppercase; overflow-wrap: anywhere; }
 .rung .op { font-size: 12px; color: var(--muted); grid-column: 2; }
@@ -258,7 +262,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 /* contain: size keeps a long ladder from stretching the column; the list fills whatever height is left. */
 .layout-stack .rungs { contain: size; min-height: 105px; max-height: none; padding: 0 12px 0 16px; overscroll-behavior: contain;
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); mask-image: linear-gradient(to bottom, rgba(0,0,0,.25) 0, #000 70%); }
-.layout-stack .rungs:hover, .layout-stack .rungs:focus-within { -webkit-mask-image: none; mask-image: none; }
+.layout-stack .rungs:hover, .layout-stack .rungs:focus-within, .layout-stack .rungs:has(.pick) { -webkit-mask-image: none; mask-image: none; }
 .layout-stack .rung { grid-template-columns: 24px auto minmax(0, 1fr) auto; padding: 0 4px 0 0; height: 35px; border-bottom: 1px dashed var(--line); }
 .layout-stack .rung .chips { display: flex; gap: 4px; justify-content: flex-end; min-width: 0; grid-column: 3; grid-row: 1; }
 .layout-stack .rung .chips .chip { font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; }
@@ -474,7 +478,7 @@ const DATA = {"words":"aardvark aardvarks aback abacus abacuses abaft abalone ab
 const LAYOUT = "stack";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
-const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10, BACKTRACK_N = 5;
+const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10;
 const STEP_LIMIT = 25, HINT_LIMIT = 3;
 const MODES = {
   classic: { name: "Classic", desc: "Rack up as many points as you can in 25 steps." },
@@ -783,14 +787,23 @@ function usePower(p) {
     G.bank = playableBank(); G.powers.exchange = false; G.undo = null;
     ui.newBank = "all"; ui.msg = { text: "Fresh letters in your bank.", kind: "info" };
   } else if (p === "choose") {
-    ui.mode = ui.mode ? null : "pick"; ui.chosen = null; ui.msg = null;
+    ui.mode = ui.mode === "pick" || ui.mode === "discard" ? null : "pick"; ui.chosen = null; ui.msg = null;
   } else if (p === "backtrack") {
-    const n = Math.min(BACKTRACK_N, G.chain.length - 1);
-    if (!n) return;
-    const gone = G.chain.splice(-n);
-    G.powers.backtrack = false; G.undo = null;
-    ui.pop = true; ui.msg = { text: `Backtracked ${n} word${n > 1 ? "s" : ""} (${gone.reduce((s, c) => s + c.pts, 0)} points).`, kind: "info" };
+    // Pick the word to return to from Previous Steps.
+    if (G.chain.length < 2) return;
+    ui.mode = ui.mode === "back" ? null : "back"; ui.chosen = null; ui.msg = null;
+    render();
+    if (ui.mode === "back") $("rungs").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    return;
   }
+  render();
+}
+// Backtrack: drop every word after step i, so step i becomes the current word again. The bank stays as it is.
+function backtrackTo(i) {
+  if (ui.mode !== "back" || !G.powers.backtrack || i < 0 || i >= G.chain.length - 1) return;
+  const gone = G.chain.splice(i + 1), n = gone.length;
+  G.powers.backtrack = false; G.undo = null; ui.mode = null;
+  ui.pop = true; ui.msg = { text: `Back to ${UP(cur())}: removed ${n} word${n > 1 ? "s" : ""} (${gone.reduce((s, c) => s + c.pts, 0)} points).`, kind: "info" };
   render();
 }
 function chooseLetter(l) { ui.mode = "discard"; ui.chosen = l; render(); }
@@ -877,6 +890,7 @@ function render() {
   if (G.over) hint = "No moves left.";
   else if (ui.mode === "pick") hint = "Choose a letter to add to your bank.";
   else if (ui.mode === "discard") hint = `Tap a bank letter to discard for ${UP(ui.chosen)}.`;
+  else if (ui.mode === "back") hint = "Tap a word in Previous Steps to go back to it.";
   else if (!sel) hint = "Tap a bank letter to add or swap it in, or tap a letter in the current word to move, swap or remove it.";
   else if (sel.k === "bank") hint = `Tap a gap to insert ${UP(G.bank[sel.i])}, or a letter in the word to replace it with ${UP(G.bank[sel.i])}.`;
   else hint = `Tap a gap to move ${UP(w[sel.i])}, another letter to swap with it, a bank letter to replace it, or <button type="button" class="btn danger" id="remove">Remove ${UP(w[sel.i])}</button>`;
@@ -912,19 +926,22 @@ function render() {
   $("newgame").classList.toggle("danger", ui.confirmNew);
 
   // powers
-  const back = Math.min(BACKTRACK_N, G.chain.length - 1);
+  const back = G.chain.length - 1;
   const P = [
     ["exchange", "Exchange letters", "Trade all 6 bank letters for new ones", G.powers.exchange],
     ["choose", "Choose a letter", "Add any letter, discard one", G.powers.choose],
-    ["backtrack", "Backtrack", back ? `Remove the last ${back} word${back > 1 ? "s" : ""} from the ladder` : "Nothing to backtrack yet", G.powers.backtrack && back > 0],
+    ["backtrack", "Backtrack", back ? "Go back to any word in Previous Steps" : "Nothing to backtrack yet", G.powers.backtrack && back > 0],
   ];
   $("powers").innerHTML = P.map(([id, name, desc, ok]) =>
-    `<button type="button" class="power${ui.mode && id === "choose" ? " active" : ""}" data-power="${id}" ${ok && !G.over ? "" : "disabled"}><span class="state">${G.powers[id] ? "Ready" : "Used"}</span><b>${name}</b><span>${desc}</span></button>`).join("");
+    `<button type="button" class="power${(id === "choose" && (ui.mode === "pick" || ui.mode === "discard")) || (id === "backtrack" && ui.mode === "back") ? " active" : ""}" data-power="${id}" ${ok && !G.over ? "" : "disabled"}><span class="state">${G.powers[id] ? "Ready" : "Used"}</span><b>${name}</b><span>${desc}</span></button>`).join("");
   const picker = $("picker");
   picker.hidden = !ui.mode;
   if (ui.mode === "pick") {
     picker.className = "picker";
     picker.innerHTML = `<div class="bar"><b>Pick a letter</b><button type="button" class="btn" data-cancel>Cancel</button></div><div class="alpha">${"abcdefghijklmnopqrstuvwxyz".split("").map(l => `<button type="button" data-pickl="${l}" aria-label="${UP(l)}">${UP(l)}</button>`).join("")}</div>`;
+  } else if (ui.mode === "back") {
+    picker.className = "picker";
+    picker.innerHTML = `<div class="bar"><span>Tap a word in <b>Previous Steps</b> to go back to it.</span><button type="button" class="btn" data-cancel>Cancel</button></div>`;
   } else if (ui.mode === "discard") {
     picker.className = "picker";
     picker.innerHTML = `<div class="bar"><span>Adding <b>${UP(ui.chosen)}</b>. Now tap a bank letter to discard.</span><button type="button" class="btn" data-cancel>Cancel</button></div>`;
@@ -937,7 +954,8 @@ function render() {
     const kinds = [c.long && "Long word", c.bonus && "Category", c.toolkit && "Toolkit"].filter(Boolean);
     const chips = kinds.map(k => ` <span class="chip"${k === "Category" ? ` title="${esc(c.bonus)}"` : ""}>${k} bonus</span>`).join("");
     const combined = kinds.length > 1 ? `<span class="chip" title="${esc(kinds.join(" + "))} bonus">${kinds.join(" + ")} bonus</span>` : chips;
-    return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}"><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${combined}</span></li>`;
+    const pickable = ui.mode === "back" && i < G.chain.length - 1;
+    return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}${pickable ? " pick" : ""}"${pickable ? ` data-back="${i}" role="button" tabindex="0" aria-label="Go back to ${UP(c.w)}"` : ""}><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${combined}</span></li>`;
   });
   const rungs = $("rungs");
   if (LAYOUT === "stack") { rungs.innerHTML = rows.join(""); rungs.scrollTop = rungs.scrollHeight; }
@@ -1004,6 +1022,8 @@ document.addEventListener("click", e => {
     if (e.target.hasAttribute && e.target.hasAttribute("data-modal-back")) return closeSummary();
     if (!e.target.closest(".modal")) return;
   }
+  const bk = e.target.closest("[data-back]");
+  if (bk) return backtrackTo(+bk.dataset.back);
   const t = e.target.closest("button");
   if (!t) {
     // Tapping anywhere off the buttons drops the current selection.
@@ -1052,6 +1072,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && $("modal-slot").firstChild) { closeSummary(); return; }
+  if (e.key === "Enter" && e.target.dataset && e.target.dataset.back != null) { e.preventDefault(); return backtrackTo(+e.target.dataset.back); }
   if (e.key === "Escape") { ui.sel = null; ui.mode = null; ui.chosen = null; render(); }
   else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
   else if ((e.key === "Delete" || e.key === "Backspace") && ui.sel && ui.sel.k === "word" && !G.over) { e.preventDefault(); removeLetter(ui.sel.i); }
@@ -1262,7 +1283,6 @@ function histogram(scores) {
     if (c) {
       const mid = x + bw / 2, bx = Math.max(0, mid - barW / 2), bxe = Math.min(W, mid + barW / 2);
       svg += `<path class="bar" d="${roundTop(bx, y(c), bxe - bx, H - y(c), 3)}"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></path><rect x="${mid - Math.max(bw, 12) / 2}" y="${top}" width="${Math.max(bw, 12)}" height="${H - top}" fill="transparent"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></rect>`;
-      svg += `<text x="${mid}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
     }
     if (lo >= 0 && x >= 0 && x <= W) {
       svg += `<line class="axis" x1="${x}" x2="${x}" y1="${H}" y2="${H + 3}"/>`;
