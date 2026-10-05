@@ -489,7 +489,7 @@ const MODES = {
 const lengthBonus = n => n >= 6 ? n : 0;
 const FREQ = { a: 9, b: 2, c: 2, d: 4, e: 12, f: 2, g: 3, h: 2, i: 9, j: 1, k: 1, l: 4, m: 2, n: 6, o: 8, p: 2, q: 1, r: 6, s: 4, t: 6, u: 4, v: 2, w: 2, x: 1, y: 2, z: 1 };
 // Letter values, 1 (common) to 5 (hard to use). Scrabble values squeezed into 1-5.
-const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorstu", 2: "dg", 3: "bcmp", 4: "fhkvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
+const VALUE = Object.fromEntries(Object.entries({ 1: "aeilnorst", 2: "dgmpu", 3: "bcfh", 4: "kvwy", 5: "jqxz" }).flatMap(([v, ls]) => [...ls].map(l => [l, +v])));
 const BAG = Object.entries(FREQ).flatMap(([l, n]) => Array(n).fill(l));
 const isVowel = l => "aeiou".includes(l);
 // Random numbers come from Math.random, except inside withSeed(), which swaps in a seeded generator.
