@@ -161,6 +161,14 @@ car bus van cab taxi truck lorry train tram metro subway bike cycle moped scoote
 sleigh boat ship yacht canoe kayak raft ferry barge tug liner ark sub plane jet glider blimp rocket shuttle copter
 tractor tank trailer camper caravan carriage buggy chariot rickshaw gondola punt dinghy skiff sloop junk dhow
 cutter frigate cruiser airship balloon tandem trike unicycle hearse ambulance bulldozer motorbike streetcar trolley
+walk walked walking stroll strolled strolling stride strode striding hike hiked hiking trek trekked trekking
+march marched marching run ran running jog jogged jogging sprint sprinted sprinting dash dashed dashing race raced
+racing drive drove driven driving ride rode ridden riding fly flew flown flying sail sailed sailing row rowed rowing
+paddle paddled paddling swim swam swum swimming skate skated skating skied skiing cycled cycling pedal pedaled
+pedaling hop hopped hopping skip skipped skipping jump jumped jumping crawl crawled crawling climb climbed climbing
+wade waded wading glide glided gliding cruise cruised cruising roam roamed roaming wander wandered travel traveled
+commute commuted journey hitch hitched hitching gallop galloped trot trotted trotting canter amble ambled ambling
+limp limped limping shuffle tiptoe toddle waddle march sled sledded sledding steer steered steering
 """,
     "tool": """
 axe saw drill hammer mallet chisel file rasp plane lathe vise vice wrench spanner pliers tongs clamp level ruler
