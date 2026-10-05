@@ -153,7 +153,7 @@ regret remorse content tense angry upset afraid scared brave bored lonely jolly 
 tired hurt peeved irate livid elated proud smug shy timid nervous eager keen giddy sore blue down fond
 """,
     "transport": """
-car bus van cab taxi truck lorry train tram metro subway bike cycle moped scooter jeep limo coach wagon cart sled
+car bus van cab taxi truck lorry train tram metro subway bike cycle moped scooter jeep limo coach wagon cart sled ski
 sleigh boat ship yacht canoe kayak raft ferry barge tug liner ark sub plane jet glider blimp rocket shuttle copter
 tractor tank trailer camper caravan carriage buggy chariot rickshaw gondola punt dinghy skiff sloop junk dhow
 cutter frigate cruiser airship balloon tandem trike unicycle hearse ambulance bulldozer motorbike streetcar trolley
