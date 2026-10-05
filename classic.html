@@ -980,7 +980,7 @@ function render() {
   const stuck = $("stuck");
   if (classicDone()) {
     stuck.hidden = false;
-    stuck.innerHTML = `<h2>Classic complete: ${score()} points</h2><p>You used all ${STEP_LIMIT} steps and ended on ${UP(w)}. Your score is saved. Keep playing to carry on in Free play.</p><div><button type="button" class="btn primary" data-keep>Keep playing</button><button type="button" class="btn" data-restart>See your summary</button></div>`;
+    stuck.innerHTML = `<h2>Classic complete: ${score()} points</h2><div><button type="button" class="btn primary" data-keep>Keep playing</button><button type="button" class="btn" data-restart>See your summary</button></div>`;
   } else if (G.over) {
     stuck.hidden = false;
     stuck.innerHTML = `<h2>Game over: ${score()} points</h2><p>No legal moves from ${UP(w)}, and no powers left. Your ladder reached ${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"}.${(G.earned || []).length ? ` Achievements reached this game: ${ACHIEVEMENTS.filter(a => G.earned.includes(a.id)).map(a => a.name).join(", ")}.` : ""}</p><div><button type="button" class="btn primary" data-restart>Play again</button></div>`;
