@@ -633,6 +633,7 @@ const newSeed = () => Math.floor(Math.random() * 2 ** 31);
 // backtracking and then replaying a move brings in the same letters as before.
 function refilled(bank, bi, step) {
   bank = bank.slice();
+  if (!G.seed) G.seed = newSeed(); // games saved before refills were seeded
   withSeed((G.seed ^ Math.imul(step + 1, 0x9E3779B1)) >>> 0, () => { bank[bi] = draw(); balance(bank, [bi]); });
   return bank;
 }
@@ -1381,7 +1382,7 @@ function boot(data) {
   renderExample();
   let g = data && data.game;
   if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
-  if (valid(g)) { G = g; if (!G.seed) G.seed = newSeed(); G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
+  if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
   else newGame();
   render();
 }
