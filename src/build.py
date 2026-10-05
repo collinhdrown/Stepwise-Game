@@ -8,7 +8,9 @@ start words and bonus-category word lists.
 import json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DICT = set(open(os.path.join(HERE, "data/enable1.txt")).read().split())
+# words.txt is everyday words only (see data/make_words.py); enable1.txt is the full list it is cut from.
+DICT = set(open(os.path.join(HERE, "data/words.txt")).read().split())
+FULL = set(open(os.path.join(HERE, "data/enable1.txt")).read().split())
 COMMON = open(os.path.join(HERE, "data/google-10000-english-usa-no-swears.txt")).read().split()
 
 MIN_LEN, MAX_LEN = 3, 15
@@ -166,13 +168,16 @@ def expand(words):
     out = set()
     for w in words:
         for f in (w, w + "s", w + "es", (w[:-1] + "ies") if w.endswith("y") else None):
-            if f and f in WSET:
+            if f and f in FULL and MIN_LEN <= len(f) <= MAX_LEN:
                 out.add(f)
     return sorted(out)
 
 
 cats = {k: expand(v) for k, v in CATEGORIES.items()}
-missing = {k: [w for w in v if w not in WSET] for k, v in CATEGORIES.items()}
+missing = {k: [w for w in v if w not in FULL] for k, v in CATEGORIES.items()}
+# Hand-picked category words always count, even when they are too rare for words.txt (PESTO, ORCA).
+WORDS = sorted(WSET.union(*cats.values()))
+WSET = set(WORDS)
 
 
 def neighbors(w):
