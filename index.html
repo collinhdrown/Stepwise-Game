@@ -219,6 +219,7 @@ header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: f
 .stuck { border-color: color-mix(in srgb, var(--bad) 50%, var(--line)); display: grid; gap: 10px; }
 .stuck h2 { margin: 0; font-family: var(--font-display); font-size: 22px; }
 .stuck p { margin: 0; color: var(--muted); }
+.stuck div { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* Ladder */
 .ladder { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 10px; padding: 16px 0 10px; max-height: calc(100vh - 40px); grid-template-rows: auto minmax(0, 1fr); }
@@ -456,7 +457,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
           <li><b>Category bonus.</b> A word whose meaning fits the active bonus category scores 20 more, and a new category appears.</li>
           <li><b>Toolkit bonus.</b> Each kind of move lights up its icon. Light all five and you score 10 more, then the icons reset so you can earn it again.</li>
           <li><b>Long word bonus.</b> A 6-letter word scores 6 more and a 7-letter word 7 more. Longer words score their length.</li>
-          <li><b>Classic</b> ends after 25 steps. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
+          <li><b>Classic</b> ends after 25 steps, and you can keep playing in Free play from there. <b>Free play</b> ends when no move is possible and no powers or undo can help.</li>
         </ul>
       </div>
     </div>
@@ -566,6 +567,7 @@ const score = () => G.chain.reduce((s, c) => s + c.pts, 0);
 const lit = () => G.chain[G.chain.length - 1].lit || [];
 const hintsLeft = () => G.hintsLeft ?? HINT_LIMIT;
 const stepsLeft = () => Math.max(0, STEP_LIMIT - gameWords());
+const classicDone = () => G.over && G.mode === "classic" && gameWords() >= STEP_LIMIT;
 
 const MAX_SAME = 2;
 // No letter may appear more than MAX_SAME times in the bank. Redraws the fresh
@@ -652,7 +654,7 @@ function commit(op, nw, nm, detail, bankFn) {
   ui.msg = { text: extras.length ? `${UP(nw)} +${pts}, including ${extras.join(" and ")}!` : `${UP(nw)} +${pts}`, kind: "good" };
   ui.hint = null;
   checkAchievements(nw);
-  // Classic ends on the 50th step.
+  // Classic ends on the 25th step; the player can then keep going in Free play.
   const finished = G.mode === "classic" && gameWords() >= STEP_LIMIT;
   if (finished) { G.over = true; G.undo = null; ui.sel = null; ui.mode = null; }
   render();
@@ -885,7 +887,7 @@ function render() {
   $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
   $("mode-line").innerHTML = G.mode === "classic"
     ? `<b>Classic</b> · <span class="steps${stepsLeft() <= 5 ? " low" : ""}">${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left</span>`
-    : `<b>Free play</b>`;
+    : `<b>Free play</b>${G.cont ? ` · Classic score ${G.cont.score}` : ""}`;
 
   const msg = $("msg");
   msg.textContent = ui.msg ? ui.msg.text : "";
@@ -955,9 +957,9 @@ function render() {
 
   // stuck / game over
   const stuck = $("stuck");
-  if (G.over && G.mode === "classic" && gameWords() >= STEP_LIMIT) {
+  if (classicDone()) {
     stuck.hidden = false;
-    stuck.innerHTML = `<h2>Classic complete: ${score()} points</h2><p>You used all ${STEP_LIMIT} steps and ended on ${UP(w)}.</p><div><button type="button" class="btn primary" data-restart>See your summary</button></div>`;
+    stuck.innerHTML = `<h2>Classic complete: ${score()} points</h2><p>You used all ${STEP_LIMIT} steps and ended on ${UP(w)}. Your score is saved. Keep playing to carry on in Free play.</p><div><button type="button" class="btn primary" data-keep>Keep playing</button><button type="button" class="btn" data-restart>See your summary</button></div>`;
   } else if (G.over) {
     stuck.hidden = false;
     stuck.innerHTML = `<h2>Game over: ${score()} points</h2><p>No legal moves from ${UP(w)}, and no powers left. Your ladder reached ${G.chain.length - 1} word${G.chain.length === 2 ? "" : "s"}.${(G.earned || []).length ? ` Achievements reached this game: ${ACHIEVEMENTS.filter(a => G.earned.includes(a.id)).map(a => a.name).join(", ")}.` : ""}</p><div><button type="button" class="btn primary" data-restart>Play again</button></div>`;
@@ -996,7 +998,7 @@ document.addEventListener("pointerover", e => {
 document.addEventListener("click", e => {
   if ($("modal-slot").firstChild) {
     // While the summary is open, only its own buttons act; tapping the backdrop closes it (unless the game is over).
-    if (e.target.hasAttribute && e.target.hasAttribute("data-modal-back") && !G.over) return closeSummary();
+    if (e.target.hasAttribute && e.target.hasAttribute("data-modal-back") && (!G.over || classicDone())) return closeSummary();
     if (!e.target.closest(".modal")) return;
   }
   const t = e.target.closest("button");
@@ -1013,6 +1015,7 @@ document.addEventListener("click", e => {
   if (t.hasAttribute("data-restart")) { openSummary(); return; }
   if (t.hasAttribute("data-share")) return shareSummary();
   if (t.hasAttribute("data-close")) return closeSummary();
+  if (t.hasAttribute("data-keep")) return keepPlaying();
   if (t.dataset.newMode) { const m = t.dataset.newMode; closeSummary(); newGame(m); ui.msg = { text: `New ${MODES[m].name} game. Good luck!`, kind: "info" }; return render(); }
   if (t.id === "undo") return undo();
   if (t.id === "remove") return removeLetter(ui.sel.i);
@@ -1045,7 +1048,7 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && $("modal-slot").firstChild) { if (!G.over) closeSummary(); return; }
+  if (e.key === "Escape" && $("modal-slot").firstChild) { if (!G.over || classicDone()) closeSummary(); return; }
   if (e.key === "Escape") { ui.sel = null; ui.mode = null; ui.chosen = null; render(); }
   else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
   else if ((e.key === "Delete" || e.key === "Backspace") && ui.sel && ui.sel.k === "word" && !G.over) { e.preventDefault(); removeLetter(ui.sel.i); }
@@ -1070,7 +1073,7 @@ function openSummary() {
     `<button type="button" class="mode-opt${id === G.mode ? " current" : ""}" data-new-mode="${id}"><b>${m.name}</b><span>${m.desc}</span></button>`).join("");
   $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sum-title">
     <h2 id="sum-title">${fresh ? "New game" : G.over ? (G.mode === "classic" && st.words >= STEP_LIMIT ? "Classic complete" : "Game over") : "Your game"}</h2>
-    ${fresh ? `<p class="sub">Pick a mode to start.</p>` : `<p class="sub">${st.mode} · started from ${UP(st.start)}</p>
+    ${fresh ? `<p class="sub">Pick a mode to start.</p>` : `<p class="sub">${st.mode} · started from ${UP(st.start)}${G.cont ? ` · Classic score ${G.cont.score}` : ""}</p>
     <div class="stats">
       <div class="stat-box big"><span class="k">Points</span><span class="v">${st.points}</span></div>
       <div class="stat-box"><span class="k">Words</span><span class="v">${st.words}</span></div>
@@ -1082,7 +1085,8 @@ function openSummary() {
     <h3>Start a new game</h3>
     <div class="modes">${modeBtns}</div>
     <div class="row">
-      ${G.over ? "" : `<button type="button" class="btn" data-close>${fresh ? "Cancel" : "Keep playing"}</button>`}
+      ${classicDone() ? `<button type="button" class="btn primary" data-keep>Keep playing</button><button type="button" class="btn" data-close>Exit</button>`
+        : G.over ? "" : `<button type="button" class="btn" data-close>${fresh ? "Cancel" : "Keep playing"}</button>`}
       ${fresh ? "" : `<button type="button" class="btn" data-share>Share</button>`}
     </div>
   </div></div>`;
@@ -1090,6 +1094,18 @@ function openSummary() {
   first && first.focus();
 }
 function closeSummary() { $("modal-slot").innerHTML = ""; }
+// After 25 Classic steps the player can keep going. The Classic score is already saved in the history;
+// the same ladder carries on as a Free play game with its own entry, which skips the first 25 words in word stats.
+function keepPlaying() {
+  if (!classicDone()) return;
+  closeSummary();
+  recordGame(score());
+  G.cont = { steps: gameWords(), score: score() };
+  G.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  G.mode = "free"; G.over = false; G.newAch = [];
+  ui.msg = { text: `Classic score of ${G.cont.score} saved. Keep going in Free play!`, kind: "info" };
+  render();
+}
 async function shareSummary() {
   const text = shareText(gameStats()), note = $("share-note");
   try {
@@ -1155,8 +1171,10 @@ function recordGame(sc) {
   let e = h.find(x => x.id === G.id);
   if (!words.length) { if (e && !e.words.length && e.score === sc) return; }
   if (!e) {
-    if (!words.length) return;
+    // A continued game gets its Free play entry with its first move past Classic.
+    if (words.length <= (G.cont ? G.cont.steps : 0)) return;
     e = { id: G.id, mode: G.mode, date: new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" }), score: 0, words: [] };
+    if (G.cont) e.cont = G.cont.steps;
     h.push(e);
   }
   if (e.score === sc && e.words.length === words.length && (!words.length || e.words[words.length - 1][0] === words[words.length - 1][0])) return;
@@ -1259,7 +1277,8 @@ function renderStats() {
   const list = (rows, empty = "Nothing yet.") => rows.length ? `<ol class="st-list">${rows.join("")}</ol>` : `<p class="st-empty">${empty}</p>`;
   const top5 = m => list(byMode(m).slice().sort((a, b) => b.score - a.score).slice(0, 5).map((g, i) =>
     `<li class="${g.id === G.id ? "live" : ""}"><span class="rk">${i + 1}.</span><span class="sc">${g.score}</span><span class="n">${esc(g.date)}${g.id === G.id ? " · this game" : ""}</span></li>`), "No games yet.");
-  const words = games.flatMap(g => g.words);
+  // A Free play game continued from Classic leaves out the words its Classic entry already counts.
+  const words = games.flatMap(g => g.words.slice(g.cont || 0));
   const best = new Map(), seen = new Map();
   words.forEach(([w, , , lp]) => { best.set(w, Math.max(best.get(w) ?? 0, lp ?? wordValue(w, "p".repeat(w.length)))); seen.set(w, (seen.get(w) || 0) + 1); });
   const uniq = [...best.keys()];
