@@ -37,24 +37,45 @@ kangaroo wallaby wombat platypus possum mice geese oxen wolves calves sheep deer
 bison hen rooster chick chicken cockerel pullet capon turkey drone queen larva pupa grizzly polar elephant
 giraffe camel dromedary alpaca vicuna mustang stallion gelding pony mare burro ass hinny zebu yak gaur hart hind
 roe fawn buck stag elk caribou reindeer marmot beaver otter mink sable ermine weasel ferret polecat badger
+anchovy angelfish barracuda blowfish bluefish bonito catfish char chub cichlid coelacanth crayfish cuttlefish dogfish dory
+flounder fluke gar goby goldfish grayling grouper guppy haddock halibut herring jellyfish kipper koi lamprey lionfish lungfish
+mackerel mako marlin molly monkfish mullet pilchard piranha plaice pollack pollock puffer redfish rockfish sailfish sardine
+sawfish shad shellfish skate snapper sprat starfish stingray sturgeon sunfish swordfish tarpon tetra tilapia triggerfish
+turbot walleye whitebait whitefish whiting wrasse yellowtail
 """,
     "food": """
-apple bread cake rice bean pea corn meat beef pork ham egg milk cheese butter cream honey jam soup stew pie tart
-bun roll toast pasta noodle pizza taco salad fruit grape lemon lime melon peach pear plum berry cherry date fig
-kiwi mango olive onion leek kale beet yam potato tomato carrot radish celery pepper garlic ginger herb mint basil
-sage thyme salt sugar flour oat bran wheat barley rye nut almond pecan walnut cashew candy fudge toffee cookie
-biscuit muffin scone bagel donut waffle crepe pancake omelet bacon sausage steak chop roast veal lamb mutton
-venison chicken turkey fish tuna salmon trout cod crab prawn shrimp lobster clam oyster mussel squid sushi curry
-chili soy tofu miso broth gravy sauce salsa dip relish pickle chutney mustard ketchup vinegar oil lard tea coffee
-cocoa juice cider wine beer ale mead rum gin sake soda lettuce cabbage spinach squash pumpkin turnip parsnip okra
-chard endive cress sprout lentil grain cereal porridge gruel granola yogurt custard pudding jelly mousse sorbet
-gelato icing frosting syrup treacle caramel nougat praline truffle brownie strudel pastry dumpling ravioli lasagna
-gnocchi risotto paella burrito nacho tamale kebab gyro falafel hummus pita naan pretzel cracker wafer chip fries
-burger hotdog sandwich sub wrap pesto ragout chowder bisque gumbo jerky salami bologna pastrami brisket rib ribs
-cutlet fillet filet loin sirloin mince patty meatball egg yolk tamarind papaya guava lychee banana orange apricot
-nectarine quince raisin prune currant melon citrus berry cranberry blueberry raspberry strawberry coconut peanut
-pistachio hazelnut chestnut macaroni spaghetti linguine penne bean beans peas chive dill fennel cumin clove
-nutmeg cinnamon vanilla anise saffron paprika oregano parsley cilantro scallion shallot tater spud
+apple bread cake rice bean pea corn meat beef pork ham egg milk cheese butter cream honey jam soup stew pie tart bun
+roll toast pasta noodle pizza taco salad fruit grape lemon lime melon peach pear plum berry cherry date fig kiwi mango
+olive onion leek kale beet yam potato tomato carrot radish celery pepper garlic ginger herb mint basil sage thyme salt
+sugar flour oat bran wheat barley rye nut almond pecan walnut cashew candy fudge toffee cookie biscuit muffin scone
+bagel donut waffle crepe pancake omelet bacon sausage steak chop roast veal lamb mutton venison chicken turkey fish
+tuna salmon trout cod crab prawn shrimp lobster clam oyster mussel squid sushi curry chili soy tofu miso broth gravy
+sauce salsa dip relish pickle chutney mustard ketchup vinegar oil lard tea coffee cocoa juice cider wine beer ale mead
+rum gin sake soda lettuce cabbage spinach squash pumpkin turnip parsnip okra chard endive cress sprout lentil grain
+cereal porridge gruel granola yogurt custard pudding jelly mousse sorbet gelato icing frosting syrup treacle caramel
+nougat praline truffle brownie strudel pastry dumpling ravioli lasagna gnocchi risotto paella burrito nacho tamale
+kebab gyro falafel hummus pita naan pretzel cracker wafer chip fries burger hotdog sandwich sub wrap pesto ragout
+chowder bisque gumbo jerky salami bologna pastrami brisket rib ribs cutlet fillet filet loin sirloin mince patty
+meatball egg yolk tamarind papaya guava lychee banana orange apricot nectarine quince raisin prune currant melon
+citrus berry cranberry blueberry raspberry strawberry coconut peanut pistachio hazelnut chestnut macaroni spaghetti
+linguine penne bean beans peas chive dill fennel cumin clove nutmeg cinnamon vanilla anise saffron paprika oregano
+parsley cilantro scallion shallot tater spud aioli allspice anchovy artichoke arugula asparagus aubergine avocado
+baguette blackberry blintz borscht bouillon bourbon boysenberry brandy bratwurst brie brioche broccoli bulgur
+butterscotch calamari cannoli cantaloupe cappuccino cardamom casserole catfish cauliflower caviar cayenne champagne
+chapati cheddar cheeseburger cheesecake chickpea chips chocolate chorizo cobbler cocktail cognac cola coleslaw
+consomme cordial coriander cornbread courgette couscous croissant cruller crumble crumpet cucumber cupcake curd dal
+danish dhal doughnut duck eclair eggplant elderberry empanada enchilada espresso fajita feta fettuccine flan focaccia
+frankfurter frappe frittata fritter fusilli ghee gherkin goose gooseberry goulash gourd grapefruit grits gruyere
+guacamole gumdrop haddock halibut hamburger hash herring hoagie honeydew horseradish jalapeno jambalaya jellybean
+kefir kielbasa kimchi knish kohlrabi kumquat lager latke latte lemonade licorice liqueur loaf lollipop macadamia
+macaroon mackerel malt mandarin margarine margarita marmalade marshmallow martini marzipan mascarpone mayo mayonnaise
+meatloaf meringue millet mocha molasses mozzarella muesli mulberry mushroom nachos nectar oatmeal octopus omelette
+orzo parfait pepperoni persimmon pheasant pierogi pilaf pimento pineapple plantain polenta pomegranate pomelo popcorn
+preserves prosciutto provolone pumpernickel quail quesadilla quiche quinoa ricotta rigatoni roe rosemary roti rutabaga
+samosa sangria sardine scallop scotch semolina sherbet sherry slaw smoothie sole souffle sourdough spelt starfruit
+stout sundae taffy tahini tangerine tarragon tempeh tempura tenderloin tequila teriyaki tilapia tiramisu toddy
+tortellini tortilla tostada trifle turmeric vermicelli vodka wasabi water watercress watermelon whey whiskey whisky
+wiener wonton zucchini
 """,
     "body": """
 arm leg hand foot head neck back hip knee toe heel shin calf thigh chin cheek jaw lip mouth nose eye ear brow
@@ -151,6 +172,17 @@ triangle xylophone sax clarinet bassoon piccolo harmonica accordion bagpipe note
 melody harmony lyric verse chorus refrain riff solo duet trio quartet jazz blues rock pop rap folk punk soul funk
 disco reggae swing gospel ballad anthem carol lullaby dirge march waltz tango samba salsa polka jig reel sonata
 concerto symphony overture prelude encore
+""",
+    "sound": """
+achoo ahem arf baa bam bang bark beep belch biff blare bleat blip bloop boing bong boo boom bop bowwow brr burp buzz
+cackle caw cheep chime chink chirp chomp chuckle chug clack clang clank clap clatter click clink clomp clop cluck
+clunk coo crack crackle crash creak crinkle croak crunch cuckoo ding dingdong dong drip drone fizz fizzle flap flop
+flutter gargle gasp giggle glug gobble gong growl grunt guffaw gulp gurgle haha hiccup hiss honk hoot howl hum hush
+jangle jingle kerplunk knock meow mew moo mumble munch murmur neigh oink ouch patter peep ping plink plop plunk poof
+pop pow puff purr quack rattle ring roar rumble rustle screech shh shush sizzle slam slap slurp smack snap snarl sniff
+snore snort splash splat splosh sputter squawk squeak squeal squelch squish swish swoosh tap thud thump thwack tick
+tinkle toot twang tweet twitter vroom whack wham wheeze whimper whinny whir whirr whish whiz whizz whoop whoosh woof
+yap yelp yip yowl zap zing zip zoom
 """,
     "place": """
 home house hut shack cabin cottage villa manor palace castle fort tower temple church chapel abbey mosque shrine barn
