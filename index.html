@@ -1314,8 +1314,8 @@ function renderStats() {
   const total = Object.values(ops).reduce((a, b) => a + b, 0), omax = Math.max(1, ...Object.values(ops));
   const opChart = total ? `<svg viewBox="0 0 320 ${MOVE_NAMES.length * 28}" role="img" aria-label="Moves used">` + MOVE_NAMES.map(([k, name], i) => {
     const w = (ops[k] / omax) * 190, yy = i * 28;
-    return `<text x="0" y="${yy + 17}">${name}</text>` + (ops[k] ? `<path class="bar mv" style="--c: var(--mv-${k})" d="M70 ${yy + 5}H${70 + w - 4}Q${70 + w} ${yy + 5} ${70 + w} ${yy + 9}V${yy + 19}Q${70 + w} ${yy + 23} ${70 + w - 4} ${yy + 23}H70Z"><title>${name}: ${ops[k]} (${Math.round(100 * ops[k] / total)}%)</title></path>` : "") +
-      `<text x="${70 + w + 6}" y="${yy + 17}">${ops[k]} · ${Math.round(100 * ops[k] / total)}%</text>`;
+    return `<text x="0" y="${yy + 17}">${name}</text>` + (ops[k] ? `<path class="bar mv" style="--c: var(--mv-${k})" d="M70 ${yy + 5}H${70 + w - 4}Q${70 + w} ${yy + 5} ${70 + w} ${yy + 9}V${yy + 19}Q${70 + w} ${yy + 23} ${70 + w - 4} ${yy + 23}H70Z"><title>${name}: ${Math.round(100 * ops[k] / total)}%</title></path>` : "") +
+      `<text x="${70 + w + 6}" y="${yy + 17}">${Math.round(100 * ops[k] / total)}%</text>`;
   }).join("") + `</svg>` : `<p class="st-empty">No moves yet.</p>`;
   $("stats-body").innerHTML = `
     <div class="st-block"><h3>Top scores</h3><div class="st-grid">${modes.map(m => `<div><h4>${MODES[m].name}</h4>${top5(m)}</div>`).join("")}</div></div>
