@@ -1238,7 +1238,7 @@ function histogram(scores) {
   }
   svg += `<line class="axis" x1="0" x2="${W}" y1="${H}" y2="${H}"/>`;
   svg += `<line class="mean" x1="${W / 2}" x2="${W / 2}" y1="14" y2="${H}"/><text class="mean-label" x="${W / 2}" y="8" text-anchor="middle">Mean ${mean.toFixed(1)}</text></svg>`;
-  return svg + `<p class="st-cap"><b>${scores.length}</b> game${scores.length === 1 ? "" : "s"} · mean <b>${mean.toFixed(1)}</b> · best <b>${max}</b> · bars group scores by 10s</p>`;
+  return svg + `<p class="st-cap"><b>${scores.length}</b> game${scores.length === 1 ? "" : "s"} played</p>`;
 }
 function renderStats() {
   const games = loadHistory().filter(g => g.score > 0 || g.words.length);
