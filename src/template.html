@@ -472,7 +472,7 @@ const DATA = /*__DATA__*/null;
 const LAYOUT = /*__LAYOUT__*/"side";
 const DICT = new Set(DATA.words.split(" "));
 const CATS = Object.fromEntries(Object.entries(DATA.cats).map(([k, v]) => [k, new Set(v)]));
-const MIN_LEN = 3, BANK_SIZE = 6, BONUS_PTS = 20, TOOLKIT_PTS = 10;
+const MIN_LEN = 3, BANK_SIZE = 7, BONUS_PTS = 20, TOOLKIT_PTS = 10;
 const STEP_LIMIT = 25, HINT_LIMIT = 3;
 const MODES = {
   classic: { name: "Classic", desc: "Rack up as many points as you can in 25 steps." },
@@ -922,7 +922,7 @@ function render() {
   // powers
   const back = G.chain.length - 1;
   const P = [
-    ["exchange", "Exchange letters", "Trade all 6 bank letters for new ones", G.powers.exchange],
+    ["exchange", "Exchange letters", `Trade all ${BANK_SIZE} bank letters for new ones`, G.powers.exchange],
     ["choose", "Choose a letter", "Add any letter, discard one", G.powers.choose],
     ["backtrack", "Backtrack", back ? "Go back to any word in Previous Steps" : "Nothing to backtrack yet", G.powers.backtrack && back > 0],
   ];
@@ -1204,7 +1204,7 @@ function recordGame(sc) {
 const MODE = "morph-ladder:mode";
 function loadMode() { try { const m = localStorage.getItem(MODE); return MODES[m] ? m : "classic"; } catch { return "classic"; } }
 function saveMode(m) { try { localStorage.setItem(MODE, m); } catch {} }
-function valid(g) { return g && Array.isArray(g.chain) && g.chain.length && Array.isArray(g.bank) && g.bank.length === BANK_SIZE && BONUS[g.bonus] && g.powers; }
+function valid(g) { return g && Array.isArray(g.chain) && g.chain.length && Array.isArray(g.bank) && g.bank.length && g.bank.length <= BANK_SIZE && BONUS[g.bonus] && g.powers; }
 
 function applyLayout() {
   if (LAYOUT !== "stack") return;
@@ -1224,12 +1224,12 @@ function applyLayout() {
 
 // ---------- worked example in How to play ----------
 const EXAMPLE = [
-  { op: "Shift", text: "the S to the front", from: "pots", to: "spot", bank: "lnower", fromHl: [3], toHl: [0], arrow: { kind: "shift", i: 3, gap: 0 } },
-  { op: "Swap", text: "the P and the T", from: "spot", to: "stop", bank: "lnower", fromHl: [1, 3], toHl: [1, 3], arrow: { kind: "swap", i: 1, j: 3 } },
-  { op: "Add", text: "the O from the bank", from: "stop", to: "stoop", bank: "lnower", used: 2, toHl: [3], arrow: { kind: "add", gap: 3, l: "o" } },
-  { op: "Replace", text: "the P with the L", from: "stoop", to: "stool", bank: "lnawer", fresh: 2, used: 0, fromHl: [4], toHl: [4], arrow: { kind: "replace", i: 4, l: "l" },
+  { op: "Shift", text: "the S to the front", from: "pots", to: "spot", bank: "lnowert", fromHl: [3], toHl: [0], arrow: { kind: "shift", i: 3, gap: 0 } },
+  { op: "Swap", text: "the P and the T", from: "spot", to: "stop", bank: "lnowert", fromHl: [1, 3], toHl: [1, 3], arrow: { kind: "swap", i: 1, j: 3 } },
+  { op: "Add", text: "the O from the bank", from: "stop", to: "stoop", bank: "lnowert", used: 2, toHl: [3], arrow: { kind: "add", gap: 3, l: "o" } },
+  { op: "Replace", text: "the P with the L", from: "stoop", to: "stool", bank: "lnawert", fresh: 2, used: 0, fromHl: [4], toHl: [4], arrow: { kind: "replace", i: 4, l: "l" },
     note: "The bank drew a new A to fill the O's spot." },
-  { op: "Remove", text: "the S", from: "stool", to: "tool", bank: "inawer", fresh: 0, fromHl: [0], gone: [0], arrow: { kind: "remove", i: 0 },
+  { op: "Remove", text: "the S", from: "stool", to: "tool", bank: "inawert", fresh: 0, fromHl: [0], gone: [0], arrow: { kind: "remove", i: 0 },
     note: "The bank drew a new I to fill the L's spot." },
 ];
 function renderExample() {
@@ -1250,7 +1250,7 @@ function renderExample() {
   };
   const bank = s => `<span class="ex-label">Bank</span>` + [...s.bank].map((l, i) => `<span class="mt b${i === s.used ? " hl" : ""}">${l}</span>`).join("");
   $("how-example").innerHTML = `<h3>Example</h3>
-    <div class="ex-row"><div class="ex-what"><span class="ex-ic" style="visibility:hidden"></span><span>Start with <b>POTS</b> and the bank <b>LNOWER</b>.</span></div><div class="ex-move"><div class="ex-word">${tiles("pots")}</div></div><div class="ex-bank">${bank({ bank: "lnower" })}</div></div>` +
+    <div class="ex-row"><div class="ex-what"><span class="ex-ic" style="visibility:hidden"></span><span>Start with <b>POTS</b> and the bank <b>LNOWERT</b>.</span></div><div class="ex-move"><div class="ex-word">${tiles("pots")}</div></div><div class="ex-bank">${bank({ bank: "lnowert" })}</div></div>` +
     EXAMPLE.map((s, k) => `<div class="ex-row">
       <div class="ex-what"><span class="ex-ic" aria-hidden="true">${OP_ICON[s.op.toLowerCase()]}</span><span class="ex-op">${s.op}</span><span>${s.text} to get <b>${UP(s.to)}</b></span></div>
       <div class="ex-move"><div class="ex-word">${arrow(s.arrow, s.from.length, k)}${tiles(s.from, s.fromHl, s.gone)}</div><span class="ex-to">→</span><div class="ex-word">${tiles(s.to, s.toHl)}</div></div>
@@ -1327,7 +1327,10 @@ function boot(data) {
   renderExample();
   let g = data && data.game;
   if (!valid(g)) { try { g = JSON.parse(localStorage.getItem(KEY)); } catch { g = null; } }
-  if (valid(g)) { G = g; G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
+  if (valid(g)) { G = g;
+    // Games saved when the bank held 6 letters get topped up to the current size.
+    while (G.bank.length < BANK_SIZE) G.bank.push(draw(l => G.bank.filter(x => x === l).length < MAX_SAME));
+    G.chain.forEach((c, i) => { if (typeof c.m !== "string" || c.m.length !== c.w.length) c.m = i ? "p".repeat(c.w.length) : startMask(c.w); }); G.deck = (G.deck || []).filter(id => BONUS[id]); if (!MODES[G.mode]) G.mode = "free"; ui.pop = true; }
   else newGame();
   render();
 }
