@@ -37,6 +37,11 @@ kangaroo wallaby wombat platypus possum mice geese oxen wolves calves sheep deer
 bison hen rooster chick chicken cockerel pullet capon turkey drone queen larva pupa grizzly polar elephant
 giraffe camel dromedary alpaca vicuna mustang stallion gelding pony mare burro ass hinny zebu yak gaur hart hind
 roe fawn buck stag elk caribou reindeer marmot beaver otter mink sable ermine weasel ferret polecat badger
+anchovy angelfish barracuda blowfish bluefish bonito catfish char chub cichlid coelacanth crayfish cuttlefish dogfish dory
+flounder fluke gar goby goldfish grayling grouper guppy haddock halibut herring jellyfish kipper koi lamprey lionfish lungfish
+mackerel mako marlin molly monkfish mullet pilchard piranha plaice pollack pollock puffer redfish rockfish sailfish sardine
+sawfish shad shellfish skate snapper sprat starfish stingray sturgeon sunfish swordfish tarpon tetra tilapia triggerfish
+turbot walleye whitebait whitefish whiting wrasse yellowtail
 """,
     "food": """
 apple bread cake rice bean pea corn meat beef pork ham egg milk cheese butter cream honey jam soup stew pie tart
