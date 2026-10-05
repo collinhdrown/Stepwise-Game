@@ -73,7 +73,7 @@ nav.tabs button[aria-current="page"] { background: var(--ink); border-color: var
 
 header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
 .brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 48px; letter-spacing: -0.01em; margin: 0; line-height: 1; display: flex; align-items: flex-end; gap: 10px; }
-.brand h1 .feet { width: 0.95em; height: auto; flex: none; margin-bottom: 0.02em; }
+.brand h1 .steps-mark { width: 0.95em; height: auto; flex: none; margin-bottom: 0.06em; }
 .brand p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
 .scores { display: flex; gap: 22px; }
 .stat { display: grid; gap: 2px; text-align: right; }
@@ -296,7 +296,9 @@ details.rules summary { cursor: pointer; font-weight: 700; font-family: var(--fo
 .ex-row:last-child { border-bottom: 0; }
 .ex-what { align-self: center; }
 .ex-what b { color: var(--ink); }
-.ex-op { display: inline-block; min-width: 64px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.ex-what { display: flex; align-items: center; flex-wrap: wrap; gap: 0 8px; }
+.ex-ic { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex: none; font-size: 14px; font-weight: 700; background: var(--accent); color: var(--panel); }
+.ex-op { display: inline-block; min-width: 62px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .ex-move { display: flex; align-items: flex-end; gap: 10px; }
 .ex-to { color: var(--muted); padding-bottom: 5px; }
 .ex-word { position: relative; padding-top: 18px; display: flex; gap: 3px; }
@@ -309,7 +311,6 @@ details.rules summary { cursor: pointer; font-weight: 700; font-family: var(--fo
 .mt.hl { box-shadow: inset 0 -3px 0 var(--tile-edge), 0 0 0 2px var(--accent); }
 .mt.b.hl { box-shadow: inset 0 -3px 0 var(--bank-edge), 0 0 0 2px var(--accent); }
 .mt.gone { opacity: .35; }
-.mt.b.fresh { box-shadow: inset 0 -3px 0 var(--bank-edge), 0 0 0 2px var(--good); }
 .ex-note { grid-column: 1 / -1; font-size: 12.5px; margin-top: -2px; }
 @media (max-width: 640px) { .ex-row { grid-template-columns: 1fr; gap: 8px; } }
 
@@ -363,7 +364,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 <div class="app">
   <header class="top">
     <div class="brand">
-      <h1>Stepwise<svg class="feet" viewBox="0 0 112 128" aria-hidden="true" fill="currentColor"><g transform="translate(4 38) rotate(-6 25 45) translate(50 0) scale(-1 1)"><path d="M10 25C9 16 17 12 27 12.5C37 13 44 18 43 28C42 38 38 46 37 56C36 66 38 76 32 83C27 89 17 88 15 81C13 74 17 66 19 58C21 50 18 46 14 41C11 36 10 31 10 25Z"/><circle cx="14" cy="6.5" r="5.2"/><circle cx="23.5" cy="3.6" r="3.6"/><circle cx="30.5" cy="5" r="3.1"/><circle cx="36.4" cy="8.6" r="2.7"/><circle cx="40.8" cy="13.6" r="2.3"/></g><g transform="translate(60 2) rotate(6 25 45)"><path d="M10 25C9 16 17 12 27 12.5C37 13 44 18 43 28C42 38 38 46 37 56C36 66 38 76 32 83C27 89 17 88 15 81C13 74 17 66 19 58C21 50 18 46 14 41C11 36 10 31 10 25Z"/><circle cx="14" cy="6.5" r="5.2"/><circle cx="23.5" cy="3.6" r="3.6"/><circle cx="30.5" cy="5" r="3.1"/><circle cx="36.4" cy="8.6" r="2.7"/><circle cx="40.8" cy="13.6" r="2.3"/></g></svg></h1>
+      <h1>Stepwise<svg class="steps-mark" viewBox="0 0 64 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="miter" stroke-linecap="square"><path d="M3 45H11V36H19V27H27V18H34V25H41V13H49V4H61"/></svg></h1>
       <p>Create new words, one step at a time.</p>
       <nav class="tabs" aria-label="Pages"><button type="button" data-view="play">Play</button><button type="button" data-view="ach" id="tab-ach">Achievements</button><button type="button" data-view="stats">Stats</button><button type="button" id="theme-btn" class="theme-btn">Theme: Dark</button></nav>
     </div>
@@ -935,7 +936,6 @@ function render() {
   const have = achState();
   const got = ACHIEVEMENTS.filter(a => have[a.id]).length;
   $("ach-count").textContent = `${got} of ${ACHIEVEMENTS.length}`;
-  $("tab-ach").textContent = `Achievements ${got}/${ACHIEVEMENTS.length}`;
   const groups = [...new Set(ACHIEVEMENTS.map(a => a.group))];
   $("ach-list").innerHTML = groups.map(g => `<h3 class="ach-group">${g}</h3>` + ACHIEVEMENTS.filter(a => a.group === g).map(a => {
     const on = !!have[a.id];
@@ -1204,11 +1204,11 @@ function renderExample() {
     if (a.kind === "remove") { const x = cx(a.i); body = `<path d="M${x - 4} 5L${x + 4} 13M${x + 4} 5L${x - 4} 13" stroke="var(--bad)" stroke-width="2" stroke-linecap="round"/>`; }
     return `<svg width="${w}" height="18" viewBox="0 0 ${w} 18">${head}${body}</svg>`;
   };
-  const bank = s => `<span class="ex-label">Bank</span>` + [...s.bank].map((l, i) => `<span class="mt b${i === s.used ? " hl" : ""}${i === s.fresh ? " fresh" : ""}">${l}</span>`).join("");
+  const bank = s => `<span class="ex-label">Bank</span>` + [...s.bank].map((l, i) => `<span class="mt b${i === s.used ? " hl" : ""}">${l}</span>`).join("");
   $("how-example").innerHTML = `<h3>Example</h3>
-    <div class="ex-row"><div class="ex-what">Start with <b>POTS</b> and the bank <b>LNOWER</b>.</div><div class="ex-move"><div class="ex-word">${tiles("pots")}</div></div><div class="ex-bank">${bank({ bank: "lnower" })}</div></div>` +
+    <div class="ex-row"><div class="ex-what"><span class="ex-ic" style="visibility:hidden"></span><span>Start with <b>POTS</b> and the bank <b>LNOWER</b>.</span></div><div class="ex-move"><div class="ex-word">${tiles("pots")}</div></div><div class="ex-bank">${bank({ bank: "lnower" })}</div></div>` +
     EXAMPLE.map((s, k) => `<div class="ex-row">
-      <div class="ex-what"><span class="ex-op">${s.op}</span>${s.text} to get <b>${UP(s.to)}</b></div>
+      <div class="ex-what"><span class="ex-ic" aria-hidden="true">${OP_ICON[s.op.toLowerCase()]}</span><span class="ex-op">${s.op}</span><span>${s.text} to get <b>${UP(s.to)}</b></span></div>
       <div class="ex-move"><div class="ex-word">${arrow(s.arrow, s.from.length, k)}${tiles(s.from, s.fromHl, s.gone)}</div><span class="ex-to">→</span><div class="ex-word">${tiles(s.to, s.toHl)}</div></div>
       <div class="ex-bank">${bank(s)}</div>${s.note ? `<div class="ex-note">${s.note}</div>` : ""}
     </div>`).join("");
@@ -1220,21 +1220,26 @@ const niceStep = raw => { const p = 10 ** Math.floor(Math.log10(Math.max(raw, 1)
 const roundTop = (x, y, w, h, r) => { r = Math.min(r, w / 2, h); return `M${x} ${y + h}V${y + r}Q${x} ${y} ${x + r} ${y}H${x + w - r}Q${x + w} ${y} ${x + w} ${y + r}V${y + h}Z`; };
 function histogram(scores) {
   if (!scores.length) return `<p class="st-empty">No games yet.</p>`;
-  const max = Math.max(...scores), step = niceStep(Math.ceil((max + 1) / 8)), bins = Math.max(1, Math.ceil((max + 1) / step));
-  const counts = Array(bins).fill(0); scores.forEach(s => counts[Math.min(bins - 1, Math.floor(s / step))]++);
-  const W = 480, H = 150, top = 18, bw = W / bins, cmax = Math.max(...counts), mean = scores.reduce((a, b) => a + b, 0) / scores.length;
-  const y = c => top + (H - top) * (1 - c / cmax);
-  let svg = `<svg viewBox="0 -4 ${W} ${H + 22}" role="img" aria-label="Score histogram">`;
-  counts.forEach((c, i) => {
-    const lo = i * step, hi = lo + step - 1, label = step === 1 ? `${lo}` : `${lo}–${hi}`;
-    if (c) svg += `<path class="bar" d="${roundTop(i * bw + 1, y(c), bw - 2, H - y(c), 4)}"><title>${label} points: ${c} game${c === 1 ? "" : "s"}</title></path><text x="${i * bw + bw / 2}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
-    if (i % Math.ceil(bins / 6) === 0) svg += `<text x="${i * bw}" y="${H + 14}">${lo}</text>`;
-  });
-  const mx = (mean / (bins * step)) * W;
-  svg += `<line class="axis" x1="0" x2="${W}" y1="${H}" y2="${H}"/><text x="${W}" y="${H + 14}" text-anchor="end">${bins * step}</text>`;
-  svg += `<line class="mean" x1="${mx}" x2="${mx}" y1="14" y2="${H}"/><text class="mean-label" x="${mx + (mx > W * 0.7 ? -4 : 4)}" y="10" text-anchor="${mx > W * 0.7 ? "end" : "start"}" dy="-2">Mean ${mean.toFixed(1)}</text>`;
-  svg += `</svg>`;
-  return svg + `<p class="st-cap"><b>${scores.length}</b> game${scores.length === 1 ? "" : "s"} · mean <b>${mean.toFixed(1)}</b> · best <b>${max}</b></p>`;
+  // Buckets of 10 points; the x axis runs symmetrically around the mean so the mean sits in the middle.
+  const B = 10, min = Math.min(...scores), max = Math.max(...scores), mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const half = Math.max(mean - min, max + B - mean, B * 2) + B / 2, x0 = mean - half, x1 = mean + half;
+  const first = Math.floor(x0 / B), last = Math.floor(x1 / B);
+  const counts = new Map(); scores.forEach(s => counts.set(Math.floor(s / B), (counts.get(Math.floor(s / B)) || 0) + 1));
+  const W = 480, H = 150, top = 18, cmax = Math.max(...counts.values()), sx = v => ((v - x0) / (x1 - x0)) * W, y = c => top + (H - top) * (1 - c / cmax);
+  const bw = sx(B) - sx(0), tickEvery = bw * 5 >= 60 ? 5 : bw * 10 >= 60 ? 10 : 20;
+  let svg = `<svg viewBox="0 -4 ${W} ${H + 22}" role="img" aria-label="Score histogram, buckets of 10 points">`;
+  for (let k = first; k <= last; k++) {
+    const c = counts.get(k) || 0, lo = k * B, x = sx(lo);
+    if (c) {
+      const bx = Math.max(0, x + 1), bxe = Math.min(W, x + bw - 1);
+      svg += `<path class="bar" d="${roundTop(bx, y(c), bxe - bx, H - y(c), 4)}"><title>${lo}–${lo + B - 1} points: ${c} game${c === 1 ? "" : "s"}</title></path>`;
+      if (bw >= 14) svg += `<text x="${(bx + bxe) / 2}" y="${y(c) - 4}" text-anchor="middle">${c}</text>`;
+    }
+    if (lo >= 0 && k % tickEvery === 0 && x >= 0 && x <= W - 10) svg += `<line class="axis" x1="${x}" x2="${x}" y1="${H}" y2="${H + 4}"/><text x="${x}" y="${H + 16}" text-anchor="middle">${lo}</text>`;
+  }
+  svg += `<line class="axis" x1="0" x2="${W}" y1="${H}" y2="${H}"/>`;
+  svg += `<line class="mean" x1="${W / 2}" x2="${W / 2}" y1="14" y2="${H}"/><text class="mean-label" x="${W / 2}" y="8" text-anchor="middle">Mean ${mean.toFixed(1)}</text></svg>`;
+  return svg + `<p class="st-cap"><b>${scores.length}</b> game${scores.length === 1 ? "" : "s"} · mean <b>${mean.toFixed(1)}</b> · best <b>${max}</b> · bars group scores by 10s</p>`;
 }
 function renderStats() {
   const games = loadHistory().filter(g => g.score > 0 || g.words.length);
