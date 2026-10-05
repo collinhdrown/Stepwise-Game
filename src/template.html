@@ -492,6 +492,7 @@ const BONUSES = [
   { id: "tool", name: "Tool or weapon", hint: "Like SAW, RAKE or SPEAR", test: w => CATS.tool.has(w) },
   { id: "music", name: "Music", hint: "Instruments, styles and song words, like HARP, TUNE or BLUES", test: w => CATS.music.has(w) },
   { id: "place", name: "Place or building", hint: "Like BARN, CAFE or STREET", test: w => CATS.place.has(w) },
+  { id: "sound", name: "Onomatopoeia", hint: "A word that sounds like its noise, like BUZZ, SPLASH or OINK", test: w => CATS.sound.has(w) },
 ];
 const BONUS = Object.fromEntries(BONUSES.map(b => [b.id, b]));
 

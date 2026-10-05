@@ -173,6 +173,17 @@ melody harmony lyric verse chorus refrain riff solo duet trio quartet jazz blues
 disco reggae swing gospel ballad anthem carol lullaby dirge march waltz tango samba salsa polka jig reel sonata
 concerto symphony overture prelude encore
 """,
+    "sound": """
+achoo ahem arf baa bam bang bark beep belch biff blare bleat blip bloop boing bong boo boom bop bowwow brr burp buzz
+cackle caw cheep chime chink chirp chomp chuckle chug clack clang clank clap clatter click clink clomp clop cluck
+clunk coo crack crackle crash creak crinkle croak crunch cuckoo ding dingdong dong drip drone fizz fizzle flap flop
+flutter gargle gasp giggle glug gobble gong growl grunt guffaw gulp gurgle haha hiccup hiss honk hoot howl hum hush
+jangle jingle kerplunk knock meow mew moo mumble munch murmur neigh oink ouch patter peep ping plink plop plunk poof
+pop pow puff purr quack rattle ring roar rumble rustle screech shh shush sizzle slam slap slurp smack snap snarl sniff
+snore snort splash splat splosh sputter squawk squeak squeal squelch squish swish swoosh tap thud thump thwack tick
+tinkle toot twang tweet twitter vroom whack wham wheeze whimper whinny whir whirr whish whiz whizz whoop whoosh woof
+yap yelp yip yowl zap zing zip zoom
+""",
     "place": """
 home house hut shack cabin cottage villa manor palace castle fort tower temple church chapel abbey mosque shrine barn
 shed stable farm mill school college library museum gallery theater theatre cinema arena stadium gym pool park zoo
