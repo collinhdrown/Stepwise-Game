@@ -577,7 +577,9 @@ const wordValue = (w, m) => [...w].reduce((s, l, i) => s + tileValue(l, m[i]), 0
 const score = () => G.chain.reduce((s, c) => s + c.pts, 0);
 // Toolkit icons lit after the latest move; stored on each step so undo and backtrack restore it.
 const lit = () => G.chain[G.chain.length - 1].lit || [];
-const hintsLeft = () => G.hintsLeft ?? HINT_LIMIT;
+// Classic gets HINT_LIMIT hints a game; Free play has no limit.
+const unlimitedHints = () => G.mode === "free";
+const hintsLeft = () => unlimitedHints() ? Infinity : G.hintsLeft ?? HINT_LIMIT;
 const stepsLeft = () => Math.max(0, STEP_LIMIT - gameWords());
 const classicDone = () => G.over && G.mode === "classic" && gameWords() >= STEP_LIMIT;
 
@@ -733,15 +735,18 @@ function showHint() {
   const ops = new Set();
   for (const s of legalMoves().values()) for (const op of s) ops.add(op);
   const avail = OPS.map(o => o[0]).filter(op => ops.has(op));
-  if (!avail.length) { ui.hint = { text: "No move works from here. Undo your last move or use a power." }; return render(); }
+  if (!avail.length) { ui.hint = { text: "No move works from here." }; return render(); }
   const seen = ui.hint && ui.hint.seen ? ui.hint.seen : [];
   let fresh = avail.filter(op => !seen.includes(op));
   const cycle = !fresh.length;
   if (cycle) fresh = avail;
   const op = pick(fresh);
   const nextSeen = cycle ? [op] : seen.concat(op);
-  G.hintsLeft = hintsLeft() - 1;
-  const left = G.hintsLeft ? ` ${G.hintsLeft} hint${G.hintsLeft > 1 ? "s" : ""} left.` : " That was your last hint.";
+  let left = "";
+  if (!unlimitedHints()) {
+    G.hintsLeft = hintsLeft() - 1;
+    left = G.hintsLeft ? ` ${G.hintsLeft} hint${G.hintsLeft > 1 ? "s" : ""} left.` : " That was your last hint.";
+  }
   const more = avail.length > 1 ? ` (${avail.length} kinds of move work here.)` : " (It's the only kind of move that works here.)";
   ui.hint = { text: `Hint: ${OP_HINT[op]}.${more}${left}`, seen: nextSeen };
   G.hints = (G.hints || 0) + 1;
@@ -936,9 +941,10 @@ function render() {
   $("hinttext").textContent = ui.hint ? ui.hint.text : "";
   $("hintbtn").disabled = G.over || !!ui.mode;
   const hl = hintsLeft();
-  $("hint-dots").innerHTML = Array.from({ length: HINT_LIMIT }, (_, i) => `<i class="${i < hl ? "" : "off"}"></i>`).join("");
+  $("hint-dots").hidden = unlimitedHints();
+  $("hint-dots").innerHTML = unlimitedHints() ? "" : Array.from({ length: HINT_LIMIT }, (_, i) => `<i class="${i < hl ? "" : "off"}"></i>`).join("");
   $("hint-dots").title = `${hl} of ${HINT_LIMIT} hints left`;
-  $("hintbtn").setAttribute("aria-label", `Hint, ${hl} of ${HINT_LIMIT} left`);
+  $("hintbtn").setAttribute("aria-label", unlimitedHints() ? "Hint" : `Hint, ${hl} of ${HINT_LIMIT} left`);
   $("mode-line").innerHTML = G.mode === "classic"
     ? `<b>Classic</b> · <span class="steps${stepsLeft() <= 5 ? " low" : ""}">${stepsLeft()} step${stepsLeft() === 1 ? "" : "s"} left</span>`
     : `<b>Free play</b>${G.cont ? ` · Classic score ${G.cont.score}` : ""}`;
