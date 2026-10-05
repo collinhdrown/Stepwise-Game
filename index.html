@@ -1097,7 +1097,7 @@ function openSummary() {
     `<button type="button" class="mode-opt${id === G.mode ? " current" : ""}" data-new-mode="${id}"><b>${m.name}</b><span>${m.desc}</span></button>`).join("");
   $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sum-title">
     <button type="button" class="x" data-close aria-label="Close">×</button>
-    <h2 id="sum-title">${fresh ? "New game" : G.over ? (G.mode === "classic" && st.words >= STEP_LIMIT ? "Classic complete" : "Game over") : "Your game"}</h2>
+    <h2 id="sum-title">${fresh ? "New game" : G.over ? "Game Completed" : "Your game"}</h2>
     ${fresh ? `<p class="sub">Pick a mode to start.</p>` : `<p class="sub">${st.mode} · started from ${UP(st.start)}${G.cont ? ` · Classic score ${G.cont.score}` : ""}</p>
     <div class="stats">
       <div class="stat-box big"><span class="k">Points</span><span class="v">${st.points}</span></div>
@@ -1110,7 +1110,7 @@ function openSummary() {
     <h3>Start a new game</h3>
     <div class="modes">${modeBtns}</div>
     <div class="row">
-      ${classicDone() ? `<button type="button" class="btn primary" data-keep>Keep playing</button><button type="button" class="btn" data-close>Exit</button>`
+      ${classicDone() ? `<button type="button" class="btn primary" data-keep>Keep playing</button>`
         : G.over ? "" : `<button type="button" class="btn" data-close>${fresh ? "Cancel" : "Keep playing"}</button>`}
       ${fresh ? "" : `<button type="button" class="btn" data-share>Share</button>`}
     </div>
