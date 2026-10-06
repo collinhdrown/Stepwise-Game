@@ -1009,9 +1009,12 @@ function render() {
     const pickable = ui.mode === "back" && i < G.chain.length - 1;
     return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}${pickable ? " pick" : ""}"${pickable ? ` data-back="${i}" role="button" tabindex="0" aria-label="Go back to ${UP(c.w)}"` : ""}><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${combined}</span></li>`;
   });
-  const rungs = $("rungs");
-  if (LAYOUT === "stack") { rungs.innerHTML = rows.join(""); rungs.scrollTop = rungs.scrollHeight; }
-  else { rungs.innerHTML = rows.reverse().join(""); rungs.scrollTop = 0; }
+  // Rebuild only when the ladder changed, so tapping letters doesn't replay the newest word's pop-in.
+  const rungs = $("rungs"), html = (LAYOUT === "stack" ? rows : rows.reverse()).join("");
+  if (rungs.dataset.html !== html) {
+    rungs.innerHTML = html; rungs.dataset.html = html;
+    rungs.scrollTop = LAYOUT === "stack" ? rungs.scrollHeight : 0;
+  }
 
   // achievements
   const have = achState();
