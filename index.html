@@ -363,7 +363,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
   --bg: #142019; --panel: #213229; --ink: #F6F8EE; --muted: #BCC8B0; --line: #3F5746;
   --tile: #E3915F; --tile-edge: #9E5532; --tile-ink: #24150C;
   --bank: #F3EED9; --bank-edge: #ADA484; --bank-ink: #1C2A1F;
-  --accent: #F0AE7A; --accent-soft: #3A3A2A;
+  --accent: #E2AE2A; --accent-soft: #3B3A1F;
   --good: #A8DA82; --good-soft: #294026; --bad: #FF6A5C;
   --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
   color-scheme: dark;
@@ -1009,9 +1009,12 @@ function render() {
     const pickable = ui.mode === "back" && i < G.chain.length - 1;
     return `<li class="rung${i === 0 ? " start" : ""}${latest ? " latest" : ""}${pickable ? " pick" : ""}"${pickable ? ` data-back="${i}" role="button" tabindex="0" aria-label="Go back to ${UP(c.w)}"` : ""}><span class="n">${i === 0 ? "" : i}</span><span class="w">${esc(c.w)}</span><span class="p">${i === 0 ? "" : `+${c.pts}`}</span><span class="op">${i === 0 ? "starting word" : esc(c.detail)}${chips}</span><span class="chips">${combined}</span></li>`;
   });
-  const rungs = $("rungs");
-  if (LAYOUT === "stack") { rungs.innerHTML = rows.join(""); rungs.scrollTop = rungs.scrollHeight; }
-  else { rungs.innerHTML = rows.reverse().join(""); rungs.scrollTop = 0; }
+  // Rebuild only when the ladder changed, so tapping letters doesn't replay the newest word's pop-in.
+  const rungs = $("rungs"), html = (LAYOUT === "stack" ? rows : rows.reverse()).join("");
+  if (rungs.dataset.html !== html) {
+    rungs.innerHTML = html; rungs.dataset.html = html;
+    rungs.scrollTop = LAYOUT === "stack" ? rungs.scrollHeight : 0;
+  }
 
   // achievements
   const have = achState();
