@@ -412,7 +412,7 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
     </div>
 
     <section class="card powers">
-      <div class="label">One use per game</div>
+      <div class="label">Use one of each per game</div>
       <div class="row" id="powers"></div>
       <div id="picker" hidden></div>
     </section>
@@ -1032,11 +1032,22 @@ function render() {
   ui.pop = false; ui.freshBonus = false; ui.justLit = null; ui.newBank = -1; ui.shake = false;
   save();
   // Pop up once per dead end: a nudge toward Backtrack, or the game summary when the game is over.
-  const key = `${G.id}:${G.chain.length}:${w}`;
-  if ((dead === "backtrack" || dead === "over") && ui.deadShown !== key && !$("modal-slot").firstChild) {
+  // Being stuck (no move with these letters, but a power or Undo can help) pops up in the middle of the screen too.
+  const key = `${G.id}:${G.chain.length}:${w}:${G.bank.join("")}`;
+  const stuckNow = !classicDone() && !G.over && dead !== "backtrack" && moves === 0;
+  if ((dead === "backtrack" || dead === "over" || stuckNow) && ui.deadShown !== key && !$("modal-slot").firstChild) {
     ui.deadShown = key;
-    if (dead === "over") openSummary(); else openDeadEnd();
+    if (dead === "over") openSummary(); else if (dead === "backtrack") openDeadEnd(); else openStuck(w);
   }
+}
+function openStuck(w) {
+  const canUndo = G.undo && undoCanEscape();
+  $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="stuck-title">
+    <button type="button" class="x" data-close aria-label="Close">×</button>
+    <h2 id="stuck-title">You're stuck</h2>
+    <p class="sub">No legal move from ${UP(w)} with these letters. ${canUndo ? "Undo your last move or use a power." : "Use a power to keep going."}</p>
+    <div class="row">${canUndo ? `<button type="button" class="btn" data-undo>Undo last move</button>` : ""}<button type="button" class="btn primary" data-close>Use a power</button></div>
+  </div></div>`;
 }
 function openDeadEnd() {
   $("modal-slot").innerHTML = `<div class="modal-back" data-modal-back><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dead-title">
@@ -1095,6 +1106,7 @@ document.addEventListener("click", e => {
   if (t.hasAttribute("data-keep")) return keepPlaying();
   if (t.dataset.newMode) { const m = t.dataset.newMode; closeSummary(); newGame(m); ui.msg = { text: `New ${MODES[m].name} game. Good luck!`, kind: "info" }; return render(); }
   if (t.id === "undo") return undo();
+  if (t.hasAttribute("data-undo")) { closeSummary(); return undo(); }
   if (t.id === "remove") return removeLetter(ui.sel.i);
   if (t.dataset.power) { closeSummary(); return usePower(t.dataset.power); }
   if (t.hasAttribute("data-cancel")) { ui.mode = null; ui.chosen = null; return render(); }
