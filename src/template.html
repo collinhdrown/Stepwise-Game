@@ -368,6 +368,63 @@ details.rules .goal { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
 :root[data-theme="organic"] .tile { border-radius: 12px; }
 :root[data-theme="organic"] .brand h1 { font-weight: 800; }
 
+/* Glass: frosted glass cards and letter tiles resting on warm wooden planks. Word tiles are bright frosted glass with dark letters;
+   bank tiles are clearer, darker glass with light letters, so the two read apart by brightness, not hue. Highlights are honey gold. */
+:root[data-theme="glass"] {
+  --bg: #2E1F14; --panel: #3F2A1B; --ink: #FBF3E4; --muted: #DCC9B0; --line: rgba(255,244,228,.22);
+  --tile: rgba(255,250,240,.72); --tile-edge: rgba(110,70,35,.28); --tile-ink: #2A190C;
+  --bank: rgba(255,255,255,.2); --bank-edge: rgba(0,0,0,.22); --bank-ink: #FFF7EA;
+  --accent: #F4C54F; --accent-soft: rgba(244,197,79,.2);
+  --good: #C3E8A6; --good-soft: rgba(195,232,166,.16); --bad: #FFA083;
+  --glass: linear-gradient(160deg, rgba(255,255,255,.17), rgba(255,255,255,.06) 60%, rgba(255,255,255,.09));
+  --glass-edge: rgba(255,255,255,.24);
+  --glass-shine: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.12);
+  --font-display: "Fraunces", Georgia, serif; --font-body: "Nunito", system-ui, sans-serif;
+  color-scheme: dark;
+}
+/* Wood: long horizontal grain from stretched noise, planks with dark seams, each plank a slightly different tone. */
+:root[data-theme="glass"] body {
+  background-color: #6A4427;
+  background-image:
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(20,10,4,.45)),
+    repeating-linear-gradient(180deg, transparent 0 157px, rgba(25,12,4,.55) 157px 159px, rgba(255,225,190,.12) 159px 160px),
+    repeating-linear-gradient(180deg, rgba(255,220,180,.05) 0 160px, rgba(0,0,0,.08) 160px 320px, rgba(255,200,150,.03) 320px 480px, rgba(0,0,0,.14) 480px 640px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1800' height='640'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0035 .11' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .08 0 0 0 0 .03 1.7 0 0 0 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1800' height='600'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .03' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .7 0 0 0 0 .45 0 1.2 0 0 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23h)'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+:root[data-theme="glass"] .app { gap: 24px; }
+:root[data-theme="glass"] .card,
+:root[data-theme="glass"] nav.tabs button,
+:root[data-theme="glass"] .btn,
+:root[data-theme="glass"] .power,
+:root[data-theme="glass"] .mode-opt,
+:root[data-theme="glass"] .stat-box {
+  background: var(--glass); border-color: var(--glass-edge);
+  -webkit-backdrop-filter: blur(14px) saturate(130%); backdrop-filter: blur(14px) saturate(130%);
+}
+:root[data-theme="glass"] .card { border-radius: 20px; padding: 20px 22px; box-shadow: var(--glass-shine), 0 14px 34px rgba(15,7,2,.4); }
+:root[data-theme="glass"] .btn, :root[data-theme="glass"] .power, :root[data-theme="glass"] nav.tabs button { box-shadow: var(--glass-shine), 0 2px 6px rgba(15,7,2,.25); }
+:root[data-theme="glass"] nav.tabs button[aria-current="page"], :root[data-theme="glass"] .btn.primary { background: var(--accent); border-color: var(--accent); color: #2A190C; }
+:root[data-theme="glass"] .power.active, :root[data-theme="glass"] .mode-opt.current { background: var(--accent-soft); border-color: var(--accent); }
+/* Tiles: frosted panes with a bright top edge and a soft gloss across the upper half. */
+:root[data-theme="glass"] .tile, :root[data-theme="glass"] .mt, :root[data-theme="glass"] .alpha button {
+  background: linear-gradient(170deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.12) 46%, transparent 47%), var(--tile);
+  border: 1px solid rgba(255,255,255,.6); border-top-color: rgba(255,255,255,.95); border-radius: 12px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+:root[data-theme="glass"] .bank .tile, :root[data-theme="glass"] .mt.b, :root[data-theme="glass"] .alpha button {
+  background: linear-gradient(170deg, rgba(255,255,255,.3) 0%, rgba(255,255,255,.06) 46%, transparent 47%), var(--bank);
+  border-color: rgba(255,255,255,.32); border-top-color: rgba(255,255,255,.7); color: var(--bank-ink);
+}
+:root[data-theme="glass"] .mt, :root[data-theme="glass"] .alpha button { border-radius: 6px; }
+:root[data-theme="glass"] .tile .pv { opacity: .7; }
+:root[data-theme="glass"] .stuck.float, :root[data-theme="glass"] .modal { background: linear-gradient(160deg, rgba(90,60,38,.82), rgba(52,34,21,.86)); border-color: var(--glass-edge); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+:root[data-theme="glass"] .stuck.float { border-color: var(--bad); }
+:root[data-theme="glass"] .modal-back { background: rgba(20,10,4,.4); }
+:root[data-theme="glass"] .modal textarea { background: rgba(0,0,0,.2); }
+:root[data-theme="glass"] .brand h1 { font-weight: 800; text-shadow: 0 2px 10px rgba(15,7,2,.5); }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
@@ -1215,7 +1272,7 @@ async function shareSummary() {
 // ---------- theme ----------
 const THEME = "morph-ladder:theme";
 // The toggle cycles through every theme. The green "organic" look is the default; a saved choice wins.
-const THEMES = [["organic", "Default"], ["dark", "Dark"], ["light", "Light"]];
+const THEMES = [["organic", "Default"], ["glass", "Glass"], ["dark", "Dark"], ["light", "Light"]];
 const THEME_NAME = Object.fromEntries(THEMES);
 const curTheme = () => THEME_NAME[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : "organic";
 const nextTheme = () => THEMES[(THEMES.findIndex(([id]) => id === curTheme()) + 1) % THEMES.length][0];
